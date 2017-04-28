@@ -4,45 +4,18 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Athame.PluginAPI;
 using Athame.PluginAPI.Downloader;
 using Athame.PluginAPI.Service;
 using GoogleMusicApi.Common;
 
 namespace Athame.PlayMusicApi
 {
-    public class PlayMusicService : MusicService
+    public class PlayMusicService : MusicService, IUsernamePasswordAuthenticationAsync, IRestorableAsync
     {
         private const string GooglePlayHost = "play.google.com";
         private MobileClient client = new MobileClient();
         private PlayMusicServiceSettings settings = new PlayMusicServiceSettings();
-
-        public override async Task<AuthenticationResponse> LoginAsync(string username, string password)
-        {
-            await client.LoginAsync(username, password);
-            return new AuthenticationResponse
-            {
-                Token = client.Session.MasterToken,
-                UserIdentity = username,
-                UserName = client.Session.FirstName + " " + client.Session.LastName + " (" + username + ")"
-            };
-        }
-
-        public override async Task<bool> RestoreSessionAsync(AuthenticationResponse response)
-        {
-            return await client.LoginWithToken(response.UserIdentity, response.Token);
-        }
-
-        public override bool RestoreSession(AuthenticationResponse response)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void ClearSession()
-        {
-            // reinit client to clear stored session
-            client = new MobileClient();
-            settings.Response = null;
-        }
 
         private Artist CreateArtist(GoogleMusicApi.Structure.Track track)
         {
@@ -197,16 +170,21 @@ namespace Athame.PlayMusicApi
             return CreateTrack(track);
         }
 
-        public override string Name => "Google Play Music";
+        public AccountInfo Account { get; private set; }
 
-        public override bool IsAuthenticated => client.Session != null && client.Session.IsAuthenticated;
+        public bool IsAuthenticated => client.Session != null && client.Session.IsAuthenticated;
+
+        public Task<bool> AuthenticateAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         public override Control GetSettingsControl()
         {
             return new PlayMusicSettingsControl(settings);
         }
 
-        public override StoredSettings Settings
+        public override object Settings
         {
             get
             {
@@ -216,18 +194,67 @@ namespace Athame.PlayMusicApi
         }
 
         public override Uri[] BaseUri => new[] { new Uri("http://" + GooglePlayHost), new Uri("https://" + GooglePlayHost) };
-
-        public override AuthenticationMethod AuthenticationMethod => AuthenticationMethod.UsernameAndPassword;
-
-        public override AuthenticationFlow Flow => new AuthenticationFlow
+        public override string Name => "Google Play Music";
+        public override string Description => "Plugin for the Google Play Music service.";
+        public override string Author => "svbnet";
+        public override Uri Website => new Uri("https://svbnet.co");
+        public override void Init(AthameApplication application)
         {
-            SignInInformation =
-                "Enter your Google account email and password. If you use two-factor authentication, you must set an app password:",
-            LinksToDisplay = new[]
+            
+        }
+
+        public async Task<bool> Authenticate(string username, string password, bool rememberUser)
+        {
+            if (!await client.LoginAsync(username, password))
             {
-                new SignInLink{DisplayName = "Set an app password", Link = new Uri("https://security.google.com/settings/security/apppasswords")},
-                new SignInLink{DisplayName = "Forgot your password?", Link = new Uri("https://accounts.google.com/signin/recovery")}
+                return false;
+            }
+            Account = new AccountInfo
+            {
+                DisplayId = username,
+                DisplayName = client.Session.FirstName + " " + client.Session.LastName
+            };
+            // ReSharper disable once InvertIf
+            if (rememberUser)
+            {
+                settings.SessionToken = client.Session.MasterToken;
+                settings.Email = username;
+            }
+            return true;
+        }
+
+        public string SignInHelpText
+            =>
+            "Enter your Google account email and password. If you use two-factor authentication, you must set an app password:"
+            ;
+
+        public IReadOnlyCollection<SignInLink> SignInLinks => new[]
+        {
+            new SignInLink
+            {
+                DisplayName = "Set an app password",
+                Link = new Uri("https://security.google.com/settings/security/apppasswords")
+            },
+            new SignInLink
+            {
+                DisplayName = "Forgot your password?",
+                Link = new Uri("https://accounts.google.com/signin/recovery")
             }
         };
+
+        public bool HasSavedSession => settings.SessionToken != null;
+
+        public async Task<bool> RestoreAsync()
+        {
+            if (settings.SessionToken == null) return false;
+            if (!await client.LoginWithToken(settings.Email, settings.SessionToken)) return false;
+
+            Account = new AccountInfo
+            {
+                DisplayId = settings.Email,
+                DisplayName = client.Session.FirstName + " " + client.Session.LastName
+            };
+            return true;
+        }
     }
 }

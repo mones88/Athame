@@ -62,8 +62,8 @@ namespace Athame.Settings
         // Defaults
         public AthameSettings()
         {
-            ServiceSettings = new Dictionary<string, StoredSettings>();
-            AlbumArtworkSaveFormat = AlbumArtworkSaveFormat.AsCover;
+            ServiceSettings = new Dictionary<string, object>();
+            AlbumArtworkSaveFormat = AlbumArtworkSaveFormat.DontSave;
             GeneralSavePreference = new MediaTypeSavePreference
             {
                 AskForLocation = false,
@@ -72,15 +72,15 @@ namespace Athame.Settings
             };
             PlaylistSavePreference = new MediaTypeSavePreference
             {
-                AskForLocation = false,
+                AskForLocation = true,
                 SaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                SaveFormat = "Playlist Name/{AlbumArtistOrArtist} - {Title}"
+                SaveFormat = "{AlbumArtistOrArtist} - {Title}"
             };
-            PlaylistSavePreferenceUsesGeneral = true;
+            PlaylistSavePreferenceUsesGeneral = false;
             MainWindowPreference = new WindowPreference();
         }
 
-        public Dictionary<string, StoredSettings> ServiceSettings { get; set; }
+        public Dictionary<string, object> ServiceSettings { get; set; }
         public AlbumArtworkSaveFormat AlbumArtworkSaveFormat { get; set; }
         public MediaTypeSavePreference GeneralSavePreference { get; set; }
         public MediaTypeSavePreference PlaylistSavePreference { get; set; }

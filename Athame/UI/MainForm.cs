@@ -65,6 +65,14 @@ namespace Athame.UI
             mediaDownloadQueue.TrackDequeued += MediaDownloadQueue_TrackDequeued;
             mediaDownloadQueue.TrackDownloadCompleted += MediaDownloadQueue_TrackDownloadCompleted;
             mediaDownloadQueue.TrackDownloadProgress += MediaDownloadQueue_TrackDownloadProgress;
+
+            // Error handler for plugin loader
+            Program.DefaultPluginManager.LoadException += DefaultPluginManagerOnLoadException;
+        }
+
+        private void DefaultPluginManagerOnLoadException(object sender, PluginLoadExceptionEventArgs pluginLoadExceptionEventArgs)
+        {
+            pluginLoadExceptionEventArgs.Continue = true;
         }
 
         /// <summary>
@@ -281,9 +289,6 @@ namespace Athame.UI
 
         private void PresentException(Exception ex)
         {
-#if DEBUG
-            throw ex;
-#else
             SetGlobalProgressState(ProgressBarState.Error);
             var th = "An unknown error occurred";
             if (ex is ResourceNotFoundException)
@@ -294,37 +299,7 @@ namespace Athame.UI
             {
                 th = "Invalid session/subscription expired";
             }
-            CommonTaskDialogs.Error(ex, th).Show();
-#endif
-        }
-
-        private void OpenInExplorer(string directory)
-        {
-            Process.Start($"\"{directory}\"");
-        }
-
-        private async Task DownloadQueue()
-        {
-            try
-            {
-
-                LockUi();
-                totalStatusLabel.Text = "Warming up...";
-                await mediaDownloadQueue.StartDownloadAsync();
-                currentlyDownloadingItem = null;
-                SetGlobalProgress(0);
-                SetGlobalProgressState(ProgressBarState.Normal);
-
-            }
-            catch (Exception ex)
-            {
-                PresentException(ex);
-
-            }
-            finally
-            {
-                UnlockUi();
-            }
+            CommonTaskDialogs.Exception(ex, th, "You may need to sign into this service again.", this).Show();
         }
 
         private MediaTypeSavePreference PreferenceForType(MediaType type)
@@ -335,47 +310,6 @@ namespace Athame.UI
             }
             return Program.DefaultSettings.Settings.GeneralSavePreference.Clone();
         }
-
-        //        private async Task DownloadTracks(MusicService svc, List<DownloadableTrack> tracks)
-        //        {
-        //            var tagger = new TrackTagger();
-        //            var downloader = new TrackDownloader(svc, tracks, mPathFormat);
-        //            totalProgressBar.Value = 0;
-        //            PrepareForNextTrack(tracks[0].CommonTrack, 0, tracks.Count);
-        //            downloader.ItemProgressChanged += (o, args) =>
-        //            {
-        //                switch (args.CurrentTrack.State)
-        //                {
-        //                    case TrackState.DownloadingArtwork:
-        //                        totalProgressStatus.Text = "Getting artwork...";
-        //                        break;
-        //                    case TrackState.DownloadingTrack:
-        //                        totalProgressStatus.Text = "Getting track...";
-        //                        break;
-        //                    default:
-        //                        throw new ArgumentOutOfRangeException();
-        //                }
-        //                SetGlobalProgress(args.OverallCompletionPercentage);
-        //            };
-        //            downloader.ItemDownloadCompleted += (o, args) =>
-        //            {
-        //                totalProgressStatus.Text = "Tagging...";
-        //                tagger.Write(args.CurrentTrack.Path, tracks[args.CurrentItemIndex].CommonTrack, args.CurrentTrack.ArtworkPath);
-        //                var lvItemIndex = mGroupAndQueueIndices[currentCollection][args.CurrentItemIndex];
-        //                var lvItem = queueListView.Items[lvItemIndex];
-        //                lvItem.Checked = false;
-        //                lvItem.ImageKey = "done";
-        //                var nextIndex = args.CurrentItemIndex + 1;
-        //                if (nextIndex < args.TotalItems)
-        //                {
-        //                    PrepareForNextTrack(tracks[nextIndex].CommonTrack, nextIndex, args.TotalItems);
-        //                }
-        //            };
-        //            await downloader.DownloadAsync();
-        //            currTrackLabel.Text = GetCompletionMessage();
-        //            totalProgressStatus.Text = "Downloaded album successfully";
-        //        }
-
         private static bool IsWithinVisibleBounds(Point topLeft)
         {
             var screens = Screen.AllScreens;
@@ -386,36 +320,26 @@ namespace Athame.UI
 
         private void ShowStartupTaskDialog()
         {
-            var td = CommonTaskDialogs.Wait(this, null);
+            var td = CommonTaskDialogs.Wait(owner: this);
             var openCt = new CancellationTokenSource();
             td.Opened += async (o, args) =>
             {
                 await Task.Factory.StartNew(async () =>
                 {
-                    foreach (var service in ServiceRegistry.Default)
+                    foreach (var service in Program.DefaultPluginManager.ServicesEnumerable())
                     {
-                        if (service.Settings.Response == null) continue;
+                        var restorable = service.AsAuthenticatable();
+                        if (restorable == null || !restorable.HasSavedSession) continue;
+
                         var result = false;
                         td.InstructionText = $"Signing into {service.Name}...";
-                        td.Text = $"Signing in as {service.Settings.Response.UserName}";
-                        try
+                        td.Text = $"Signing in as {restorable.Account.DisplayName}";
+                        openCt.Token.ThrowIfCancellationRequested();
+                        result = await restorable.RestoreAsync();
+                        if (!result)
                         {
-                            openCt.Token.ThrowIfCancellationRequested();
-                            result = await service.RestoreSessionAsync(service.Settings.Response);
-                        }
-                        catch (NotImplementedException)
-                        {
-                            result = service.RestoreSession(service.Settings.Response);
-                        }
-                        finally
-                        {
-                            if (result)
-                            {
-                            }
-                            else
-                            {
-                                MessageBox.Show($"Failed to sign in to {service.Name}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                            CommonTaskDialogs.Message(owner: this, caption: $"Failed to sign in to {service.Name}",
+                                message: null, icon:TaskDialogStandardIcon.Error);
                         }
                     }
                     td.Close();
@@ -458,7 +382,7 @@ namespace Athame.UI
                 urlValidStateLabel.Text = UrlInvalid;
                 return false;
             }
-            var service = ServiceRegistry.Default.GetByBaseUri(url);
+            var service = Program.DefaultPluginManager.GetServiceByBaseUri(url);
             // No service associated with host
             if (service == null)
             {
@@ -466,7 +390,8 @@ namespace Athame.UI
                 return false;
             }
             // Not authenticated
-            if (!service.IsAuthenticated)
+            var authenticatable = service.AsAuthenticatable();
+            if (!authenticatable.IsAuthenticated)
             {
                 urlValidStateLabel.Text = String.Format(UrlNeedsAuthentication, service.Name);
                 var linkIndex = urlValidStateLabel.Text.LastIndexOf(UrlNeedsAuthenticationLink1, StringComparison.Ordinal);
@@ -518,9 +443,8 @@ namespace Athame.UI
                 if (isAlreadyInQueue)
                 {
                     using (
-                        var td = CommonTaskDialogs.Message(this, TaskDialogStandardIcon.Error, "Athame",
-                            "Cannot add to download queue", "This item already exists in the download queue.",
-                            TaskDialogStandardButtons.Ok))
+                        var td = CommonTaskDialogs.Message(owner: this, icon: TaskDialogStandardIcon.Error, 
+                        caption: "Cannot add to download queue", message: "This item already exists in the download queue."))
                     {
                         td.Show();
                         return;
@@ -549,9 +473,9 @@ namespace Athame.UI
                 if (mResult.Type != MediaType.Album && mResult.Type != MediaType.Playlist &&
                     mResult.Type != MediaType.Track)
                 {
-                    using (var noTypeTd = CommonTaskDialogs.Message(this, TaskDialogStandardIcon.Warning,
-                        "Athame", $"'{mResult.Type}' is not supported yet.",
-                        "You may be able to download it in a later release.", TaskDialogStandardButtons.Ok))
+                    using (var noTypeTd = CommonTaskDialogs.Message(owner: this, icon: TaskDialogStandardIcon.Warning,
+                        caption: $"'{mResult.Type}' is not supported yet.",
+                        message: "You may be able to download it in a later release."))
                     {
                         noTypeTd.Show();
                         return;
@@ -624,9 +548,8 @@ namespace Athame.UI
                 Program.DefaultSettings.Settings.MainWindowPreference.Size = savedSize = MinimumSize;
             }
             Size = savedSize;
+            Program.DefaultPluginManager.LoadAll(Program.DefaultSettings.Settings.ServiceSettings);
         }
-
-
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
@@ -672,10 +595,8 @@ namespace Athame.UI
             if (mediaDownloadQueue.Count == 0)
             {
                 using (
-                    var td = CommonTaskDialogs.Message(this, TaskDialogStandardIcon.Error, "Athame",
-                        "No tracks are in the queue.",
-                        "You can add tracks by copying the URL to an album, artist, track, or playlist and pasting it into Athame.",
-                        TaskDialogStandardButtons.Ok))
+                    var td = CommonTaskDialogs.Message(owner: this, icon: TaskDialogStandardIcon.Error, caption: "No tracks are in the queue.",
+                        message: "You can add tracks by copying the URL to an album, artist, track, or playlist and pasting it into Athame."))
                 {
                     td.Show();
                 }

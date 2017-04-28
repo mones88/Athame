@@ -45,6 +45,7 @@ namespace Athame
             DefaultSettings = new SettingsManager<AthameSettings>(SettingsPath);
             DefaultSettings.Load();
 
+            // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
 
             // Begin main form

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Media;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -7,12 +8,14 @@ namespace Athame.UI
 {
     public static class CommonTaskDialogs
     {
-        public static TaskDialog Wait(IWin32Window owner, string message)
+        private const string MainCaption = "Athame";
+
+        public static TaskDialog Wait(string message = null, IWin32Window owner = null)
         {
             var dialog = new TaskDialog
             {
                 Cancelable = false,
-                Caption = "Athame",
+                Caption = MainCaption,
                 InstructionText = message ?? "Please wait...",
                 StandardButtons = TaskDialogStandardButtons.Cancel,
                 OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero
@@ -23,22 +26,32 @@ namespace Athame.UI
             return dialog;
         }
 
-        public static TaskDialog Error(Exception exception, string errorText)
+        public static TaskDialog Exception(Exception exception, string errorTitle, string errorRemedy = null, IWin32Window owner = null)
         {
             var td = new TaskDialog
             {
                 DetailsExpanded = false,
                 Cancelable = true,
                 Icon = TaskDialogStandardIcon.Error,
-                Caption = "Something went wrong!",
-                InstructionText = errorText ?? "An unknown error occurred",
-                Text = "If you keep experiencing errors, you may need to sign in again. Click \"Show details\" for technical information.",
+                Caption = MainCaption,
+                InstructionText = errorTitle ?? "An unknown error occurred",
+                Text = errorRemedy,
                 DetailsExpandedLabel = "Hide details",
                 DetailsCollapsedLabel = "Show details",
-                DetailsExpandedText = exception.GetType().Name + ": " + exception.Message + "\n" + exception.StackTrace,
+                DetailsExpandedText = exception.GetType().Name + ": " + exception.Message + "\n--- Begin stack trace ---\n" + exception.StackTrace,
                 ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter,
-                StandardButtons = TaskDialogStandardButtons.Ok,
+                OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero
             };
+            if (Debugger.IsAttached)
+            {
+                var button = new TaskDialogButton("Break", "Break into debugger");
+                button.Click += (sender, args) => Debugger.Break();
+                td.Controls.Add(button);
+            }
+            var okButton = new TaskDialogButton("OK", "OK");
+            okButton.Click += (sender, args) => td.Close(TaskDialogResult.Ok);
+            td.Controls.Add(okButton);
+
             td.Opened += (sender, args) =>
             {
                 td.Icon = TaskDialogStandardIcon.Error;
@@ -47,24 +60,17 @@ namespace Athame.UI
             return td;
         }
 
-        public static TaskDialog Error(IWin32Window owner, Exception exception, string errorText)
-        {
-            var td = Error(exception, errorText);
-            td.OwnerWindowHandle = owner.Handle;
-            return td;
-        }
-
-        public static TaskDialog Message(IWin32Window owner, TaskDialogStandardIcon icon, string title, string caption,
-            string message, TaskDialogStandardButtons buttons)
+        public static TaskDialog Message(string caption, string message, TaskDialogStandardButtons buttons = TaskDialogStandardButtons.Ok, 
+            TaskDialogStandardIcon icon = TaskDialogStandardIcon.None, IWin32Window owner = null)
         {
             var td = new TaskDialog
             {
                 Icon = icon,
-                Caption = title,
+                Caption = MainCaption,
                 InstructionText = caption,
                 Text = message,
                 StandardButtons = buttons,
-                OwnerWindowHandle = owner.Handle
+                OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero
             };
             td.Opened += (sender, args) =>
             {

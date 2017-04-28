@@ -8,10 +8,6 @@ namespace Athame.PluginAPI
 {
     public class PluginContext
     {
-        public PluginContext(string dataDirectory)
-        {
-            DataDirectory = dataDirectory;
-        }
-        public string DataDirectory { get; private set; }
+        public string PluginDirectory { get; set; }
     }
 }

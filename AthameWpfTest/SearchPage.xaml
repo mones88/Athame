@@ -270,9 +270,10 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock FontSize="{StaticResource PagePrimaryHeaderFontSize}"><Run Text="Placeholder heading"/></TextBlock>
-                    <TextBlock FontSize="{StaticResource PageSubHeaderFontSize}" Margin="0,15,0,30"><Run Text="Placeholder subheading text which will be filled in at runtime."/></TextBlock>
+                    <TextBlock FontSize="{StaticResource PagePrimaryHeaderFontSize}" Text="Add by search or URL" />
+                    <TextBlock FontSize="{StaticResource PageSubHeaderFontSize}" Margin="0,15,0,30" Text="Enter the name of an album, track or playlist into the field below to search. Alternatively, paste a link to get an exact match:" TextWrapping="WrapWithOverflow" />
                     <TextBox x:Name="PrimaryInputTextBox" TextWrapping="Wrap" Style="{DynamicResource PrimaryTextBox}" Margin="40,0"/>
+                    <Button x:Name="PasteButton" Style="{DynamicResource FlatButton}" Content="Paste" Margin="40,0" HorizontalAlignment="Left" />
                 </StackPanel>
                 <local:AlbumView x:Name="TempAlbum" Loaded="TempAlbum_OnLoaded" />
             </DockPanel>

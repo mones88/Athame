@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Athame.Plugin;
+using Athame.PluginAPI.Service;
 using Athame.Properties;
 using Athame.Settings;
 
@@ -9,7 +11,8 @@ namespace Athame.UI
 {
     public partial class SettingsForm : Form
     {
-        private AthameSettings defaults = Program.DefaultSettings.Settings;
+        private readonly AthameSettings defaults = Program.DefaultSettings.Settings;
+        private readonly List<MusicService> services;
 
         public SettingsForm()
         {
@@ -46,7 +49,7 @@ namespace Athame.UI
             }
 
             // Populate services
-            var services = ServiceRegistry.Default;
+            services = new List<MusicService>(Program.DefaultPluginManager.ServicesEnumerable());
             foreach (var service in services)
             {
                 servicesListBox.Items.Add(service.Name);
@@ -120,11 +123,17 @@ namespace Athame.UI
 
         private void servicesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var ss = ServiceRegistry.Default[servicesListBox.SelectedIndex];
+            var ss = services[servicesListBox.SelectedIndex];
             serviceUiPanel.Controls.Clear();
-            var ssv = new ServiceSettingsView(ss);
-            ssv.Dock = DockStyle.Fill;
-            serviceUiPanel.Controls.Add(ssv);
+            if (ss.AsAuthenticatable() != null)
+            {
+                var ssv = new ServiceSettingsView(ss) {Dock = DockStyle.Fill};
+                serviceUiPanel.Controls.Add(ssv);
+            }
+            else
+            {
+                serviceUiPanel.Controls.Add(ss.GetSettingsControl());
+            }
         }
 
         private void formatHelpButton_Click(object sender, EventArgs e)

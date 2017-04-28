@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Media;
 using System.Windows.Forms;
+using Athame.Plugin;
 using Athame.PluginAPI.Service;
 
 namespace Athame.UI
@@ -10,20 +11,23 @@ namespace Athame.UI
     public partial class CredentialsForm : Form
     {
         private readonly MusicService svc;
+        private readonly IUsernamePasswordAuthenticationAsync usernamePasswordService;
 
         public CredentialsForm(MusicService service)
         {
             InitializeComponent();
             svc = service;
+            usernamePasswordService = service.AsUsernamePasswordAuthenticatable();
             FillInInfo();
         }
 
         private void FillInInfo()
         {
+            
             Text = String.Format(Text, svc.Name);
-            if (svc.Flow == null) return;
-            helpLabel.Text = svc.Flow.SignInInformation ?? String.Format(helpLabel.Text, svc.Name);
-            foreach (var linkPair in svc.Flow.LinksToDisplay)
+            if (usernamePasswordService.SignInLinks == null) return;
+            helpLabel.Text = usernamePasswordService.SignInHelpText ?? String.Format(helpLabel.Text, svc.Name);
+            foreach (var linkPair in usernamePasswordService.SignInLinks)
             {
                 var button = new Button
                 {
@@ -40,17 +44,14 @@ namespace Athame.UI
             }
         }
 
-        public AuthenticationResponse Result;
-
         private void okButton_Click(object sender, EventArgs e)
         {
-            var waitForm = CommonTaskDialogs.Wait(this, $"Signing into {svc.Name}...");
+            var waitForm = CommonTaskDialogs.Wait($"Signing into {svc.Name}...", this);
             waitForm.Opened += async (o, args) => {
-                Result = await svc.LoginAsync(emailTextBox.Text, passwordTextBox.Text);
+                var result = await usernamePasswordService.AuthenticateAsync(emailTextBox.Text, passwordTextBox.Text, true);
                 waitForm.Close();
-                if (Result != null)
+                if (result)
                 {
-                    svc.Settings.Response = Result;
                     Program.DefaultSettings.Save();
                     DialogResult = DialogResult.OK;
                 }

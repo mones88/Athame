@@ -67,6 +67,7 @@ namespace AthameWPF
             var tracksPerAlbum = new Limit(8, 20);
             var wordsInAlbumTitle = new Limit(1, 3);
             var wordsInTrackTitle = new Limit(1, 6);
+            var albumYear = new Limit(1980, DateTime.Now.Year);
 
             var trackCount = tracksPerAlbum.RandomValue();
             var artistRng = new Random();
@@ -78,6 +79,7 @@ namespace AthameWPF
                 Id = Guid.NewGuid().ToString(),
                 Title = ToTitleCase(String.Join(" ", wordsInAlbumTitle.RandomSet(AlbumWords))),
                 Tracks = new List<Track>(),
+                Year = albumYear.RandomValue(),
                 CoverUri = new Uri("https://placehold.it/256")
             };
 

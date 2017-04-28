@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,7 @@ using Athame.PluginAPI.Service;
 
 namespace Athame.Plugin
 {
+
     public class PluginManager
     {
         public const string PluginDir = "Plugins";
@@ -22,55 +24,139 @@ namespace Athame.Plugin
             this.pluginDir = pluginDir;
             Directory.CreateDirectory(pluginDir);
             Plugins = new List<IPlugin>();
-            Services = new ServiceRegistry();
+            // !! NOTE !! This will be invoked if an assembly, for whatever reason, is loaded during
+            // the plugin load process.
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                // If we are currently loading plugin assemblies
+                if (!isLoading) return null;
+
+                // If for some reason an assembly to resolve doesn't have a file path
+                if (args.RequestingAssembly.Location == null) return null;
+
+                // Parse name, get parent directory from requesting assembly's location, then
+                // build a path.
+                var name = new AssemblyName(args.Name);
+                var parentDir = Directory.GetParent(args.RequestingAssembly.Location).FullName;
+                var referencedDllPath = Path.Combine(parentDir, name.Name + ".dll");
+
+                // Load the assembly no matter what.
+                return Assembly.LoadFile(referencedDllPath);
+            };
         }
 
         public List<IPlugin> Plugins { get; }
 
-        public ServiceRegistry Services { get; }
+        public event EventHandler<PluginLoadExceptionEventArgs> LoadException;
 
-//        private Type[] LoadAssemblies()
-//        {
-//            var directories = Directory.GetDirectories(pluginDir, PluginDllPrefix + "*");
-//
-//        }
+        private Assembly[] loadedAssemblies;
+        private bool isLoading;
 
-        public void LoadAll()
+        private bool IsAlreadyLoaded(string assemblyFullName)
         {
-            var pluginDlls = Directory.GetFiles(pluginDir, "*.dll");
+            return loadedAssemblies.Any(assembly => assembly.FullName == assemblyFullName);
+        }
+
+        public void LoadAll(Dictionary<string, object> savedSettings)
+        {
+            // Cache current AppDomain loaded assemblies
+            loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
+            var subDirs = Directory.GetDirectories(pluginDir);
+            var pluginDlls = new List<string>();
+            foreach (var subDir in subDirs)
+            {
+                pluginDlls.AddRange(Directory.GetFiles(subDir, $"{PluginDllPrefix}*.dll"));
+            }
+            isLoading = true;
             // Load and activate all plugins
-            var assemblies = from dllPath in pluginDlls
-                where Path.GetFileName(dllPath).StartsWith(PluginDllPrefix)
-                select Assembly.LoadFile(Path.Combine(Directory.GetCurrentDirectory(), dllPath));
+            var assemblies = from dllPath in pluginDlls select Assembly.LoadFile(dllPath);
             foreach (var assembly in assemblies)
             {
-                if (assembly == null) continue;
-                foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
+                try
                 {
-                    Assembly.Load(referencedAssembly);
+                    if (assembly == null) continue;
+                    if (IsAlreadyLoaded(assembly.FullName)) continue;
+
+                    var types = assembly.GetExportedTypes();
+                    // Only filter for types which can be instantiated and implement IPlugin somehow.
+                    var implementingType = types.FirstOrDefault(
+                        type =>
+                            !type.IsInterface &&
+                            !type.IsAbstract &&
+                            type.GetInterface(nameof(IPlugin)) != null);
+                    if (implementingType == null)
+                    {
+                        throw new PluginLoadException("No exported types found implementing IPlugin.",
+                            assembly.Location);
+                    }
+                    // Activate base plugin
+                    var plugin = (IPlugin) Activator.CreateInstance(implementingType);
+
+                    // If it's a service plugin, add it to main service collection
+                    var service = plugin as MusicService;
+                    if (service == null) return;
+
+                    // Restore the config, or set the config to the default value
+                    if (savedSettings.ContainsKey(service.Name) && savedSettings[service.Name] != null)
+                    {
+                        service.Settings = savedSettings[service.Name];
+                    }
+                    else
+                    {
+                        savedSettings[service.Name] = service.Settings;
+                    }
+
+                    // Call Init
+                    plugin.Init(Program.DefaultApp,
+                        new PluginContext {PluginDirectory = Directory.GetParent(assembly.Location).FullName});
+                    Plugins.Add(plugin);
+                    AddService(service);
                 }
-                var types = assembly.GetExportedTypes();
-                // Only filter for types which can be instantiated and implement IPlugin somehow.
-                var implementingType = types.FirstOrDefault(
-                    type => 
-                        !type.IsInterface && 
-                        !type.IsAbstract && 
-                        type.GetInterface(nameof(IPlugin)) != null);
-                if (implementingType == null)
+                catch (Exception ex)
                 {
-                    throw new PluginLoadException("No exported types found implementing IPlugin.",
-    assembly.Location);
+#if DEBUG
+                    Debugger.Break();
+#endif
+                    var eventArgs = new PluginLoadExceptionEventArgs {Exception = ex, Continue = true};
+                    LoadException?.Invoke(this, eventArgs);
+                    if (!eventArgs.Continue) return;
                 }
-                // Activate base plugin
-                var plugin = (IPlugin) Activator.CreateInstance(implementingType);
-                plugin.Init(Program.DefaultApp);
-                Plugins.Add(plugin);
-                // If it's a service plugin, add it to main service collection
-                var servicePlugin = plugin as IServicePlugin;
-                if (servicePlugin == null) return;
-                var service = servicePlugin.CreateMusicService();
-                Services.Register(service);
+            }
+            isLoading = false;
+        }
+
+        private readonly HashSet<MusicService> services = new HashSet<MusicService>();
+        private readonly Dictionary<Uri, MusicService> servicesByUris = new Dictionary<Uri, MusicService>();
+
+        private void AddService(MusicService service)
+        {
+            services.Add(service);
+            foreach (var uri in service.BaseUri)
+            {
+                servicesByUris.Add(uri, service);
             }
         }
+
+        public MusicService GetService(string name)
+        {
+            return (from service in services
+                where service.Name == name
+                select service).FirstOrDefault();
+        }
+
+        public MusicService GetServiceByBaseUri(Uri baseUri)
+        {
+            return (from s in servicesByUris
+                    where s.Key.Scheme == baseUri.Scheme && s.Key.Host == baseUri.Host
+                    select s.Value).FirstOrDefault();
+        }
+
+        public IEnumerable<MusicService> ServicesEnumerable()
+        {
+            return services.AsEnumerable();
+        }
+
     }
 }
