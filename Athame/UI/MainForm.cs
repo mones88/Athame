@@ -68,6 +68,11 @@ namespace Athame.UI
 
             // Error handler for plugin loader
             Program.DefaultPluginManager.LoadException += DefaultPluginManagerOnLoadException;
+
+            // Begin
+            Program.DefaultPluginManager.LoadAll();
+            Program.DefaultSettings.Load();
+            Program.DefaultPluginManager.InitAll(Program.DefaultSettings.Settings.ServiceSettings);
         }
 
         private void DefaultPluginManagerOnLoadException(object sender, PluginLoadExceptionEventArgs pluginLoadExceptionEventArgs)
@@ -333,7 +338,7 @@ namespace Athame.UI
 
                         var result = false;
                         td.InstructionText = $"Signing into {service.Name}...";
-                        td.Text = $"Signing in as {restorable.Account.DisplayName}";
+                        td.Text = $"Signing in as {LocalisableAccountNameFormat.GetFormattedName(restorable.Account)}";
                         openCt.Token.ThrowIfCancellationRequested();
                         result = await restorable.RestoreAsync();
                         if (!result)
@@ -548,7 +553,6 @@ namespace Athame.UI
                 Program.DefaultSettings.Settings.MainWindowPreference.Size = savedSize = MinimumSize;
             }
             Size = savedSize;
-            Program.DefaultPluginManager.LoadAll(Program.DefaultSettings.Settings.ServiceSettings);
         }
 
         private void settingsButton_Click(object sender, EventArgs e)
@@ -684,6 +688,14 @@ namespace Athame.UI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+            if (Program.DefaultPluginManager.Plugins.Count == 0)
+            {
+                CommonTaskDialogs.Message("No plugins installed",
+                    "No plugins could be found. If you have attempted to install a plugin, it may not be installed properly.",
+                    TaskDialogStandardButtons.Ok, TaskDialogStandardIcon.Error, this).Show();
+                Application.Exit();
+            }
+
             LockUi();
             ShowStartupTaskDialog();
             UnlockUi();

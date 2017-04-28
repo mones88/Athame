@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -21,7 +23,8 @@ namespace Athame.Settings
             SerializerSettings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full
             };
         }
 
@@ -41,10 +44,11 @@ namespace Athame.Settings
                 }
                 catch (JsonSerializationException)
                 {
+#if DEBUG
+                    throw;           
+#endif
                     Settings = new T();
                     Save();
-                    Settings = JsonConvert.DeserializeObject<T>(File.ReadAllText(settingsPath),
-                        SerializerSettings);
                 }
             }
         }

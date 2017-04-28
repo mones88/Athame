@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Athame.PluginAPI.Service;
+using Newtonsoft.Json;
 
 namespace Athame.Settings
 {

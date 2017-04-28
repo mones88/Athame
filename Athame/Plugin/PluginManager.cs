@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Athame.PluginAPI;
 using Athame.PluginAPI.Service;
+using System.IO.Compression;
+using System.Text.RegularExpressions;
 
 namespace Athame.Plugin
 {
@@ -17,13 +19,12 @@ namespace Athame.Plugin
         public const string PluginDir = "Plugins";
         public const string PluginDllPrefix = "AthamePlugin.";
 
-        private readonly string pluginDir;
+        public string PluginDirectory { get; }
 
         public PluginManager(string pluginDir)
         {
-            this.pluginDir = pluginDir;
+            PluginDirectory = pluginDir;
             Directory.CreateDirectory(pluginDir);
-            Plugins = new List<IPlugin>();
             // !! NOTE !! This will be invoked if an assembly, for whatever reason, is loaded during
             // the plugin load process.
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
@@ -45,25 +46,54 @@ namespace Athame.Plugin
             };
         }
 
-        public List<IPlugin> Plugins { get; }
+        public List<IPlugin> Plugins { get; private set; }
 
         public event EventHandler<PluginLoadExceptionEventArgs> LoadException;
 
         private Assembly[] loadedAssemblies;
         private bool isLoading;
+        private Dictionary<IPlugin, string> pluginPaths = new Dictionary<IPlugin, string>();
 
         private bool IsAlreadyLoaded(string assemblyFullName)
         {
             return loadedAssemblies.Any(assembly => assembly.FullName == assemblyFullName);
         }
 
-        public void LoadAll(Dictionary<string, object> savedSettings)
+        private void Load(Assembly assembly)
         {
+            if (assembly == null) return;
+            if (IsAlreadyLoaded(assembly.FullName)) return;
+
+            var types = assembly.GetExportedTypes();
+            // Only filter for types which can be instantiated and implement IPlugin somehow.
+            var implementingType = types.FirstOrDefault(
+                type =>
+                    !type.IsInterface &&
+                    !type.IsAbstract &&
+                    type.GetInterface(nameof(IPlugin)) != null);
+            if (implementingType == null)
+            {
+                throw new PluginLoadException("No exported types found implementing IPlugin.",
+                    assembly.Location);
+            }
+            // Activate base plugin
+            var plugin = (IPlugin)Activator.CreateInstance(implementingType);
+            Plugins.Add(plugin);
+            pluginPaths[plugin] = assembly.Location;
+        }
+
+        public void LoadAll()
+        {
+            if (Plugins != null)
+            {
+                throw new InvalidOperationException("Plugins can only be loaded once");
+            }
+            Plugins = new List<IPlugin>();
             // Cache current AppDomain loaded assemblies
             loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
-            var subDirs = Directory.GetDirectories(pluginDir);
+            var subDirs = Directory.GetDirectories(PluginDirectory);
             var pluginDlls = new List<string>();
             foreach (var subDir in subDirs)
             {
@@ -76,43 +106,7 @@ namespace Athame.Plugin
             {
                 try
                 {
-                    if (assembly == null) continue;
-                    if (IsAlreadyLoaded(assembly.FullName)) continue;
-
-                    var types = assembly.GetExportedTypes();
-                    // Only filter for types which can be instantiated and implement IPlugin somehow.
-                    var implementingType = types.FirstOrDefault(
-                        type =>
-                            !type.IsInterface &&
-                            !type.IsAbstract &&
-                            type.GetInterface(nameof(IPlugin)) != null);
-                    if (implementingType == null)
-                    {
-                        throw new PluginLoadException("No exported types found implementing IPlugin.",
-                            assembly.Location);
-                    }
-                    // Activate base plugin
-                    var plugin = (IPlugin) Activator.CreateInstance(implementingType);
-
-                    // If it's a service plugin, add it to main service collection
-                    var service = plugin as MusicService;
-                    if (service == null) return;
-
-                    // Restore the config, or set the config to the default value
-                    if (savedSettings.ContainsKey(service.Name) && savedSettings[service.Name] != null)
-                    {
-                        service.Settings = savedSettings[service.Name];
-                    }
-                    else
-                    {
-                        savedSettings[service.Name] = service.Settings;
-                    }
-
-                    // Call Init
-                    plugin.Init(Program.DefaultApp,
-                        new PluginContext {PluginDirectory = Directory.GetParent(assembly.Location).FullName});
-                    Plugins.Add(plugin);
-                    AddService(service);
+                   Load(assembly);
                 }
                 catch (Exception ex)
                 {
@@ -126,6 +120,38 @@ namespace Athame.Plugin
             }
             isLoading = false;
         }
+
+        public void InitAll(Dictionary<string, object> savedSettings)
+        {
+            if (Plugins == null)
+            {
+                throw new InvalidOperationException("InitAll can only be called after LoadAll");
+            }
+            foreach (var plugin in Plugins)
+            {
+                // If it's a service plugin, add it to main service collection
+                var service = plugin as MusicService;
+                if (service == null) return;
+
+                // Restore the config, or set the config to the default value
+                if (savedSettings.ContainsKey(service.Name) && savedSettings[service.Name] != null)
+                {
+                    service.Settings = savedSettings[service.Name];
+                }
+                else
+                {
+                    savedSettings[service.Name] = service.Settings;
+                }
+
+                // Call Init
+                plugin.Init(Program.DefaultApp,
+                    new PluginContext {PluginDirectory = Directory.GetParent(pluginPaths[plugin]).FullName});
+
+                AddService(service);
+            }
+        }
+
+        private static readonly Regex FilenameRegex = new Regex(@"AthamePlugin\.(?:.*)\.dll");
 
         private readonly HashSet<MusicService> services = new HashSet<MusicService>();
         private readonly Dictionary<Uri, MusicService> servicesByUris = new Dictionary<Uri, MusicService>();

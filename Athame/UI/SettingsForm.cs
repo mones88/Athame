@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Athame.Plugin;
@@ -121,9 +122,11 @@ namespace Athame.UI
             DialogResult = DialogResult.OK;
         }
 
+        private MusicService ss = null;
+
         private void servicesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var ss = services[servicesListBox.SelectedIndex];
+            ss = services[servicesListBox.SelectedIndex];
             serviceUiPanel.Controls.Clear();
             if (ss.AsAuthenticatable() != null)
             {
@@ -134,6 +137,10 @@ namespace Athame.UI
             {
                 serviceUiPanel.Controls.Add(ss.GetSettingsControl());
             }
+            serviceNameLabel.Text = ss.Name;
+            serviceDescriptionLabel.Text = ss.Description;
+            serviceAuthorLabel.Text = ss.Author;
+            serviceWebsiteLabel.Text = ss.Website.ToString();
         }
 
         private void formatHelpButton_Click(object sender, EventArgs e)
@@ -167,5 +174,16 @@ namespace Athame.UI
             if (artworkDontSaveRadioButton.Checked) defaults.AlbumArtworkSaveFormat = AlbumArtworkSaveFormat.DontSave;
         }
         #endregion
+
+        private void openPluginDirButton_Click(object sender, EventArgs e)
+        {
+            Process.Start("\"" + Program.DefaultPluginManager.PluginDirectory + "\"");
+        }
+
+        private void serviceWebsiteLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (ss == null) return;
+            Process.Start("\"" + ss.Website.ToString() + "\"");
+        }
     }
 }
