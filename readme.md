@@ -16,6 +16,19 @@ Latest release
 --------------
 The code in the current repo probably won't compile, so check out the releases tab to download a pre-built binary.
 
+Requirements
+------------
+* .NET 4.6.2 - if you do not have this installed, you should be prompted to download.
+
+Getting Started
+---------------
+* Click the 'Releases' tab above at the top to download a pre-built zip, optionally with plugins. Extract it and launch the Athame.exe executable.
+
+Plugins
+-------
+Plugins are always distributed as Zip files - to install a plugin, simply extract the zip to the "Plugins" folder, which is in the same directory
+as the Athame executable. A guide for creating your own plugins can be found [here](plugin-guide.md).
+
 Usage
 -----
 Enter a URL in the "URL" textbox, then click "Add". It will show up in the download queue. Click "Start" to begin downloading.
@@ -30,25 +43,14 @@ textbox.
 Under `Settings > General`, you can change where music is downloaded to as well as the filename format used. There is an explanation
 of the valid format specifiers on the General tab.
 
-TODO
-----
-* Implement a plugin API.
-* Add an option to execute an external program (like `ffmpeg`) after each track or collection download.
-* Properly implement cancellation and stopping on sign in and download.
-* Implement search.
-
-Build/requirements
-------------------
-* .NET 4.6.2 (for other platforms see Mono compatibility section)
+Build
+-----
 * Visual Studio 2015 (Express will work fine) with NuGet
 
-Mono compatibility
-------------------
-For the most part, it appears to work on Mono on Linux (tested on Linux Mint 18). However, there are a few bugs you need to be aware of, namely:
-
-* Signing in via clicking the "Click here to sign in" link will crash for some reason.
-* You should avoid adding more than one set of media to the doiwnload queue as it will only download the first set then hang.
-* The UI will not be disabled when downloading, so try and avoid clicking on shit while it downloads.
-
-Linux/OS X compatibility isn't my top priority at the moment, but you are welcome to contribute if you like. I have been thinking about adding a CLI interface,
-but I think a WPF and GTK# UI would be more pertinent at the moment.
+Roadmap
+-------
+While Athame currently uses WinForms for its UI, this is a halfway solution to an ideal UI. I'm currently in the process of creating a
+WPF UI to replace the WinForms UI, which will hopefully also fix many bugs in the process. I am also currently considering a cross-platform
+interface (since WinForms is incredibly buggy on non-Windows platforms), but again this is just a consideration as writing a command-line
+interface would take time away from porting it to WPF. A GTK# interface would also be possible, but would take a while since I am unfamiliar with GTK#.
+There are currently no plans for a Cocoa (OS X) interface since I do not have a Mac.

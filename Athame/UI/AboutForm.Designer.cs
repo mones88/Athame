@@ -96,7 +96,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(527, 47);
             this.label3.TabIndex = 8;
-            this.label3.Text = "Copyright © 2016 svbnet\r\n\r\nThis project wouldn\'t have been possible without:";
+            this.label3.Text = "Copyright © 2017 svbnet\r\n\r\nThis project wouldn\'t have been possible without:";
             // 
             // okButton
             // 
