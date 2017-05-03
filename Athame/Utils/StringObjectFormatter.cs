@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Athame.Utils
 {
-    public static class StringObjectFormatter
+    public class StringObjectFormatter
     {
         private static readonly Regex FormatRegex = new Regex(@"(?<!{){([\w\d\.]*)}");
 

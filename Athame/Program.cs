@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Athame.Logging;
 using Athame.Plugin;
 using Athame.PluginAPI;
 using Athame.Settings;
@@ -24,6 +25,7 @@ namespace Athame
         [STAThread]
         public static void Main()
         {
+
             // Create app instance config
             DefaultApp = new AthameApplication
             {
@@ -37,6 +39,16 @@ namespace Athame
 #endif
             };
 
+            // Install logging
+            Log.AddLogger("file", new FileLogger(DefaultApp.UserDataPath));
+#if !DEBUG
+            Log.Filter = Level.Warning;
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                Log.WriteException(Level.Fatal, "AppDomain", args.ExceptionObject as Exception);
+            };
+#endif
+
             // Ensure user data dir
             Directory.CreateDirectory(DefaultApp.UserDataPath);
 
@@ -46,7 +58,7 @@ namespace Athame
 
             // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
-
+            
             // Begin main form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
