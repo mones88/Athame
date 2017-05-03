@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace AthameWPF
+namespace AthameWPF.UI
 {
     [ValueConversion(typeof(string), typeof(string))]
     public class StringCaseConverter : IValueConverter

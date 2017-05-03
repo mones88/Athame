@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AthameWPF"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="AthameWPF.App"
-             StartupUri="MainWindow.xaml">
+             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+             xmlns:ui="clr-namespace:AthameWPF.UI"
+             x:Class="AthameWPF.App"
+             StartupUri="UI/Windows/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="LightTheme.xaml" />
+                <ResourceDictionary Source="UI/LightTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Theme colours as brushes -->
@@ -60,7 +62,7 @@
                 </Setter>
             </Style>
             
-            <local:StringCaseConverter x:Key="StringCaseConverter" Case="Upper" />
+            <ui:StringCaseConverter x:Key="StringCaseConverter" Case="Upper" />
             <Style x:Key="FlatButton" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
                 <Setter Property="Background" Value="Transparent"/>

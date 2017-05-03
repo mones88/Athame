@@ -58,32 +58,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AlbumView.xaml.cs">
+    <Compile Include="UI\Controls\AlbumView.xaml.cs">
       <DependentUpon>AlbumView.xaml</DependentUpon>
     </Compile>
     <Compile Include="EnqueuedTrack.cs" />
     <Compile Include="MockDataGen.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="QueuePage.xaml.cs">
+    <Compile Include="UI\Pages\QueuePage.xaml.cs">
       <DependentUpon>QueuePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SearchPage.xaml.cs">
+    <Compile Include="UI\Pages\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SecSwitcherButtonExtensions.cs" />
-    <Compile Include="SettingsPage.xaml.cs">
+    <Compile Include="UI\SecSwitcherButtonExtensions.cs" />
+    <Compile Include="UI\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StringCaseConverter.cs" />
-    <Page Include="AlbumView.xaml">
+    <Compile Include="UI\StringCaseConverter.cs" />
+    <Page Include="UI\Controls\AlbumView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LightTheme.xaml">
+    <Page Include="UI\LightTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="UI\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -91,20 +91,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainSwitcherButtonExtensions.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="UI\MainSwitcherButtonExtensions.cs" />
+    <Compile Include="UI\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="QueuePage.xaml">
+    <Page Include="UI\Pages\QueuePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SearchPage.xaml">
+    <Page Include="UI\Pages\SearchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SettingsPage.xaml">
+    <Page Include="UI\Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

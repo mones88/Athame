@@ -4,7 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AthameWPF"
-      xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="AthameWPF.SearchPage"
+      xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+      xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
+      xmlns:ui="clr-namespace:AthameWPF.UI"
+      x:Class="AthameWPF.UI.Pages.SearchPage"
       mc:Ignorable="d" 
       d:DesignHeight="548" d:DesignWidth="870"
       Title="Search">
@@ -24,7 +27,7 @@
                                     <Path
                                         Width="24" Height="24"
                                         VerticalAlignment="Center"
-                                        Style="{Binding (local:SecSwitcherButtonExtensions.PathStyle), RelativeSource={RelativeSource TemplatedParent}}"
+                                        Style="{Binding (ui:SecSwitcherButtonExtensions.PathStyle), RelativeSource={RelativeSource TemplatedParent}}"
                                         Fill="{StaticResource SecondaryNavForegroundBrush}"  
                                         Margin="10,0,5,0" />
 
@@ -35,7 +38,7 @@
                                         FontSize="14" 
                                         Margin="5,0,10,0"
                                         FontWeight="Bold" 
-                                        Text="{Binding (local:SecSwitcherButtonExtensions.Text), RelativeSource={RelativeSource TemplatedParent}}" />
+                                        Text="{Binding (ui:SecSwitcherButtonExtensions.Text), RelativeSource={RelativeSource TemplatedParent}}" />
                                 </StackPanel>
                             </ContentPresenter.Content>
                         </ContentPresenter>
@@ -88,26 +91,26 @@
             <RadioButton x:Name="SearchSecMenuOption"
                          DockPanel.Dock="Top"
                          IsChecked="True"
-                         local:SecSwitcherButtonExtensions.PathStyle="{StaticResource SearchIcon}"
-                         local:SecSwitcherButtonExtensions.Text="Search/URL"
+                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource SearchIcon}"
+                         ui:SecSwitcherButtonExtensions.Text="Search/URL"
                          Style="{DynamicResource SecMenuRadioButtonTemplate}" />
 
             <RadioButton x:Name="PlaylistsSecMenuOption"
                          DockPanel.Dock="Top"
-                         local:SecSwitcherButtonExtensions.PathStyle="{StaticResource PlaylistIcon}"
-                         local:SecSwitcherButtonExtensions.Text="Playlists"
+                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource PlaylistIcon}"
+                         ui:SecSwitcherButtonExtensions.Text="Playlists"
                          Style="{DynamicResource SecMenuRadioButtonTemplate}" />
 
             <RadioButton x:Name="AlbumsSecMenuOption"
                          DockPanel.Dock="Top"
-                         local:SecSwitcherButtonExtensions.PathStyle="{StaticResource AlbumIcon}"
-                         local:SecSwitcherButtonExtensions.Text="Albums"
+                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource AlbumIcon}"
+                         ui:SecSwitcherButtonExtensions.Text="Albums"
                          Style="{DynamicResource SecMenuRadioButtonTemplate}" />
 
             <RadioButton x:Name="TracksSecMenuOption"
                          DockPanel.Dock="Top"
-                         local:SecSwitcherButtonExtensions.PathStyle="{StaticResource TrackIcon}"
-                         local:SecSwitcherButtonExtensions.Text="Tracks"
+                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource TrackIcon}"
+                         ui:SecSwitcherButtonExtensions.Text="Tracks"
                          Style="{DynamicResource SecMenuRadioButtonTemplate}" />
 
             <!-- Account selector at bottom -->
@@ -275,7 +278,7 @@
                     <TextBox x:Name="PrimaryInputTextBox" TextWrapping="Wrap" Style="{DynamicResource PrimaryTextBox}" Margin="40,0"/>
                     <Button x:Name="PasteButton" Style="{DynamicResource FlatButton}" Content="Paste" Margin="40,0" HorizontalAlignment="Left" />
                 </StackPanel>
-                <local:AlbumView x:Name="TempAlbum" Loaded="TempAlbum_OnLoaded" />
+                <controls:AlbumView x:Name="TempAlbum" Loaded="TempAlbum_OnLoaded" />
             </DockPanel>
         </Grid>
     </Grid>
