@@ -10,8 +10,9 @@
       x:Class="AthameWPF.UI.Pages.SearchPage"
       mc:Ignorable="d" 
       d:DesignHeight="548" d:DesignWidth="870"
-      Title="Search">
+      Title="Search" KeepAlive="True">
     <Page.Resources>
+        
         <Style x:Key="SecMenuRadioButtonTemplate" TargetType="{x:Type RadioButton}">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
@@ -261,7 +262,7 @@
             </ComboBox>
         </DockPanel>
         <Grid Grid.Column="1">
-            <DockPanel Margin="10,10,10,0">
+            <DockPanel Margin="10,10,0,0">
                 <StackPanel DockPanel.Dock="Top" x:Name="PrimaryInputContainer" Orientation="Vertical" Margin="0,0,0,40">
                     <!-- Only show input container when searching/inputting a URL -->
                     <StackPanel.Style>
@@ -278,7 +279,21 @@
                     <TextBox x:Name="PrimaryInputTextBox" TextWrapping="Wrap" Style="{DynamicResource PrimaryTextBox}" Margin="40,0"/>
                     <Button x:Name="PasteButton" Style="{DynamicResource FlatButton}" Content="Paste" Margin="40,0" HorizontalAlignment="Left" />
                 </StackPanel>
-                <controls:AlbumView x:Name="TempAlbum" Loaded="TempAlbum_OnLoaded" />
+                <StackPanel Orientation="Vertical" x:Name="SearchResultsStackPanel">
+                    <TextBlock Text="Results" FontSize="16">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=SearchSecMenuOption}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ListView x:Name="ResultsListBox" Loaded="ResultsListBox_Loaded" 
+                                      Resources="{StaticResource BasicMediaCollectionTemplates}" />
+                </StackPanel>
             </DockPanel>
         </Grid>
     </Grid>

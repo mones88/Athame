@@ -248,14 +248,11 @@ namespace Athame.DownloadAndTag
                     eventArgs.State = DownloadState.WritingTags;
                     OnTrackDownloadProgress(eventArgs);
                     TrackTagger.Write(path, currentItem);
-                    OnTrackDownloadCompleted(eventArgs);
+                    
 
                 }
                 catch (Exception ex)
                 {
-#if DEBUG
-                    throw ex;
-#else
                     var exEventArgs = new ExceptionEventArgs { CurrentState = eventArgs, Exception = ex };
                     OnException(exEventArgs);
                     switch (exEventArgs.SkipTo)
@@ -271,9 +268,11 @@ namespace Athame.DownloadAndTag
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-#endif
                 }
-                
+
+                // Raise the completed event even if an error occurred
+                OnTrackDownloadCompleted(eventArgs);
+
             }
             return true;
         }

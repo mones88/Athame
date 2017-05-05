@@ -6,12 +6,15 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
+using Athame.Logging;
 using Newtonsoft.Json;
 
 namespace Athame.Settings
 {
     public class SettingsManager<T> where T : new()
     {
+        public const string Tag = "SettingsManager";
+
         private readonly string settingsPath;
         private readonly JsonSerializerSettings SerializerSettings;
 
@@ -19,6 +22,7 @@ namespace Athame.Settings
 
         public SettingsManager(string settingsPath)
         {
+            Log.Debug(Tag, "Init settings manager");
             this.settingsPath = settingsPath;
             SerializerSettings = new JsonSerializerSettings
             {
@@ -30,8 +34,10 @@ namespace Athame.Settings
 
         public void Load()
         {
+            Log.Debug(Tag, "Load config");
             if (!File.Exists(settingsPath))
             {
+                Log.Info(Tag, $"Create new config in {settingsPath}");
                 Settings = new T();
             }
             else
@@ -42,8 +48,9 @@ namespace Athame.Settings
                     Settings = JsonConvert.DeserializeObject<T>(File.ReadAllText(settingsPath),
                         SerializerSettings);
                 }
-                catch (JsonSerializationException)
+                catch (JsonSerializationException ex)
                 {
+                    Log.WriteException(Level.Warning, Tag, ex, "Config could not be parsed, creating new");
 #if DEBUG
                     throw;           
 #endif
@@ -55,6 +62,7 @@ namespace Athame.Settings
 
         public void Save()
         {
+            Log.Debug(Tag, $"Saving config to {settingsPath}");
             File.WriteAllText(settingsPath, JsonConvert.SerializeObject(Settings, SerializerSettings));
         }
     }

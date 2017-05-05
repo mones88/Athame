@@ -111,22 +111,22 @@ namespace AthameWPF.UI.Windows
 
         private void MainSwitcherSettingsButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            MainContentFrame?.Navigate(new Pages.SettingsPage());
+            MainContentFrame?.Navigate(new Uri("/UI/Pages/SettingsPage.xaml", UriKind.Relative));
         }
 
         private void MainSwitcherQueueButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            MainContentFrame?.Navigate(new Pages.QueuePage());
+            MainContentFrame?.Navigate(new Uri("/UI/Pages/QueuePage.xaml", UriKind.Relative));
         }
 
         private void MainSwitcherSearchButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            MainContentFrame?.Navigate(new Pages.SearchPage());
+            MainContentFrame?.Navigate(new Uri("/UI/Pages/SearchPage.xaml", UriKind.Relative));
         }
 
         private void MainContentFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
-            MainContentFrame.Navigate(new Pages.SearchPage());
+            MainContentFrame.Navigate(new Uri("/UI/Pages/SearchPage.xaml", UriKind.Relative));
         }
     }
 }

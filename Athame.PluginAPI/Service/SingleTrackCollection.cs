@@ -16,6 +16,7 @@ namespace Athame.PluginAPI.Service
         }
 
         public IList<Track> Tracks { get; set; }
+        public Track Track => Tracks[0];
         public string Title { get; set; }
         public string Id { get; set; }
     }

@@ -62,42 +62,79 @@ namespace AthameWPF
             "bare", "domineering", "hands"
         };
 
+        private static Random rng = new Random();
+
+        public static Artist GenerateArtist()
+        {
+            var artistName = ArtistNames[rng.Next(ArtistNames.Length)];
+            return new Artist { Id = Guid.NewGuid().ToString(), Name = artistName };
+        }
+
         public static Album GenerateAlbum()
         {
-            var tracksPerAlbum = new Limit(8, 20);
-            var wordsInAlbumTitle = new Limit(1, 3);
-            var wordsInTrackTitle = new Limit(1, 6);
             var albumYear = new Limit(1980, DateTime.Now.Year);
+            var artist = GenerateArtist();
 
-            var trackCount = tracksPerAlbum.RandomValue();
-            var artistRng = new Random();
-            var artistName = ArtistNames[artistRng.Next(ArtistNames.Length)];
-
-            var album = new Album
+            return new Album
             {
-                Artist = new Artist { Name = artistName },
+                Artist = artist,
                 Id = Guid.NewGuid().ToString(),
-                Title = ToTitleCase(String.Join(" ", wordsInAlbumTitle.RandomSet(AlbumWords))),
-                Tracks = new List<Track>(),
+                Title = GenerateTitle(),
                 Year = albumYear.RandomValue(),
                 CoverUri = new Uri("https://placehold.it/256")
             };
+        }
 
-            for (var i = 0; i < trackCount; i++)
-            {
-                album.Tracks.Add(new Track
-                {
-                    Album = album,
-                    Artist = new Artist { Name = artistName },
-                    DiscNumber = 1,
-                    TrackNumber = i + 1,
-                    Id = Guid.NewGuid().ToString(),
-                    Title = ToTitleCase(String.Join(" ", wordsInTrackTitle.RandomSet(TrackWords)))
-                });
-            }
+        public static string GenerateTitle()
+        {
+            var wordsInAlbumTitle = new Limit(1, 3);
+            return ToTitleCase(String.Join(" ", wordsInAlbumTitle.RandomSet(AlbumWords)));
+        }
+
+        public static Album GenerateAlbumWithTracks()
+        {
+            var album = GenerateAlbum();
+            var tracksPerAlbum = new Limit(8, 20);
+            var trackCount = tracksPerAlbum.RandomValue();
+            album.Tracks = GenerateTracks(album, album.Artist).Take(trackCount).ToList();
 
             return album;
         }
+
+        public static IEnumerable<Track> GenerateTracks(Album album = null, Artist artist = null)
+        {
+            var wordsInTrackTitle = new Limit(1, 6);
+            var counter = 0;
+            var newAlbum = album ?? GenerateAlbum();
+            var newArtist = artist ?? GenerateArtist();
+            while (true)
+            {
+                yield return new Track
+                {
+                    Album = newAlbum,
+                    Artist = newArtist,
+                    DiscNumber = 1,
+                    TrackNumber = ++counter,
+                    Id = Guid.NewGuid().ToString(),
+                    Title = ToTitleCase(String.Join(" ", wordsInTrackTitle.RandomSet(TrackWords)))
+                };
+            }
+        }
+
+        public static Playlist GeneratePlaylist()
+        {
+            var trackCount = new Limit(4, 60).RandomValue();
+            return new Playlist
+            {
+                Id = Guid.NewGuid().ToString(),
+                Title = GenerateTitle(),
+                Tracks = GenerateTracks().Take(trackCount).ToArray()
+            };
+        }
+
+        private static Playlist designerPlaylist;
+
+        public static Playlist DesignerPlaylist => designerPlaylist ?? (designerPlaylist = GeneratePlaylist());
 
         private static string ToTitleCase(string str)
         {

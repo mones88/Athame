@@ -13,6 +13,7 @@ namespace Athame.Logging
         private readonly string logDirectory;
         private string logFileName = String.Empty;
         private FileStream logFile;
+        private StreamWriter writer;
 
         public FileLogger(string logDirectory)
         {
@@ -25,21 +26,23 @@ namespace Athame.Logging
 
         public string LineFormat { get; set; }
 
-        private FileStream GetLogFile()
+        private void EnsureLog()
         {
             var temp = new { FileDate = DateTime.Now.ToString("yyyyMMdd") };
             var formattedName = StringObjectFormatter.Format(FilenameFormat, temp);
             if (logFileName != formattedName)
             {
                 logFile?.Dispose();
-                logFile = File.OpenWrite(Path.Combine(logDirectory, formattedName));
+                writer?.Dispose();
+                logFile = File.Open(Path.Combine(logDirectory, formattedName), FileMode.Append, FileAccess.Write, FileShare.Read);
                 logFileName = formattedName;
+                writer = new StreamWriter(logFile) {AutoFlush = true};
             }
-            return logFile;
         }
 
         public void Write(Level level, string moduleTag, string message)
         {
+            EnsureLog();
             var vars = new
             {
                 Date = DateTime.Now.ToString("O"),
@@ -48,13 +51,15 @@ namespace Athame.Logging
                 Message = message
             };
             var formattedMessage = StringObjectFormatter.Format(LineFormat, vars);
-            var writer = new StreamWriter(GetLogFile());
             writer.WriteLine(formattedMessage);
+            
+
         }
 
         public void Dispose()
         {
             logFile?.Dispose();
+            writer?.Dispose();
         }
     }
 }

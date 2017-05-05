@@ -12,6 +12,8 @@ namespace Athame
 {
     public static class Program
     {
+        public const string Tag = nameof(Program);
+
         private const string SettingsFilename = "settings.json";
         private static string SettingsPath;
 
@@ -48,6 +50,7 @@ namespace Athame
                 Log.WriteException(Level.Fatal, "AppDomain", args.ExceptionObject as Exception);
             };
 #endif
+            Log.Debug(Tag, "Logging installed on AppDomain");
 
             // Ensure user data dir
             Directory.CreateDirectory(DefaultApp.UserDataPath);
@@ -59,6 +62,7 @@ namespace Athame
             // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
             
+            Log.Debug(Tag, "Ready to begin main form loop");
             // Begin main form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

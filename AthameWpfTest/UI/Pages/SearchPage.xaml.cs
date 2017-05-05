@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
+using Athame.PluginAPI.Service;
 
 namespace AthameWPF.UI.Pages
 {
@@ -13,19 +16,14 @@ namespace AthameWPF.UI.Pages
             InitializeComponent();
         }
 
-        private void ByUrlSecMenuOption_Checked(object sender, RoutedEventArgs e)
+        private void ResultsListBox_Loaded(object sender, RoutedEventArgs e)
         {
-            
-        }
-
-        private void MainFrame_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void TempAlbum_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            TempAlbum.Album = MockDataGen.GenerateAlbum();
+            var items = new List<IMediaCollection>
+            {
+                MockDataGen.GenerateAlbumWithTracks(),
+                MockDataGen.GeneratePlaylist()
+            };
+            ResultsListBox.ItemsSource = items;
         }
     }
 }

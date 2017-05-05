@@ -33,7 +33,7 @@ namespace Athame.DownloadAndTag
                 file.Tag.Track = (uint) track.TrackNumber;
                 file.Tag.TrackCount = (uint) (track.Album.GetNumberOfTracksOnDisc(track.DiscNumber) ?? 0);
                 file.Tag.Disc = (uint) track.DiscNumber;
-                file.Tag.DiscCount = (uint) (track.Album.GetTotalDiscs() ?? 0 );
+                file.Tag.DiscCount = (uint) (track.Album.GetTotalDiscs() ?? 0);
                 file.Tag.Year = (uint) track.Year;
                 file.Tag.Copyright = CopyrightText;
                 file.Tag.Comment = CopyrightText;
@@ -44,6 +44,7 @@ namespace Athame.DownloadAndTag
 
                 file.Save();
             }
+            
 
             string fileName = null;
             switch (Program.DefaultSettings.Settings.AlbumArtworkSaveFormat)

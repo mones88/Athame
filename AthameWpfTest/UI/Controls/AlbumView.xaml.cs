@@ -12,14 +12,5 @@ namespace AthameWPF.UI.Controls
         {
             InitializeComponent();
         }
-
-        public static readonly DependencyProperty AlbumProperty = DependencyProperty.Register(
-            "Album", typeof(Album), typeof(AlbumView), new PropertyMetadata(default(Album)));
-
-        public Album Album
-        {
-            get { return (Album) GetValue(AlbumProperty); }
-            set { SetValue(AlbumProperty, value); }
-        }
     }
 }

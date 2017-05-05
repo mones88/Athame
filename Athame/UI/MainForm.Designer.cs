@@ -122,6 +122,7 @@ namespace Athame.UI
             this.queueListView.SelectedIndexChanged += new System.EventHandler(this.queueListView_SelectedIndexChanged);
             this.queueListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.queueListView_KeyDown);
             this.queueListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.queueListView_MouseClick);
+            this.queueListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.queueListView_MouseDoubleClick);
             this.queueListView.MouseHover += new System.EventHandler(this.queueListView_MouseHover);
             // 
             // statusCol
@@ -174,6 +175,7 @@ namespace Athame.UI
             this.queueImageList.Images.SetKeyName(13, "loading10.png");
             this.queueImageList.Images.SetKeyName(14, "loading11.png");
             this.queueImageList.Images.SetKeyName(15, "loading12.png");
+            this.queueImageList.Images.SetKeyName(16, "error");
             // 
             // groupBox2
             // 
@@ -249,7 +251,7 @@ namespace Athame.UI
             this.toolStripSeparator2,
             this.showCollectionInFileBrowserToolStripMenuItem});
             this.queueMenu.Name = "queueMenu";
-            this.queueMenu.Size = new System.Drawing.Size(236, 98);
+            this.queueMenu.Size = new System.Drawing.Size(236, 76);
             // 
             // removeTrackToolStripMenuItem
             // 

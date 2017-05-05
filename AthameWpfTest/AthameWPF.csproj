@@ -64,6 +64,9 @@
     <Compile Include="EnqueuedTrack.cs" />
     <Compile Include="MockDataGen.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="UI\Controls\PlaylistView.xaml.cs">
+      <DependentUpon>PlaylistView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\QueuePage.xaml.cs">
       <DependentUpon>QueuePage.xaml</DependentUpon>
     </Compile>
@@ -76,6 +79,10 @@
     </Compile>
     <Compile Include="UI\StringCaseConverter.cs" />
     <Page Include="UI\Controls\AlbumView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Controls\PlaylistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

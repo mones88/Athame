@@ -5,6 +5,8 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
              xmlns:ui="clr-namespace:AthameWPF.UI"
+             xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
+             xmlns:model="clr-namespace:Athame.PluginAPI.Service;assembly=Athame.PluginAPI"
              x:Class="AthameWPF.App"
              StartupUri="UI/Windows/MainWindow.xaml">
     <Application.Resources>
@@ -61,7 +63,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <ui:StringCaseConverter x:Key="StringCaseConverter" Case="Upper" />
             <Style x:Key="FlatButton" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
@@ -91,19 +93,40 @@
                                 <Trigger Property="IsMouseOver" Value="true">
                                     <Setter Property="Cursor" Value="Hand" />
                                 </Trigger>
-                                
+
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
 
+            <ResourceDictionary x:Key="InnerListBoxStyles">
+                <Style TargetType="ListBox">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <ItemsPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="ListBoxItem">
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="{DynamicResource AlternatingRowsBackgroundBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ResourceDictionary>
+
+
+
             <sys:Double x:Key="PagePrimaryHeaderFontSize">24</sys:Double>
             <sys:Double x:Key="PageSubHeaderFontSize">18</sys:Double>
             <sys:Double x:Key="ComponentHeaderFontSize">16</sys:Double>
 
             <!-- Data templates -->
-            <DataTemplate x:Key="TrackListItemTemplate">
+            <DataTemplate x:Key="TrackListItemTemplate" DataType="{x:Type model:Track}">
                 <Grid Margin="0,5">
                     <Grid.Resources>
                         <Style TargetType="{x:Type TextBlock}">
@@ -121,6 +144,59 @@
                     <!--                    <TextBlock Grid.Column="3" HorizontalAlignment="Center" Text="{Binding Path=Artist}" />-->
                 </Grid>
             </DataTemplate>
+
+            <ResourceDictionary x:Key="MediaCollectionTemplates">
+                <DataTemplate DataType="{x:Type model:Album}">
+                    <controls:AlbumView DataContext="{Binding}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:SingleTrackCollection}">
+                    <controls:AlbumView DataContext="{Binding Path=Tracks[0].Album}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:Playlist}">
+                    <controls:PlaylistView DataContext="{Binding}" />
+                </DataTemplate>
+            </ResourceDictionary>
+
+            <ResourceDictionary x:Key="BasicMediaCollectionTemplates">
+                <DataTemplate DataType="{x:Type model:Album}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,5" />
+                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" Text="{Binding Path=Artist.Name}" FontSize="14" FontWeight="Light" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:SingleTrackCollection}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,5" />
+                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" FontSize="14" FontWeight="Light"><Run Text="{Binding Path=Track.AlbumArtistOrArtist.Name}" /> — <Run Text="{Binding Path=Track.Album.Title}" /></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:Playlist}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ResourceDictionary>
 
             <!-- Icons -->
             <Style x:Key="AddIcon" TargetType="{x:Type Path}">
@@ -149,7 +225,7 @@
             </Style>
 
 
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

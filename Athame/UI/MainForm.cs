@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Athame.DownloadAndTag;
+using Athame.Logging;
 using Athame.Plugin;
 using Athame.PluginAPI.Downloader;
 using Athame.PluginAPI.Service;
@@ -34,9 +35,11 @@ namespace Athame.UI
             public int IndexInCollection { get; set; }
             public int GroupIndex { get; set; }
             public int GlobalItemIndex { get; set; }
+            public Exception Exception { get; set; }
         }
 
         // Constants
+        public const string Tag = nameof(MainForm);
         private const string GroupHeaderFormat = "{0}: {1} ({2})";
 
         // Read-only instance vars
@@ -49,6 +52,7 @@ namespace Athame.UI
         private ListViewItem mCurrentlySelectedQueueItem;
         private ListViewItem currentlyDownloadingItem;
         private CollectionDownloadEventArgs currentCollection;
+        private bool isListViewDirty = false;
         
 
         public MainForm()
@@ -134,6 +138,7 @@ namespace Athame.UI
         {
             // this'll bite me in the ass someday
             currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[e.CurrentItemIndex * 2];
+            queueListView.EnsureVisible(currentlyDownloadingItem.Index);
         }
 
         private void MediaDownloadQueue_CollectionDequeued(object sender, CollectionDownloadEventArgs e)
@@ -144,7 +149,19 @@ namespace Athame.UI
 
         private void MediaDownloadQueue_Exception(object sender, ExceptionEventArgs e)
         {
-            throw e.Exception;
+            Log.WriteException(Level.Error, Tag, e.Exception, "MDQ exception handler");
+            var tag = (MediaItemTag)currentlyDownloadingItem?.Tag;
+            if (tag == null)
+            {
+                Log.Error(Tag, "MDQ exception handler: currently downloading LV item tag is null!");
+                throw e.Exception;
+            }
+            StopAnimation();
+            currentlyDownloadingItem.ImageKey = "error";
+            currentlyDownloadingItem.Text = "Error occurred while downloading";
+            tag.Exception = e.Exception;
+            e.SkipTo = ExceptionSkip.Item;
+            
         }
 
         #region Download queue manipulation
@@ -171,6 +188,7 @@ namespace Athame.UI
                 };
                 if (!t.IsDownloadable)
                 {
+                    Log.Warning(Tag, $"Adding non-downloadable track {service.Name}/{t.Id}");
                     lvItem.BackColor = SystemColors.Control;
                     lvItem.ForeColor = SystemColors.GrayText;
                     lvItem.ImageKey = "not_downloadable";
@@ -294,6 +312,7 @@ namespace Athame.UI
 
         private void PresentException(Exception ex)
         {
+            Log.WriteException(Level.Error, Tag, ex, "PresentException");
             SetGlobalProgressState(ProgressBarState.Error);
             var th = "An unknown error occurred";
             if (ex is ResourceNotFoundException)
@@ -343,6 +362,7 @@ namespace Athame.UI
                         result = await restorable.RestoreAsync();
                         if (!result)
                         {
+                            Log.Error(Tag, $"Failed to sign into {service.Name}");
                             CommonTaskDialogs.Message(owner: this, caption: $"Failed to sign in to {service.Name}",
                                 message: null, icon:TaskDialogStandardIcon.Error);
                         }
@@ -441,6 +461,12 @@ namespace Athame.UI
         
         private void button1_Click(object sender, EventArgs e)
         {
+            if (isListViewDirty)
+            {
+                queueListView.Groups.Clear();
+                queueListView.Items.Clear();
+                isListViewDirty = false;
+            }
             try
             {
                 // Don't add if the item is already enqueued.
@@ -596,6 +622,7 @@ namespace Athame.UI
 
         private async void startDownloadButton_Click(object sender, EventArgs e)
         {
+            isListViewDirty = true;
             if (mediaDownloadQueue.Count == 0)
             {
                 using (
@@ -613,7 +640,10 @@ namespace Athame.UI
                 LockUi();
                 totalStatusLabel.Text = "Warming up...";
                 await mediaDownloadQueue.StartDownloadAsync();
+                totalStatusLabel.Text = "All downloads completed";
+                collectionStatusLabel.Text = GetCompletionMessage();
                 currentlyDownloadingItem = null;
+                mediaDownloadQueue.Clear();
                 SetGlobalProgress(0);
                 SystemSounds.Beep.Play();
                 this.Flash(FlashMethod.All | FlashMethod.TimerNoForeground, Int32.MaxValue, 0);
@@ -754,6 +784,23 @@ namespace Athame.UI
             var dir = GetCurrentlySelectedItemDir();
             if (dir == null) return;
             Process.Start($"\"{dir}\"");
+        }
+
+        private void ShowDetails()
+        {
+            var tag = (MediaItemTag) mCurrentlySelectedQueueItem?.Tag;
+            if (tag?.Exception == null) return;
+            using (var dialog = CommonTaskDialogs.Exception(tag.Exception, "An error occurred while downloading this track",
+                "Check you can play this track on the web, check that you have a subscription, or try signing in and out.",
+                this))
+            {
+                dialog.Show();
+            }
+        }
+
+        private void queueListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowDetails();
         }
     }
 }

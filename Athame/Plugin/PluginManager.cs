@@ -10,12 +10,15 @@ using Athame.PluginAPI;
 using Athame.PluginAPI.Service;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
+using Athame.Logging;
 
 namespace Athame.Plugin
 {
 
     public class PluginManager
     {
+        public const string Tag = nameof(PluginManager);
+
         public const string PluginDir = "Plugins";
         public const string PluginDllPrefix = "AthamePlugin.";
 
@@ -33,7 +36,11 @@ namespace Athame.Plugin
                 if (!isLoading) return null;
 
                 // If for some reason an assembly to resolve doesn't have a file path
-                if (args.RequestingAssembly.Location == null) return null;
+                if (args.RequestingAssembly.Location == null)
+                {
+                    Log.Warning(Tag, $"Raceist condition! Attempted to resolve assembly {args.Name} with no location while in plugin assembly resolve state!");
+                    return null;
+                }
 
                 // Parse name, get parent directory from requesting assembly's location, then
                 // build a path.
@@ -56,12 +63,23 @@ namespace Athame.Plugin
 
         private bool IsAlreadyLoaded(string assemblyFullName)
         {
-            return loadedAssemblies.Any(assembly => assembly.FullName == assemblyFullName);
+            var result = loadedAssemblies.Any(assembly => assembly.FullName == assemblyFullName);
+            if (result)
+            {
+                Log.Warning(Tag, $"Attempted to load {assemblyFullName} again!");
+            }
+            return result;
         }
 
         private void Load(Assembly assembly)
         {
-            if (assembly == null) return;
+
+            if (assembly == null)
+            {
+                Log.Warning(Tag, "Load(Assembly) passed null param");
+                return;
+            }
+            Log.Debug(Tag, $"Attempting to load {assembly.FullName}");
             if (IsAlreadyLoaded(assembly.FullName)) return;
 
             var types = assembly.GetExportedTypes();
@@ -110,6 +128,7 @@ namespace Athame.Plugin
                 }
                 catch (Exception ex)
                 {
+                    Log.WriteException(Level.Error, Tag, ex, $"While loading assembly {assembly}");
 #if DEBUG
                     Debugger.Break();
 #endif
@@ -123,6 +142,7 @@ namespace Athame.Plugin
 
         public void InitAll(Dictionary<string, object> savedSettings)
         {
+            Log.Debug(Tag, "Init plugin settings");
             if (Plugins == null)
             {
                 throw new InvalidOperationException("InitAll can only be called after LoadAll");
@@ -131,7 +151,7 @@ namespace Athame.Plugin
             {
                 // If it's a service plugin, add it to main service collection
                 var service = plugin as MusicService;
-                if (service == null) return;
+                if (service == null) continue;
 
                 // Restore the config, or set the config to the default value
                 if (savedSettings.ContainsKey(service.Name) && savedSettings[service.Name] != null)
@@ -140,6 +160,7 @@ namespace Athame.Plugin
                 }
                 else
                 {
+                    Log.Info(Tag, $"Setting new service config for {plugin.Name}");
                     savedSettings[service.Name] = service.Settings;
                 }
 
