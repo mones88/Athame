@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Athame.PluginAPI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CLIDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -66,7 +69,7 @@
     <Compile Include="Downloader\HttpDownloader.cs" />
     <Compile Include="Downloader\IDownloader.cs" />
     <Compile Include="PluginContext.cs" />
-    <Compile Include="PluginVersion.cs" />
+    <Compile Include="PluginInfo.cs" />
     <Compile Include="Service\AccountInfo.cs" />
     <Compile Include="Service\Album.cs" />
     <Compile Include="Service\Artist.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="Service\InvalidSessionException.cs" />
     <Compile Include="Service\IUsernamePasswordAuthenticationAsync.cs" />
     <Compile Include="Service\MediaType.cs" />
+    <Compile Include="Service\Metadata.cs" />
     <Compile Include="Service\PageRequest.cs" />
     <Compile Include="Service\PaginatedRecordSet.cs" />
     <Compile Include="Service\Playlist.cs" />

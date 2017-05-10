@@ -53,7 +53,7 @@ namespace Athame.UI
             services = new List<MusicService>(Program.DefaultPluginManager.ServicesEnumerable());
             foreach (var service in services)
             {
-                servicesListBox.Items.Add(service.Name);
+                servicesListBox.Items.Add(service.Info.Name);
             }
             if (servicesListBox.Items.Count > 0) servicesListBox.SelectedIndex = 0;
         }
@@ -137,10 +137,10 @@ namespace Athame.UI
             {
                 serviceUiPanel.Controls.Add(ss.GetSettingsControl());
             }
-            serviceNameLabel.Text = ss.Name;
-            serviceDescriptionLabel.Text = ss.Description;
-            serviceAuthorLabel.Text = ss.Author;
-            serviceWebsiteLabel.Text = ss.Website.ToString();
+            serviceNameLabel.Text = ss.Info.Name;
+            serviceDescriptionLabel.Text = ss.Info.Description;
+            serviceAuthorLabel.Text = ss.Info.Author;
+            serviceWebsiteLabel.Text = ss.Info.Website.ToString();
         }
 
         private void formatHelpButton_Click(object sender, EventArgs e)
@@ -183,7 +183,7 @@ namespace Athame.UI
         private void serviceWebsiteLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (ss == null) return;
-            Process.Start("\"" + ss.Website.ToString() + "\"");
+            Process.Start("\"" + ss.Info.Website.ToString() + "\"");
         }
     }
 }

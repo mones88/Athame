@@ -63,7 +63,6 @@ namespace Athame.Settings
         // Defaults
         public AthameSettings()
         {
-            ServiceSettings = new Dictionary<string, object>();
             AlbumArtworkSaveFormat = AlbumArtworkSaveFormat.DontSave;
             GeneralSavePreference = new MediaTypeSavePreference
             {
@@ -81,7 +80,6 @@ namespace Athame.Settings
             MainWindowPreference = new WindowPreference();
         }
 
-        public Dictionary<string, object> ServiceSettings { get; set; }
         public AlbumArtworkSaveFormat AlbumArtworkSaveFormat { get; set; }
         public MediaTypeSavePreference GeneralSavePreference { get; set; }
         public MediaTypeSavePreference PlaylistSavePreference { get; set; }

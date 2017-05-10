@@ -39,8 +39,9 @@ namespace Athame.UI
         }
 
         // Constants
-        public const string Tag = nameof(MainForm);
+        private new const string Tag = nameof(MainForm);
         private const string GroupHeaderFormat = "{0}: {1} ({2})";
+        private const int RetryCount = 3;
 
         // Read-only instance vars
         private readonly TaskbarManager mTaskbarManager = TaskbarManager.Instance;
@@ -53,6 +54,7 @@ namespace Athame.UI
         private ListViewItem currentlyDownloadingItem;
         private CollectionDownloadEventArgs currentCollection;
         private bool isListViewDirty = false;
+        private int numberOfRetries = 0;
         
 
         public MainForm()
@@ -76,7 +78,7 @@ namespace Athame.UI
             // Begin
             Program.DefaultPluginManager.LoadAll();
             Program.DefaultSettings.Load();
-            Program.DefaultPluginManager.InitAll(Program.DefaultSettings.Settings.ServiceSettings);
+            Program.DefaultPluginManager.InitAll();
         }
 
         private void DefaultPluginManagerOnLoadException(object sender, PluginLoadExceptionEventArgs pluginLoadExceptionEventArgs)
@@ -136,6 +138,7 @@ namespace Athame.UI
 
         private void MediaDownloadQueue_TrackDequeued(object sender, TrackDownloadEventArgs e)
         {
+            numberOfRetries = 0;
             // this'll bite me in the ass someday
             currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[e.CurrentItemIndex * 2];
             queueListView.EnsureVisible(currentlyDownloadingItem.Index);
@@ -169,7 +172,7 @@ namespace Athame.UI
         {
             var enqueuedItem = mediaDownloadQueue.Enqueue(service, item, pathFormat);
             var mediaType = MediaCollectionAsType(item);
-            var header = String.Format(GroupHeaderFormat, mediaType, item.Title, service.Name);
+            var header = String.Format(GroupHeaderFormat, mediaType, item.Title, service.Info.Name);
             var group = new ListViewGroup(header);
             var groupIndex = queueListView.Groups.Add(group);
             for (var i = 0; i < item.Tracks.Count; i++)
@@ -188,7 +191,7 @@ namespace Athame.UI
                 };
                 if (!t.IsDownloadable)
                 {
-                    Log.Warning(Tag, $"Adding non-downloadable track {service.Name}/{t.Id}");
+                    Log.Warning(Tag, $"Adding non-downloadable track {service.Info.Name}/{t.Id}");
                     lvItem.BackColor = SystemColors.Control;
                     lvItem.ForeColor = SystemColors.GrayText;
                     lvItem.ImageKey = "not_downloadable";
@@ -356,14 +359,14 @@ namespace Athame.UI
                         if (restorable == null || !restorable.HasSavedSession) continue;
 
                         var result = false;
-                        td.InstructionText = $"Signing into {service.Name}...";
+                        td.InstructionText = $"Signing into {service.Info.Name}...";
                         td.Text = $"Signing in as {LocalisableAccountNameFormat.GetFormattedName(restorable.Account)}";
                         openCt.Token.ThrowIfCancellationRequested();
                         result = await restorable.RestoreAsync();
                         if (!result)
                         {
-                            Log.Error(Tag, $"Failed to sign into {service.Name}");
-                            CommonTaskDialogs.Message(owner: this, caption: $"Failed to sign in to {service.Name}",
+                            Log.Error(Tag, $"Failed to sign into {service.Info.Name}");
+                            CommonTaskDialogs.Message(owner: this, caption: $"Failed to sign in to {service.Info.Name}",
                                 message: null, icon:TaskDialogStandardIcon.Error);
                         }
                     }
@@ -418,7 +421,7 @@ namespace Athame.UI
             var authenticatable = service.AsAuthenticatable();
             if (!authenticatable.IsAuthenticated)
             {
-                urlValidStateLabel.Text = String.Format(UrlNeedsAuthentication, service.Name);
+                urlValidStateLabel.Text = String.Format(UrlNeedsAuthentication, service.Info.Name);
                 var linkIndex = urlValidStateLabel.Text.LastIndexOf(UrlNeedsAuthenticationLink1, StringComparison.Ordinal);
                 urlValidStateLabel.Links.Add(linkIndex, urlValidStateLabel.Text.Length, service);
                 return false;
@@ -432,7 +435,7 @@ namespace Athame.UI
             }
             // Success
             urlValidStateLabel.Image = Resources.done;
-            urlValidStateLabel.Text = String.Format(UrlValidParseResult, result.Type, service.Name);
+            urlValidStateLabel.Text = String.Format(UrlValidParseResult, result.Type, service.Info.Name);
             dlButton.Enabled = true;
             mResult = result;
             mService = service;
@@ -519,7 +522,7 @@ namespace Athame.UI
                     Cancelable = false,
                     Caption = "Athame",
                     InstructionText = $"Getting {mResult.Type.ToString().ToLower()} details...",
-                    Text = $"{mService.Name}: {mResult.Id}",
+                    Text = $"{mService.Info.Name}: {mResult.Id}",
                     StandardButtons = TaskDialogStandardButtons.Cancel,
                     OwnerWindowHandle = Handle,
                     ProgressBar = new TaskDialogProgressBar { State = TaskDialogProgressBarState.Marquee }

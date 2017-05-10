@@ -9,13 +9,16 @@ namespace Athame.Utils
     {
         private static readonly Regex FormatRegex = new Regex(@"(?<!{){([\w\d\.]*)}");
 
-        private static object GetPropertyValueFromPath(string[] propertyPath, object baseObject)
+        private object GetPropertyValueFromPath(string[] propertyPath, object baseObject)
         {
-            while (true)
+            for(var i = 0; i < propertyPath.Length; i++)
             {
+                var key = propertyPath[i];
+                if (Globals.ContainsKey(key)) return Globals[key];
+
                 // Work on the first part of the path
                 var objType = baseObject.GetType();
-                var baseProperty = objType.GetProperty(propertyPath[0]);
+                var baseProperty = objType.GetProperty(key);
 
                 // If we can't find the property, return null
                 if (baseProperty == null)
@@ -23,25 +26,22 @@ namespace Athame.Utils
                     return null;
                 }
 
-                // If we only have one element, just return its string value
-                if (propertyPath.Length == 1)
+                // If we are at the last element, return the string value
+                if (propertyPath.Length - 1 == i)
                 {
                     return baseProperty.GetValue(baseObject);
                 }
 
-                // If we have more than one element, get the property's value, shift
-                // the array by 1, then recurse
+                // If we have more than one element, try again
                 var propertyValue = baseProperty.GetValue(baseObject);
                 if (propertyValue == null)
                 {
                     return null;
                 }
-                var length = propertyPath.Length - 1;
-                var shiftedPath = new string[length];
-                Array.Copy(propertyPath, 1, shiftedPath, 0, length);
-                propertyPath = shiftedPath;
+
                 baseObject = propertyValue;
             }
+            return null;
         }
 
         public static string Format(string formatString, object value)
@@ -55,6 +55,23 @@ namespace Athame.Utils
         public static readonly Func<object, string> DefaultFormatter = o => o?.ToString() ?? "null";
 
         public static string Format(string formatString, object value, Func<object, string> stringFormatter)
+        {
+            return new StringObjectFormatter().FormatInstance(formatString, value, stringFormatter);
+        }
+
+        public Dictionary<string, object> Globals { get; }
+
+        public StringObjectFormatter()
+        {
+            Globals = new Dictionary<string, object>();
+        }
+
+        public string FormatInstance(string formatString, object value)
+        {
+            return FormatInstance(formatString, value, null);
+        }
+
+        public string FormatInstance(string formatString, object value, Func<object, string> stringFormatter)
         {
             if (value == null)
             {
@@ -71,7 +88,7 @@ namespace Athame.Utils
 
             var matches = FormatRegex.Matches(formatString);
             var tokens = from match in matches.Cast<Match>()
-                select match.Groups[1].Value;
+                         select match.Groups[1].Value;
             var replacements = new Dictionary<string, object>();
 
             foreach (var token in tokens)
@@ -85,7 +102,6 @@ namespace Athame.Utils
                 var matchToken = match.Groups[1].Value;
                 return !replacements.ContainsKey(matchToken) ? match.Value : stringFormatter(replacements[matchToken]);
             });
-
         }
 
     }

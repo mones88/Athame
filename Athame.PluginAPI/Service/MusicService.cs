@@ -83,11 +83,8 @@ namespace Athame.PluginAPI.Service
             return new HttpDownloader();
         }
 
-        public abstract string Name { get; }
-        public abstract string Description { get; }
-        public abstract string Author { get; }
-        public abstract Uri Website { get; }
-        public abstract PluginVersion ApiVersion { get; }
+        public abstract PluginInfo Info { get; }
+        public abstract int ApiVersion { get; }
         public abstract void Init(AthameApplication application, PluginContext pluginContext);
     }
 }

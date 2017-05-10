@@ -26,6 +26,9 @@ namespace Athame.PluginAPI.Service
         /// Service-specific identifier for the album. Not null.
         /// </summary>
         public string Id { get; set; }
+
+        public IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
+
         /// <summary>
         /// The album artist. May be null.
         /// </summary>

@@ -12,26 +12,11 @@ namespace Athame.PluginAPI
     /// </summary>
     public interface IPlugin
     {
-        /// <summary>
-        /// The plugin's name. Required.
-        /// </summary>
-        string Name { get; }
-        /// <summary>
-        /// The plugin's description. Optional.
-        /// </summary>
-        string Description { get; }
-        /// <summary>
-        /// The plugin's author. Optional.
-        /// </summary>
-        string Author { get; }
-        /// <summary>
-        /// The plugin's homepage. Optional.
-        /// </summary>
-        Uri Website { get; }
+        PluginInfo Info { get; }
         /// <summary>
         /// The plugin API version this plugin implements.
         /// </summary>
-        PluginVersion ApiVersion { get; }
+        int ApiVersion { get; }
         /// <summary>
         /// Called when the plugin is initialized.
         /// </summary>

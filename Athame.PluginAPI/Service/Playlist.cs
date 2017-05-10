@@ -15,6 +15,7 @@ namespace Athame.PluginAPI.Service
         public string Title { get; set; }
 
         public string Id { get; set; }
+        public IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
 
         /// <summary>
         /// The tracks contained within the playlist.

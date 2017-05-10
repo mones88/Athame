@@ -36,12 +36,30 @@ namespace Athame.Tests
         }
 
         [TestMethod]
+        public void TestGlobals()
+        {
+            var formatter = new StringObjectFormatter();
+            formatter.Globals["Foo"] = "Hello";
+            formatter.Globals["Bar"] = "World";
+            var testObj = new TestData
+            {
+                Name = "Orange",
+                CircularValue = new TestData
+                {
+                    Name = "Black"
+                },
+                Number = 15
+            };
+            Assert.AreEqual("Hello, World! Orange is the new Black", formatter.FormatInstance("{Foo}, {Bar}! {Name} is the new {CircularValue.Name}", testObj));
+        }
+
+        [TestMethod]
         public void TestFormatWithNull()
         {
             const string formatString = "While this is always {AlwaysNullObject}, this should be {CircularValue.Number}";
             // Everything will be null
             var result = StringObjectFormatter.Format(formatString, new TestData());
-            Assert.AreEqual("While this is always null, this should be 0", result);
+            Assert.AreEqual("While this is always null, this should be null", result);
         }
 
         [TestMethod]

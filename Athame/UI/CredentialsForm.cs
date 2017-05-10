@@ -24,9 +24,9 @@ namespace Athame.UI
         private void FillInInfo()
         {
             
-            Text = String.Format(Text, svc.Name);
+            Text = String.Format(Text, svc.Info.Name);
             if (usernamePasswordService.SignInLinks == null) return;
-            helpLabel.Text = usernamePasswordService.SignInHelpText ?? String.Format(helpLabel.Text, svc.Name);
+            helpLabel.Text = usernamePasswordService.SignInHelpText ?? String.Format(helpLabel.Text, svc.Info.Name);
             foreach (var linkPair in usernamePasswordService.SignInLinks)
             {
                 var button = new Button
@@ -46,7 +46,7 @@ namespace Athame.UI
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            var waitForm = CommonTaskDialogs.Wait($"Signing into {svc.Name}...", this);
+            var waitForm = CommonTaskDialogs.Wait($"Signing into {svc.Info.Name}...", this);
             waitForm.Opened += async (o, args) => {
                 var result = await usernamePasswordService.AuthenticateAsync(emailTextBox.Text, passwordTextBox.Text, true);
                 waitForm.Close();

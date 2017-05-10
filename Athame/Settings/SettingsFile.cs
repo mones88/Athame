@@ -11,25 +11,33 @@ using Newtonsoft.Json;
 
 namespace Athame.Settings
 {
-    public class SettingsManager<T> where T : new()
+
+    public class SettingsFile
     {
-        public const string Tag = "SettingsManager";
+        public const string Tag = "SettingsFile";
 
         private readonly string settingsPath;
+        private readonly Type settingsType;
+        private readonly object defaultSettings;
         private readonly JsonSerializerSettings SerializerSettings;
 
-        public T Settings { get; private set; }
+        public object Settings { get; set; }
 
-        public SettingsManager(string settingsPath)
+        public SettingsFile(string settingsPath, Type settingsType, object defaultSettings)
         {
-            Log.Debug(Tag, "Init settings manager");
+            Log.Debug(Tag, "Init settings file");
             this.settingsPath = settingsPath;
+            this.settingsType = settingsType;
+            this.defaultSettings = defaultSettings;
             SerializerSettings = new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.All,
-                Formatting = Formatting.Indented,
-                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full
+                Formatting = Formatting.Indented
             };
+        }
+
+        public bool Exists()
+        {
+            return File.Exists(settingsPath);
         }
 
         public void Load()
@@ -38,23 +46,23 @@ namespace Athame.Settings
             if (!File.Exists(settingsPath))
             {
                 Log.Info(Tag, $"Create new config in {settingsPath}");
-                Settings = new T();
+                Settings = defaultSettings;
             }
             else
             {
                 try
                 {
                     // Assign settings path to deserialised settings instance
-                    Settings = JsonConvert.DeserializeObject<T>(File.ReadAllText(settingsPath),
+                    Settings = JsonConvert.DeserializeObject(File.ReadAllText(settingsPath), settingsType,
                         SerializerSettings);
                 }
                 catch (JsonSerializationException ex)
                 {
                     Log.WriteException(Level.Warning, Tag, ex, "Config could not be parsed, creating new");
 #if DEBUG
-                    throw;           
+                    throw;
 #endif
-                    Settings = new T();
+                    Settings = defaultSettings;
                     Save();
                 }
             }
@@ -65,5 +73,13 @@ namespace Athame.Settings
             Log.Debug(Tag, $"Saving config to {settingsPath}");
             File.WriteAllText(settingsPath, JsonConvert.SerializeObject(Settings, SerializerSettings));
         }
+    }
+
+    public class SettingsFile<T> : SettingsFile where T : new()
+    {
+        public SettingsFile(string settingsPath) : base(settingsPath, typeof(T), new T()) { }
+
+        public new T Settings { get; private set; }
+
     }
 }

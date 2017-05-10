@@ -1,4 +1,6 @@
-﻿namespace Athame.PluginAPI.Service
+﻿using System.Collections.Generic;
+
+namespace Athame.PluginAPI.Service
 {
     /// <summary>
     /// Represents a single audio track.
@@ -53,6 +55,14 @@
         /// </summary>
         public bool IsDownloadable { get; set; }
 
+        /// <summary>
+        /// A list of custom metadata to associate with the track.
+        /// </summary>
+        public IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
+        /// <summary>
+        /// Returns a new <see cref="SingleTrackCollection"/> for this track.
+        /// </summary>
+        /// <returns>A new <see cref="SingleTrackCollection"/> containing only this track.</returns>
         public SingleTrackCollection AsCollection()
         {
             return new SingleTrackCollection(this);

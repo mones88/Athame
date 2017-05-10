@@ -23,5 +23,9 @@ namespace Athame.PluginAPI.Service
         /// The collection's ID
         /// </summary>
         string Id { get; set; }
+        /// <summary>
+        /// A list of custom metadata to associate with the collection.
+        /// </summary>
+        IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
     }
 }

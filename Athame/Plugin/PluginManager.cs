@@ -11,6 +11,7 @@ using Athame.PluginAPI.Service;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Athame.Logging;
+using Athame.Settings;
 
 namespace Athame.Plugin
 {
@@ -38,7 +39,7 @@ namespace Athame.Plugin
                 // If for some reason an assembly to resolve doesn't have a file path
                 if (args.RequestingAssembly.Location == null)
                 {
-                    Log.Warning(Tag, $"Raceist condition! Attempted to resolve assembly {args.Name} with no location while in plugin assembly resolve state!");
+                    Log.Warning(Tag, $"Race condition! Attempted to resolve assembly {args.Name} with no location while in plugin assembly resolve state!");
                     return null;
                 }
 
@@ -53,13 +54,13 @@ namespace Athame.Plugin
             };
         }
 
-        public List<IPlugin> Plugins { get; private set; }
+        public List<PluginInstance> Plugins { get; private set; }
 
         public event EventHandler<PluginLoadExceptionEventArgs> LoadException;
 
         private Assembly[] loadedAssemblies;
         private bool isLoading;
-        private Dictionary<IPlugin, string> pluginPaths = new Dictionary<IPlugin, string>();
+        private Dictionary<PluginInstance, string> pluginPaths = new Dictionary<PluginInstance, string>();
 
         private bool IsAlreadyLoaded(string assemblyFullName)
         {
@@ -95,9 +96,39 @@ namespace Athame.Plugin
                     assembly.Location);
             }
             // Activate base plugin
-            var plugin = (IPlugin)Activator.CreateInstance(implementingType);
-            Plugins.Add(plugin);
-            pluginPaths[plugin] = assembly.Location;
+            var plugin = (IPlugin) Activator.CreateInstance(implementingType);
+            var servicePlugin = plugin as MusicService;
+            var context = new PluginContext
+            {
+                PluginDirectory = Directory.GetParent(assembly.Location).FullName
+            };
+            PluginInstance instance;
+            if (servicePlugin != null)
+            {
+                var settingsPath = Program.DefaultApp.UserDataPathOf(plugin.Info.Name + ".json");
+                var settingsFile = new SettingsFile(settingsPath, servicePlugin.Settings.GetType(),
+                    servicePlugin.Settings);
+                instance = new ServicePluginInstance
+                {
+                    Service = servicePlugin,
+                    Info = plugin.Info,
+                    Plugin = plugin,
+                    Context = context,
+                    SettingsFile = settingsFile
+                };
+            }
+            else
+            {
+                instance = new PluginInstance
+                {
+                    Info = plugin.Info,
+                    Plugin = plugin,
+                    Context = context
+                };
+            }
+            
+            Plugins.Add(instance);
+            pluginPaths[instance] = assembly.Location;
         }
 
         public void LoadAll()
@@ -106,7 +137,7 @@ namespace Athame.Plugin
             {
                 throw new InvalidOperationException("Plugins can only be loaded once");
             }
-            Plugins = new List<IPlugin>();
+            Plugins = new List<PluginInstance>();
             // Cache current AppDomain loaded assemblies
             loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -140,7 +171,7 @@ namespace Athame.Plugin
             isLoading = false;
         }
 
-        public void InitAll(Dictionary<string, object> savedSettings)
+        public void InitAll()
         {
             Log.Debug(Tag, "Init plugin settings");
             if (Plugins == null)
@@ -150,25 +181,17 @@ namespace Athame.Plugin
             foreach (var plugin in Plugins)
             {
                 // If it's a service plugin, add it to main service collection
-                var service = plugin as MusicService;
+                var service = plugin as ServicePluginInstance;
                 if (service == null) continue;
 
-                // Restore the config, or set the config to the default value
-                if (savedSettings.ContainsKey(service.Name) && savedSettings[service.Name] != null)
-                {
-                    service.Settings = savedSettings[service.Name];
-                }
-                else
-                {
-                    Log.Info(Tag, $"Setting new service config for {plugin.Name}");
-                    savedSettings[service.Name] = service.Settings;
-                }
+                // Restore the config
+                service.SettingsFile.Load();
+                service.Service.Settings = service.SettingsFile.Settings;
 
                 // Call Init
-                plugin.Init(Program.DefaultApp,
-                    new PluginContext {PluginDirectory = Directory.GetParent(pluginPaths[plugin]).FullName});
+                plugin.Plugin.Init(Program.DefaultApp, plugin.Context);
 
-                AddService(service);
+                AddService(service.Service);
             }
         }
 
@@ -189,7 +212,7 @@ namespace Athame.Plugin
         public MusicService GetService(string name)
         {
             return (from service in services
-                where service.Name == name
+                where service.Info.Name == name
                 select service).FirstOrDefault();
         }
 

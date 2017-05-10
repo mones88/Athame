@@ -19,7 +19,7 @@ namespace Athame
 
         public static AthameApplication DefaultApp;
         public static PluginManager DefaultPluginManager;
-        public static SettingsManager<AthameSettings> DefaultSettings;
+        public static SettingsFile<AthameSettings> DefaultSettings;
 
         /// <summary>
         /// The main entry point for the application.
@@ -27,7 +27,6 @@ namespace Athame
         [STAThread]
         public static void Main()
         {
-
             // Create app instance config
             DefaultApp = new AthameApplication
             {
@@ -57,7 +56,7 @@ namespace Athame
 
             // Load settings
             SettingsPath = DefaultApp.UserDataPathOf(SettingsFilename);
-            DefaultSettings = new SettingsManager<AthameSettings>(SettingsPath);
+            DefaultSettings = new SettingsFile<AthameSettings>(SettingsPath);
 
             // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
