@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Athame.Plugin;
 using Athame.PluginAPI.Service;
@@ -13,7 +14,7 @@ namespace Athame.UI
     public partial class SettingsForm : Form
     {
         private readonly AthameSettings defaults = Program.DefaultSettings.Settings;
-        private readonly List<MusicService> services;
+        private readonly List<ServicePluginInstance> services;
 
         public SettingsForm()
         {
@@ -50,7 +51,7 @@ namespace Athame.UI
             }
 
             // Populate services
-            services = new List<MusicService>(Program.DefaultPluginManager.ServicesEnumerable());
+            services = Program.DefaultPluginManager.Plugins.Cast<ServicePluginInstance>().ToList();
             foreach (var service in services)
             {
                 servicesListBox.Items.Add(service.Info.Name);
@@ -119,28 +120,31 @@ namespace Athame.UI
         private void saveButton_Click(object sender, EventArgs e)
         {
             Program.DefaultSettings.Save();
+            selectedInstance?.SettingsFile.Save();
             DialogResult = DialogResult.OK;
         }
 
-        private MusicService ss = null;
+        private ServicePluginInstance selectedInstance;
+        private MusicService selectedService;
 
         private void servicesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ss = services[servicesListBox.SelectedIndex];
+            selectedInstance = services[servicesListBox.SelectedIndex];
+            selectedService = selectedInstance.Service;
             serviceUiPanel.Controls.Clear();
-            if (ss.AsAuthenticatable() != null)
+            if (selectedService.AsAuthenticatable() != null)
             {
-                var ssv = new ServiceSettingsView(ss) {Dock = DockStyle.Fill};
+                var ssv = new ServiceSettingsView(selectedInstance) {Dock = DockStyle.Fill};
                 serviceUiPanel.Controls.Add(ssv);
             }
             else
             {
-                serviceUiPanel.Controls.Add(ss.GetSettingsControl());
+                serviceUiPanel.Controls.Add(selectedService.GetSettingsControl());
             }
-            serviceNameLabel.Text = ss.Info.Name;
-            serviceDescriptionLabel.Text = ss.Info.Description;
-            serviceAuthorLabel.Text = ss.Info.Author;
-            serviceWebsiteLabel.Text = ss.Info.Website.ToString();
+            serviceNameLabel.Text = selectedService.Info.Name;
+            serviceDescriptionLabel.Text = selectedService.Info.Description;
+            serviceAuthorLabel.Text = selectedService.Info.Author;
+            serviceWebsiteLabel.Text = selectedService.Info.Website.ToString();
         }
 
         private void formatHelpButton_Click(object sender, EventArgs e)
@@ -182,8 +186,8 @@ namespace Athame.UI
 
         private void serviceWebsiteLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (ss == null) return;
-            Process.Start("\"" + ss.Info.Website.ToString() + "\"");
+            if (selectedService == null) return;
+            Process.Start("\"" + selectedService.Info.Website.ToString() + "\"");
         }
     }
 }

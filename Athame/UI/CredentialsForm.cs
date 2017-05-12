@@ -52,7 +52,6 @@ namespace Athame.UI
                 waitForm.Close();
                 if (result)
                 {
-                    Program.DefaultSettings.Save();
                     DialogResult = DialogResult.OK;
                 }
                 else

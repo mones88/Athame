@@ -10,11 +10,13 @@ namespace Athame.UI
 
         private readonly SplitStringParser sspSignInStatus, sspSignInButton;
         private readonly MusicService service;
+        private readonly ServicePluginInstance servicePlugin;
         private readonly IAuthenticatable authenticatable;
 
-        public ServiceSettingsView(MusicService service)
+        public ServiceSettingsView(ServicePluginInstance servicePlugin)
         {
-            this.service = service;
+            this.servicePlugin = servicePlugin;
+            service = servicePlugin.Service;
             authenticatable = service.AsAuthenticatable();
             if (authenticatable == null)
             {
@@ -46,8 +48,8 @@ namespace Athame.UI
                 if (authenticatableAsync == null)
                 {
                     var dlg = new CredentialsForm(service);
-                    var result = dlg.ShowDialog();
-                    if (result != DialogResult.OK) return;
+                    dlg.ShowDialog();
+                    servicePlugin.SettingsFile.Save();
                 }
                 else
                 {
