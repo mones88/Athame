@@ -28,6 +28,7 @@ namespace Athame.PluginAPI.Service
         public string Id { get; set; }
 
         public IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
+        public TimeSpan? Duration { get; set; }
 
         /// <summary>
         /// The album artist. May be null.

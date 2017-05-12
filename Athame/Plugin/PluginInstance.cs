@@ -12,7 +12,7 @@ namespace Athame.Plugin
     {
         public PluginInfo Info { get; set; }
         public IPlugin Plugin { get; set; }
-
         public PluginContext Context { get; set; }
+        public Version AssemblyFileVersion { get; set; }
     }
 }

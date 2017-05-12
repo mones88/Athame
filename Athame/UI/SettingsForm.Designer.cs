@@ -52,6 +52,16 @@
             this.artworkSaveAsFormattedFileRadioButton = new System.Windows.Forms.RadioButton();
             this.artworkDontSaveRadioButton = new System.Windows.Forms.RadioButton();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.serviceAuthorLabel = new System.Windows.Forms.Label();
+            this.serviceDescriptionLabel = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.serviceNameLabel = new System.Windows.Forms.Label();
+            this.serviceWebsiteLabel = new System.Windows.Forms.LinkLabel();
             this.openPluginDirButton = new System.Windows.Forms.Button();
             this.serviceUiPanel = new System.Windows.Forms.Panel();
             this.servicesListBox = new System.Windows.Forms.ListBox();
@@ -59,25 +69,15 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.mFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.serviceNameLabel = new System.Windows.Forms.Label();
-            this.serviceDescriptionLabel = new System.Windows.Forms.Label();
-            this.serviceAuthorLabel = new System.Windows.Forms.Label();
-            this.serviceWebsiteLabel = new System.Windows.Forms.LinkLabel();
             this.tabControl1.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.pldOptionsGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -360,6 +360,124 @@
             this.tabPage1.Text = "Plugins and Services";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.tableLayoutPanel1);
+            this.panel1.Location = new System.Drawing.Point(185, 338);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(517, 134);
+            this.panel1.TabIndex = 3;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.37524F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.62476F));
+            this.tableLayoutPanel1.Controls.Add(this.serviceAuthorLabel, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.serviceDescriptionLabel, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label10, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label8, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.serviceNameLabel, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.serviceWebsiteLabel, 1, 3);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(517, 134);
+            this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // serviceAuthorLabel
+            // 
+            this.serviceAuthorLabel.AutoSize = true;
+            this.serviceAuthorLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serviceAuthorLabel.Location = new System.Drawing.Point(97, 66);
+            this.serviceAuthorLabel.Name = "serviceAuthorLabel";
+            this.serviceAuthorLabel.Size = new System.Drawing.Size(417, 33);
+            this.serviceAuthorLabel.TabIndex = 9;
+            this.serviceAuthorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // serviceDescriptionLabel
+            // 
+            this.serviceDescriptionLabel.AutoSize = true;
+            this.serviceDescriptionLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serviceDescriptionLabel.Location = new System.Drawing.Point(97, 33);
+            this.serviceDescriptionLabel.Name = "serviceDescriptionLabel";
+            this.serviceDescriptionLabel.Size = new System.Drawing.Size(417, 33);
+            this.serviceDescriptionLabel.TabIndex = 8;
+            this.serviceDescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label10.Location = new System.Drawing.Point(3, 99);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(88, 35);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "Website";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label8.Location = new System.Drawing.Point(3, 66);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(88, 33);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "Author:";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Location = new System.Drawing.Point(3, 33);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(88, 33);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Description:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(88, 33);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Name:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // serviceNameLabel
+            // 
+            this.serviceNameLabel.AutoSize = true;
+            this.serviceNameLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serviceNameLabel.Location = new System.Drawing.Point(97, 0);
+            this.serviceNameLabel.Name = "serviceNameLabel";
+            this.serviceNameLabel.Size = new System.Drawing.Size(417, 33);
+            this.serviceNameLabel.TabIndex = 7;
+            this.serviceNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // serviceWebsiteLabel
+            // 
+            this.serviceWebsiteLabel.AutoSize = true;
+            this.serviceWebsiteLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serviceWebsiteLabel.Location = new System.Drawing.Point(97, 99);
+            this.serviceWebsiteLabel.Name = "serviceWebsiteLabel";
+            this.serviceWebsiteLabel.Size = new System.Drawing.Size(417, 35);
+            this.serviceWebsiteLabel.TabIndex = 10;
+            this.serviceWebsiteLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.serviceWebsiteLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.serviceWebsiteLabel_LinkClicked);
+            // 
             // openPluginDirButton
             // 
             this.openPluginDirButton.Location = new System.Drawing.Point(6, 449);
@@ -420,124 +538,6 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Location = new System.Drawing.Point(185, 338);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(517, 134);
-            this.panel1.TabIndex = 3;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.37524F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.62476F));
-            this.tableLayoutPanel1.Controls.Add(this.serviceAuthorLabel, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.serviceDescriptionLabel, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label10, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label8, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.serviceNameLabel, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.serviceWebsiteLabel, 1, 3);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(517, 134);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 33);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Name:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 33);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(89, 33);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Description:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.Location = new System.Drawing.Point(3, 66);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(89, 33);
-            this.label8.TabIndex = 4;
-            this.label8.Text = "Author:";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label10.Location = new System.Drawing.Point(3, 99);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(89, 35);
-            this.label10.TabIndex = 6;
-            this.label10.Text = "Website";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // serviceNameLabel
-            // 
-            this.serviceNameLabel.AutoSize = true;
-            this.serviceNameLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.serviceNameLabel.Location = new System.Drawing.Point(98, 0);
-            this.serviceNameLabel.Name = "serviceNameLabel";
-            this.serviceNameLabel.Size = new System.Drawing.Size(416, 33);
-            this.serviceNameLabel.TabIndex = 7;
-            this.serviceNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // serviceDescriptionLabel
-            // 
-            this.serviceDescriptionLabel.AutoSize = true;
-            this.serviceDescriptionLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.serviceDescriptionLabel.Location = new System.Drawing.Point(98, 33);
-            this.serviceDescriptionLabel.Name = "serviceDescriptionLabel";
-            this.serviceDescriptionLabel.Size = new System.Drawing.Size(416, 33);
-            this.serviceDescriptionLabel.TabIndex = 8;
-            this.serviceDescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // serviceAuthorLabel
-            // 
-            this.serviceAuthorLabel.AutoSize = true;
-            this.serviceAuthorLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.serviceAuthorLabel.Location = new System.Drawing.Point(98, 66);
-            this.serviceAuthorLabel.Name = "serviceAuthorLabel";
-            this.serviceAuthorLabel.Size = new System.Drawing.Size(416, 33);
-            this.serviceAuthorLabel.TabIndex = 9;
-            this.serviceAuthorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // serviceWebsiteLabel
-            // 
-            this.serviceWebsiteLabel.AutoSize = true;
-            this.serviceWebsiteLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.serviceWebsiteLabel.Location = new System.Drawing.Point(98, 99);
-            this.serviceWebsiteLabel.Name = "serviceWebsiteLabel";
-            this.serviceWebsiteLabel.Size = new System.Drawing.Size(416, 35);
-            this.serviceWebsiteLabel.TabIndex = 10;
-            this.serviceWebsiteLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.serviceWebsiteLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.serviceWebsiteLabel_LinkClicked);
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -563,10 +563,10 @@
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.tabPage1.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

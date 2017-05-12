@@ -805,5 +805,10 @@ namespace Athame.UI
         {
             ShowDetails();
         }
+
+        private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

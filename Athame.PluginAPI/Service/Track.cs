@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Athame.PluginAPI.Downloader;
 
 namespace Athame.PluginAPI.Service
 {
@@ -43,6 +45,11 @@ namespace Athame.PluginAPI.Service
         /// The year the track was released. Must be four digits.
         /// </summary>
         public int Year { get; set; }
+
+        /// <summary>
+        /// The duration of the track.
+        /// </summary>
+        public TimeSpan? Duration { get; set; }
 
         /// <summary>
         /// If the Artist property of the <see cref="Album"/> property is null, returns the track's <see cref="Artist"/> artist property,

@@ -27,5 +27,10 @@ namespace Athame.PluginAPI.Service
         /// A list of custom metadata to associate with the collection.
         /// </summary>
         IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
+
+        /// <summary>
+        /// The duration of the entire collection.
+        /// </summary>
+        TimeSpan? Duration { get; set; }
     }
 }

@@ -47,6 +47,7 @@ namespace Athame.Settings
             {
                 Log.Info(Tag, $"Create new config in {settingsPath}");
                 Settings = defaultSettings;
+                Save();
             }
             else
             {
@@ -79,7 +80,11 @@ namespace Athame.Settings
     {
         public SettingsFile(string settingsPath) : base(settingsPath, typeof(T), new T()) { }
 
-        public new T Settings { get; private set; }
+        public new T Settings
+        {
+            get { return (T)base.Settings; }
+            set { base.Settings = value; }
+        }
 
     }
 }

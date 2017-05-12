@@ -23,6 +23,7 @@ namespace Athame.PluginAPI.Service
             Title = t.Title;
             Id = t.Id;
             CustomMetadata = t.CustomMetadata;
+            Duration = t.Duration;
         }
 
         public IList<Track> Tracks { get; set; }
@@ -33,5 +34,6 @@ namespace Athame.PluginAPI.Service
         public string Title { get; set; }
         public string Id { get; set; }
         public IReadOnlyCollection<Metadata> CustomMetadata { get; set; }
+        public TimeSpan? Duration { get; set; }
     }
 }

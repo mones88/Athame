@@ -12,9 +12,10 @@ namespace Athame
 {
     public static class Program
     {
-        public const string Tag = nameof(Program);
+        private const string Tag = nameof(Program);
+        public static string LogDir;
 
-        private const string SettingsFilename = "settings.json";
+        private const string SettingsFilename = "Athame Settings.json";
         private static string SettingsPath;
 
         public static AthameApplication DefaultApp;
@@ -41,7 +42,9 @@ namespace Athame
             };
 
             // Install logging
-            Log.AddLogger("file", new FileLogger(DefaultApp.UserDataPath));
+            LogDir = DefaultApp.UserDataPathOf("Logs");
+            Directory.CreateDirectory(LogDir);
+            Log.AddLogger("file", new FileLogger(LogDir));
 #if !DEBUG
             Log.Filter = Level.Warning;
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
@@ -57,6 +60,7 @@ namespace Athame
             // Load settings
             SettingsPath = DefaultApp.UserDataPathOf(SettingsFilename);
             DefaultSettings = new SettingsFile<AthameSettings>(SettingsPath);
+            DefaultSettings.Load();
 
             // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));

@@ -22,6 +22,8 @@ namespace Athame.Plugin
 
         public const string PluginDir = "Plugins";
         public const string PluginDllPrefix = "AthamePlugin.";
+        public const string SettingsDir = "Plugin Data";
+        public const string SettingsFileFormat = "{0} Settings.json";
 
         public string PluginDirectory { get; }
 
@@ -29,6 +31,7 @@ namespace Athame.Plugin
         {
             PluginDirectory = pluginDir;
             Directory.CreateDirectory(pluginDir);
+            Directory.CreateDirectory(Program.DefaultApp.UserDataPathOf(SettingsDir));
             // !! NOTE !! This will be invoked if an assembly, for whatever reason, is loaded during
             // the plugin load process.
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
@@ -60,7 +63,6 @@ namespace Athame.Plugin
 
         private Assembly[] loadedAssemblies;
         private bool isLoading;
-        private Dictionary<PluginInstance, string> pluginPaths = new Dictionary<PluginInstance, string>();
 
         private bool IsAlreadyLoaded(string assemblyFullName)
         {
@@ -96,39 +98,33 @@ namespace Athame.Plugin
                     assembly.Location);
             }
             // Activate base plugin
-            var plugin = (IPlugin) Activator.CreateInstance(implementingType);
+            var plugin = (IPlugin)Activator.CreateInstance(implementingType);
             var servicePlugin = plugin as MusicService;
             var context = new PluginContext
             {
                 PluginDirectory = Directory.GetParent(assembly.Location).FullName
             };
-            PluginInstance instance;
             if (servicePlugin != null)
             {
-                var settingsPath = Program.DefaultApp.UserDataPathOf(plugin.Info.Name + ".json");
+                var settingsPath = Program.DefaultApp.UserDataPathOf(Path.Combine(SettingsDir, String.Format(SettingsFileFormat, plugin.Info.Name)));
                 var settingsFile = new SettingsFile(settingsPath, servicePlugin.Settings.GetType(),
                     servicePlugin.Settings);
-                instance = new ServicePluginInstance
+                var instance = new ServicePluginInstance
                 {
-                    Service = servicePlugin,
                     Info = plugin.Info,
                     Plugin = plugin,
                     Context = context,
+                    Service = servicePlugin,
                     SettingsFile = settingsFile
                 };
+                Plugins.Add(instance);
             }
             else
             {
-                instance = new PluginInstance
-                {
-                    Info = plugin.Info,
-                    Plugin = plugin,
-                    Context = context
-                };
+                throw new PluginLoadException("IPlugin type does not implement MusicService.", assembly.Location);
             }
-            
-            Plugins.Add(instance);
-            pluginPaths[instance] = assembly.Location;
+
+
         }
 
         public void LoadAll()
@@ -155,7 +151,7 @@ namespace Athame.Plugin
             {
                 try
                 {
-                   Load(assembly);
+                    Load(assembly);
                 }
                 catch (Exception ex)
                 {
@@ -163,7 +159,7 @@ namespace Athame.Plugin
 #if DEBUG
                     Debugger.Break();
 #endif
-                    var eventArgs = new PluginLoadExceptionEventArgs {Exception = ex, Continue = true};
+                    var eventArgs = new PluginLoadExceptionEventArgs { Exception = ex, Continue = true };
                     LoadException?.Invoke(this, eventArgs);
                     if (!eventArgs.Continue) return;
                 }
@@ -212,8 +208,8 @@ namespace Athame.Plugin
         public MusicService GetService(string name)
         {
             return (from service in services
-                where service.Info.Name == name
-                select service).FirstOrDefault();
+                    where service.Info.Name == name
+                    select service).FirstOrDefault();
         }
 
         public MusicService GetServiceByBaseUri(Uri baseUri)
