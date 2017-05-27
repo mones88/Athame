@@ -46,7 +46,7 @@ namespace Athame.Logging
 
         public static void WriteException(Level level, string tag, Exception ex, string message = null)
         {
-            var messageToWrite = message ?? "Unhandled exception\n";
+            var messageToWrite = (message ?? "Unhandled exception") + "\n";
             if (ex != null)
             {
                 messageToWrite += $"{ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}";

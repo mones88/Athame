@@ -263,7 +263,7 @@
         </DockPanel>
         <Grid Grid.Column="1">
             <DockPanel Margin="10,10,0,0">
-                <StackPanel DockPanel.Dock="Top" x:Name="PrimaryInputContainer" Orientation="Vertical" Margin="0,0,0,40">
+                <StackPanel DockPanel.Dock="Top" x:Name="PrimaryInputContainer" Orientation="Vertical" Margin="0,0,10,40">
                     <!-- Only show input container when searching/inputting a URL -->
                     <StackPanel.Style>
                         <Style TargetType="{x:Type StackPanel}">
@@ -277,10 +277,14 @@
                     <TextBlock FontSize="{StaticResource PagePrimaryHeaderFontSize}" Text="Add by search or URL" />
                     <TextBlock FontSize="{StaticResource PageSubHeaderFontSize}" Margin="0,15,0,30" Text="Enter the name of an album, track or playlist into the field below to search. Alternatively, paste a link to get an exact match:" TextWrapping="WrapWithOverflow" />
                     <TextBox x:Name="PrimaryInputTextBox" TextWrapping="Wrap" Style="{DynamicResource PrimaryTextBox}" Margin="40,0"/>
-                    <Button x:Name="PasteButton" Style="{DynamicResource FlatButton}" Content="Paste" Margin="40,0" HorizontalAlignment="Left" />
+                    <StackPanel Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
+                        <Button x:Name="PasteButton" Style="{DynamicResource FlatButton}" Content="Paste" />
+                        <Button x:Name="ClearButton" Style="{DynamicResource FlatButton}" Content="Clear" />
+                    </StackPanel>
+                    <Separator Margin="0,20,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" x:Name="SearchResultsStackPanel">
-                    <TextBlock Text="Results" FontSize="16">
+                    <TextBlock Text="Results" FontSize="16" Margin="0,0,0,10">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -292,7 +296,17 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <ListView x:Name="ResultsListBox" Loaded="ResultsListBox_Loaded" 
-                                      Resources="{StaticResource BasicMediaCollectionTemplates}" />
+                                      Resources="{StaticResource BasicMediaCollectionTemplates}">
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
                 </StackPanel>
             </DockPanel>
         </Grid>

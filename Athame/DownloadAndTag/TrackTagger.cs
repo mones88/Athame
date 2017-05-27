@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Athame.PluginAPI.Downloader;
 using Athame.PluginAPI.Service;
 using Athame.Settings;
 using TagLib;
@@ -12,15 +13,16 @@ namespace Athame.DownloadAndTag
     {
         private const string CopyrightText = "Respect the artists! Pay for music when you can! Downloaded with Athame";
 
-        public static void Write(string path, Track track)
+        public static void Write(FileType fileType, string path, Track track)
         {
             AlbumArtFile artworkFile = null;
-            if (AlbumArtCache.Instance.HasItem(track.Album.CoverUri.ToString()))
+            var url = track.Album.CoverUri.ToString();
+            if (AlbumArtCache.Instance.HasItem(url) && AlbumArtCache.Instance.Get(url) != null)
             {
                 artworkFile = AlbumArtCache.Instance.Get(track.Album.CoverUri.ToString());
             }
 
-            using (var file = File.Create(path))
+            using (var file = File.Create(new File.LocalFileAbstraction(path), fileType.MimeType, ReadStyle.Average))
             {
                 file.Tag.Title = track.Title;
                 file.Tag.Performers = new[] {track.Artist.Name};

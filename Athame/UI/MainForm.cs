@@ -45,7 +45,7 @@ namespace Athame.UI
 
         // Read-only instance vars
         private readonly TaskbarManager mTaskbarManager = TaskbarManager.Instance;
-        private readonly MediaDownloadQueue mediaDownloadQueue = new MediaDownloadQueue();
+        private readonly MediaDownloadQueue mediaDownloadQueue = new MediaDownloadQueue(true);
 
         // Instance vars
         private UrlParseResult mResult;

@@ -12,11 +12,11 @@ namespace AthameWPF
     {
         private Random random;
 
-        public Limit(int lower, int upper)
+        public Limit(Random rng, int lower, int upper)
         {
             Lower = lower;
             Upper = upper;
-            random = new Random();
+            random = rng;
         }
 
         public int Lower { get; set; }
@@ -72,7 +72,7 @@ namespace AthameWPF
 
         public static Album GenerateAlbum()
         {
-            var albumYear = new Limit(1980, DateTime.Now.Year);
+            var albumYear = new Limit(rng, 1980, DateTime.Now.Year);
             var artist = GenerateArtist();
 
             return new Album
@@ -87,14 +87,14 @@ namespace AthameWPF
 
         public static string GenerateTitle()
         {
-            var wordsInAlbumTitle = new Limit(1, 3);
+            var wordsInAlbumTitle = new Limit(rng, 1, 3);
             return ToTitleCase(String.Join(" ", wordsInAlbumTitle.RandomSet(AlbumWords)));
         }
 
         public static Album GenerateAlbumWithTracks()
         {
             var album = GenerateAlbum();
-            var tracksPerAlbum = new Limit(8, 20);
+            var tracksPerAlbum = new Limit(rng, 8, 20);
             var trackCount = tracksPerAlbum.RandomValue();
             album.Tracks = GenerateTracks(album, album.Artist).Take(trackCount).ToList();
 
@@ -103,7 +103,7 @@ namespace AthameWPF
 
         public static IEnumerable<Track> GenerateTracks(Album album = null, Artist artist = null)
         {
-            var wordsInTrackTitle = new Limit(1, 6);
+            var wordsInTrackTitle = new Limit(rng, 1, 6);
             var counter = 0;
             var newAlbum = album ?? GenerateAlbum();
             var newArtist = artist ?? GenerateArtist();
@@ -123,7 +123,7 @@ namespace AthameWPF
 
         public static Playlist GeneratePlaylist()
         {
-            var trackCount = new Limit(4, 60).RandomValue();
+            var trackCount = new Limit(rng, 4, 60).RandomValue();
             return new Playlist
             {
                 Id = Guid.NewGuid().ToString(),

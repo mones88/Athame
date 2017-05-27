@@ -34,6 +34,11 @@ namespace Athame.DownloadAndTag
             items[file.DownloadUri.ToString()] = file;
         }
 
+        public void AddNull(string url)
+        {
+            items[url] = null;
+        }
+
         public bool HasItem(string url)
         {
             return items.ContainsKey(url);

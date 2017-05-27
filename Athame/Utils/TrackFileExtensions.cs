@@ -18,8 +18,7 @@ namespace Athame.Utils
         /// <returns>A formatted path.</returns>
         public static string GetPath(this TrackFile trackFile, string pathFormat)
         {
-            var cleanedFilePath = trackFile.Track.GetBasicPath(pathFormat);
-            return trackFile.FileType.Append(cleanedFilePath);
+            return GetPath(trackFile, pathFormat, new StringObjectFormatter());
         }
 
         /// <summary>
@@ -30,7 +29,18 @@ namespace Athame.Utils
         /// <returns>A formatted path without an extension.</returns>
         public static string GetBasicPath(this Track track, string pathFormat)
         {
-            return StringObjectFormatter.Format(pathFormat, track,
+            return GetBasicPath(track, pathFormat, new StringObjectFormatter());
+        }
+
+        public static string GetPath(this TrackFile trackFile, string pathFormat, StringObjectFormatter formatter)
+        {
+            var cleanedFilePath = trackFile.Track.GetBasicPath(pathFormat, formatter);
+            return trackFile.FileType.Append(cleanedFilePath);
+        }
+
+        public static string GetBasicPath(this Track track, string pathFormat, StringObjectFormatter formatter)
+        {
+            return formatter.FormatInstance(pathFormat, track,
                 o => PathHelpers.CleanFilename(o.ToString()));
         }
     }

@@ -64,7 +64,7 @@
                 </Setter>
             </Style>
 
-            <ui:StringCaseConverter x:Key="StringCaseConverter" Case="Upper" />
+            <ui:StringCaseConverter x:Key="UpperCaseConverter" Case="Upper" />
             <Style x:Key="FlatButton" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
                 <Setter Property="Background" Value="Transparent"/>
@@ -82,7 +82,7 @@
                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 FontWeight="Bold"
-                                Text="{TemplateBinding Content, Converter={StaticResource StringCaseConverter}}">
+                                Text="{TemplateBinding Content, Converter={StaticResource UpperCaseConverter}}">
                             </TextBlock>
 
                             <ControlTemplate.Triggers>
@@ -159,33 +159,33 @@
 
             <ResourceDictionary x:Key="BasicMediaCollectionTemplates">
                 <DataTemplate DataType="{x:Type model:Album}">
-                    <Grid>
+                    <Grid Margin="3,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,5" />
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
                             <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" Text="{Binding Path=Artist.Name}" FontSize="14" FontWeight="Light" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type model:SingleTrackCollection}">
-                    <Grid>
+                <DataTemplate DataType="{x:Type model:Track}">
+                    <Grid Margin="3,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,5" />
-                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" FontSize="14" FontWeight="Light"><Run Text="{Binding Path=Track.AlbumArtistOrArtist.Name}" /> — <Run Text="{Binding Path=Track.Album.Title}" /></TextBlock>
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
+                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" FontSize="14" FontWeight="Light"><Run Text="{Binding Path=AlbumArtistOrArtist.Name}" /> — <Run Text="{Binding Path=Album.Title}" /></TextBlock>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type model:Playlist}">
-                    <Grid>
+                    <Grid Margin="3,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
@@ -193,6 +193,18 @@
                         <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:Artist}">
+                    <Grid Margin="3,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Name}" FontSize="16" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

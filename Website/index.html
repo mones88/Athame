@@ -26,33 +26,110 @@
 				<li>Athame uses internal APIs, which means they are subject to change at the discretion of the streaming service provider.</li>
 			</ul>
 			<div class="center-container">
-				<a class="big-button" href="files/Athame-0.3.2.zip">Accept and download</a>
+				<a class="big-button" href="https://github.com/svbnet/Athame/releases/download/0.4.3-1/athame-0.4.3-base-plugins.zip">Accept and download</a>
 			</div>
+		</section>
+		<section>
+			<h2>Stay updated</h2>
+			<p>Follow me on <a href="https://twitter.com/svbnet">Twitter, @svbnet</a> and subscribe to <a href="http://blog.svbnet.co">my blog</a>
+			   to keep up to date with the latest releases.</p>
 		</section>
 		<section>
 			<h2>Older releases &amp; notes</h2>
 			<p><strong>Note:</strong> Config file migration has not yet been implemented, so upgrading or downgrading will likely
 			cause Athame to crash or overwrite your config file. Config files can be found at <code>%appdata%\Athame</code> on Windows,
 			or <code>~/.config/Athame</code> on Linux/OS X.</p>
-			<table>
-				<thead>
-					<tr>
-						<th>Version</th>
-						<th>Notes</th>
-						<th>Links</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>0.3.2</td>
-						<td><p>Somewhat works with Mono. Wine may be required.</p></td>
-						<td><a href="releases/0.3.2/athame-0.3.2.zip">Accept &amp; download</a></td>
-					</tr>
-				</tbody>
-			</table>
+			<hr>
+			<ul class="release-list">
+			
+			<li>
+				<header>
+					<h3 class="relTitle"><a href="https://github.com/svbnet/Athame/releases/tag/0.4.3-1">Athame 0.4.3 / Plugin API 1</a></h3>
+					<small class="version">0.4.3-1</small>
+				</header>
+				<p class="relNotes"><p><strong>Note: This release will reset your settings.</strong></p>
+<ul>
+<li>Fix issue where loading plugins on a system with .NET 4.7 installed would cause a <code>NotSupportedException</code> to be thrown.</li>
+<li>Remove type information from main settings, and put plugin settings in a separate file. This fixes the issue where settings cannot be parsed after a plugin is removed.</li>
+<li>Breaking changes for the plugin API.</li>
+</ul>
+<p>The default release archive does not contain any plugins by default. For legacy users, the <code>athame-0.4.3-base-plugins.zip</code> release is available, which includes the Tidal and Google Play Music services.</p>
+<p>Both the <a href="https://github.com/svbnet/AthamePlugin.Tidal">Tidal</a> and <a href="https://github.com/svbnet/AthamePlugin.GooglePlayMusic">Google Play Music</a> service plugins are available from their respective repositories, on the Releases tab. In the future, I will also promote other plugins that can be optionally installed.</p>
+<p>To install a plugin, just extract it into the "Plugins" folder in the same directory as the executable.</p></p>
+				<footer>
+					<a href="https://github.com/svbnet/Athame/releases/download/0.4.3-1/athame-0.4.3-base-plugins.zip" class="smaller-button">Accept &amp; download</a>
+				</footer>
+			</li>
+			
+			<li>
+				<header>
+					<h3 class="relTitle"><a href="https://github.com/svbnet/Athame/releases/tag/0.4.2">Athame 0.4.2</a></h3>
+					<small class="version">0.4.2</small>
+				</header>
+				<p class="relNotes"><ul>
+<li>Basic logging support. The logs are located in the same directory as the config file, and should not contain any PII.</li>
+<li>Better exception handling when downloading.</li>
+<li>Queue list view will clear when adding an item after downloading, and will also scroll to the currently downloading track.</li>
+</ul></p>
+				<footer>
+					<a href="https://github.com/svbnet/Athame/releases/download/0.4.2/athame-0.4.2.zip" class="smaller-button">Accept &amp; download</a>
+				</footer>
+			</li>
+			
+			<li>
+				<header>
+					<h3 class="relTitle"><a href="https://github.com/svbnet/Athame/releases/tag/0.4.1">Athame 0.4.1</a></h3>
+					<small class="version">0.4.1</small>
+				</header>
+				<p class="relNotes"><ul>
+<li>Implement plugin API</li>
+</ul>
+<p>Also note that this version will overwrite your existing config file. This should be fixed in a future release.</p></p>
+				<footer>
+					<a href="https://github.com/svbnet/Athame/releases/download/0.4.1/athame-0.4.1.zip" class="smaller-button">Accept &amp; download</a>
+				</footer>
+			</li>
+			
+			<li>
+				<header>
+					<h3 class="relTitle"><a href="https://github.com/svbnet/Athame/releases/tag/0.4">Athame v0.4</a></h3>
+					<small class="version">0.4</small>
+				</header>
+				<p class="relNotes"><p><strong>Note: This version will only run on Windows 7 and above.</strong></p>
+<ul>
+<li>Can now remove tracks from the queue instead of unticking them</li>
+<li>Individual track support</li>
+<li>Can choose where to download a collection to when adding</li>
+<li>Can set a separate folder and format for playlists</li>
+<li>Progress indication is more specific</li>
+<li>The appropriate file extension is selected when downloading FLAC files on Tidal</li>
+<li>Better tag cleaning for Tidal</li>
+<li>It's now optional to save album artwork as a file</li>
+<li>Taskbar item flashes when the queue is downloaded</li>
+<li>Slightly newer look and feel</li>
+</ul>
+<p>Also note that this version will overwrite your existing config file. This should be fixed in a future release.</p></p>
+				<footer>
+					<a href="https://github.com/svbnet/Athame/releases/download/0.4/athame-0.4.zip" class="smaller-button">Accept &amp; download</a>
+				</footer>
+			</li>
+			
+			<li>
+				<header>
+					<h3 class="relTitle"><a href="https://github.com/svbnet/Athame/releases/tag/v0.3.2">Athame v0.3.2</a></h3>
+					<small class="version">v0.3.2</small>
+				</header>
+				<p class="relNotes"><p>First released build. Many kinks still left to work out.
+Tested and runs fairly well on Mono, though be aware that clicking the "sign in" link if you paste a URL in will crash the application.</p></p>
+				<footer>
+					<a href="https://github.com/svbnet/Athame/releases/download/v0.3.2/athame-0.3.2.zip" class="smaller-button">Accept &amp; download</a>
+				</footer>
+			</li>
+			
+			</ul>
 		</section>
 	</article>
-	<footer>
+	<footer class="discl-footer">
 		<p>Not endorsed or supported by Tidal or Google. &copy; svbnet 2016.</p>
 	</footer>
 </body>

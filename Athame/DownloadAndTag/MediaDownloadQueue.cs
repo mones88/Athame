@@ -7,89 +7,25 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Athame.Logging;
 using Athame.PluginAPI.Downloader;
 using Athame.PluginAPI.Service;
 using Athame.Utils;
 
 namespace Athame.DownloadAndTag
 {
-    public class CollectionDownloadEventArgs : EventArgs
-    {
-        public EnqueuedCollection Collection { get; set; }
-
-        public int CurrentCollectionIndex { get; set; }
-
-        public int TotalNumberOfCollections { get; set; }
-    }
-
-    public class TrackDownloadEventArgs : DownloadEventArgs
-    {
-        public TrackFile TrackFile { get; set; }
-
-        public decimal TotalProgress
-        {
-            get
-            {
-                if (TotalItems == 0)
-                {
-                    return 0;
-                }
-                return (CurrentItemIndex + PercentCompleted) / TotalItems;
-            }
-        }
-
-        public int TotalItems { get; set; }
-
-        public int CurrentItemIndex { get; set; }
-
-        internal void Update(DownloadEventArgs eventArgs)
-        {
-            PercentCompleted = eventArgs.PercentCompleted;
-            State = eventArgs.State;
-        }
-    }
-
-    /// <summary>
-    /// Defines what to skip to next when an exception is encountered.
-    /// </summary>
-    public enum ExceptionSkip
-    {
-        /// <summary>
-        /// The downloader should advance to the next item.
-        /// </summary>
-        Item,
-        /// <summary>
-        /// The downloader should advance to the next collection.
-        /// </summary>
-        Collection,
-        /// <summary>
-        /// The downloader should stop and return immediately.
-        /// </summary>
-        Fail
-    }
-
-    /// <summary>
-    /// Event args used when an exception occurs while downloading a track.
-    /// </summary>
-    public class ExceptionEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The exception that occurred
-        /// </summary>
-        public Exception Exception { get; set; }
-        /// <summary>
-        /// The current state of the item being downloaded.
-        /// </summary>
-        public TrackDownloadEventArgs CurrentState { get; set; }
-        /// <summary>
-        /// What the downloader should advance to when the event handler returns.
-        /// </summary>
-        public ExceptionSkip SkipTo { get; set; }
-    }
-
     public class MediaDownloadQueue : List<EnqueuedCollection>
     {
+        private const string Tag = nameof(MediaDownloadQueue);
+
         public CancellationTokenSource CancellationTokenSource { get; set; }
+
+        private readonly bool useTempFile;
+
+        public MediaDownloadQueue(bool useTempFile)
+        {
+            this.useTempFile = useTempFile;
+        }
 
         public EnqueuedCollection Enqueue(MusicService service, IMediaCollection collection, string pathFormat)
         {
@@ -215,14 +151,24 @@ namespace Athame.DownloadAndTag
                         continue;
                     }
                     OnTrackDownloadProgress(eventArgs);
-                    // Download album artwork if it's not cached
-                    if (currentItem.Album != null && !AlbumArtCache.Instance.HasItem(currentItem.Album.CoverUri.ToString()))
+                    if (currentItem.Album.CoverUri != null)
                     {
-                        eventArgs.State = DownloadState.DownloadingAlbumArtwork;
-                        OnTrackDownloadProgress(eventArgs);
-
-                        await AlbumArtCache.Instance.AddByDownload(currentItem.Album.CoverUri.ToString());
-
+                        // Download album artwork if it's not cached
+                        if (currentItem.Album != null &&
+                            !AlbumArtCache.Instance.HasItem(currentItem.Album.CoverUri.ToString()))
+                        {
+                            eventArgs.State = DownloadState.DownloadingAlbumArtwork;
+                            OnTrackDownloadProgress(eventArgs);
+                            try
+                            {
+                                await AlbumArtCache.Instance.AddByDownload(currentItem.Album.CoverUri.ToString());
+                            }
+                            catch (Exception ex)
+                            {
+                                AlbumArtCache.Instance.AddNull(currentItem.Album.CoverUri.ToString());
+                                Log.WriteException(Level.Warning, Tag, ex, "Exception occurred when download album artwork:");
+                            }
+                        }
                     }
                     eventArgs.TrackFile = await collection.Service.GetDownloadableTrackAsync(currentItem);
                     var downloader = collection.Service.GetDownloader(eventArgs.TrackFile);
@@ -237,17 +183,24 @@ namespace Athame.DownloadAndTag
                         OnTrackDownloadProgress(eventArgs);
                     };
                     var path = eventArgs.TrackFile.GetPath(collection.PathFormat);
-                    EnsureParentDirectories(path);
+                    var tempPath = path;
+                    if (useTempFile) tempPath += "-temp";
+                    EnsureParentDirectories(tempPath);
                     eventArgs.State = DownloadState.Downloading;
-                    await downloader.DownloadAsyncTask(eventArgs.TrackFile, path);
+                    await downloader.DownloadAsyncTask(eventArgs.TrackFile, tempPath);
+
                     // Attempt to dispose the downloader, since the most probable case will be that it will
                     // implement IDisposable if it uses sockets
                     var disposableDownloader = downloader as IDisposable;
                     disposableDownloader?.Dispose();
+
                     // Write the tag
                     eventArgs.State = DownloadState.WritingTags;
                     OnTrackDownloadProgress(eventArgs);
-                    TrackTagger.Write(path, currentItem);
+                    TrackTagger.Write(eventArgs.TrackFile.FileType, tempPath, currentItem);
+
+                    // Rename to proper path
+                    if (useTempFile) File.Move(tempPath, path);
                     
 
                 }
