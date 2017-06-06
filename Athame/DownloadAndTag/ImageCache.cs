@@ -9,11 +9,11 @@ using Athame.PluginAPI.Downloader;
 
 namespace Athame.DownloadAndTag
 {
-    internal class AlbumArtCache : IDisposable
+    public class ImageCache : IDisposable
     {
-        public static readonly AlbumArtCache Instance = new AlbumArtCache();
+        public static readonly ImageCache Instance = new ImageCache();
 
-        private readonly Dictionary<string, AlbumArtFile> items = new Dictionary<string, AlbumArtFile>();
+        private readonly Dictionary<string, ImageFile> items = new Dictionary<string, ImageFile>();
         private readonly WebClient mClient = new WebClient();
 
         public async Task AddByDownload(string url)
@@ -21,7 +21,7 @@ namespace Athame.DownloadAndTag
             var data = await mClient.DownloadDataTaskAsync(url);
             var contentMimeType = mClient.ResponseHeaders[HttpResponseHeader.ContentType];
 
-            items.Add(url, new AlbumArtFile
+            items.Add(url, new ImageFile
             {
                 Data = data,
                 DownloadUri = new Uri(url),
@@ -29,7 +29,7 @@ namespace Athame.DownloadAndTag
             });
         }
 
-        public void Add(AlbumArtFile file)
+        public void Add(ImageFile file)
         {
             items[file.DownloadUri.ToString()] = file;
         }
@@ -39,12 +39,23 @@ namespace Athame.DownloadAndTag
             items[url] = null;
         }
 
+        private const string DefaultKey = "_default";
+        public ImageFile GetDefault()
+        {
+            return items.ContainsKey(DefaultKey) ? items[DefaultKey] : null;
+        }
+
+        public void SetDefault(ImageFile file)
+        {
+            items[DefaultKey] = file;
+        }
+
         public bool HasItem(string url)
         {
             return items.ContainsKey(url);
         }
 
-        public AlbumArtFile Get(string url)
+        public ImageFile Get(string url)
         {
             return items[url];
         }

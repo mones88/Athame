@@ -32,5 +32,10 @@ namespace Athame.PluginAPI.Service
         /// The date of when the playlist was last modified. May be null.
         /// </summary>
         public DateTime? LastModifiedDate { get; set; }
+
+        /// <summary>
+        /// A picture representing the playlist. May be null.
+        /// </summary>
+        public Picture PlaylistPicture { get; set; }
     }
 }

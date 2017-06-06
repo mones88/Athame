@@ -97,8 +97,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownloadAndTag\AlbumArtCache.cs" />
-    <Compile Include="DownloadAndTag\AlbumArtFile.cs" />
+    <Compile Include="DownloadAndTag\ImageCache.cs" />
+    <Compile Include="DownloadAndTag\ImageFile.cs" />
     <Compile Include="DownloadAndTag\CollectionDownloadEventArgs.cs" />
     <Compile Include="DownloadAndTag\ExceptionEventArgs.cs" />
     <Compile Include="DownloadAndTag\ExceptionSkip.cs" />

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,14 +14,12 @@ namespace AthameWPF.UI.Pages
     /// </summary>
     public partial class SearchPage : Page
     {
+
+        private readonly List<object> items;
         public SearchPage()
         {
             InitializeComponent();
-        }
-
-        private void ResultsListBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            var items = new List<object>
+            items = new List<object>
             {
                 MockDataGen.GenerateArtist(),
                 MockDataGen.GenerateArtist(),
@@ -38,6 +37,24 @@ namespace AthameWPF.UI.Pages
             var view = (CollectionView)CollectionViewSource.GetDefaultView(ResultsListBox.ItemsSource);
             var groupDescription = new MediaTypeGroupDescription();
             view?.GroupDescriptions?.Add(groupDescription);
+        }
+
+        private void ResultsListBox_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            
+
+        }
+
+        private void ResultsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count <= 0) return;
+            var item = e.AddedItems[0];
+            var album = item as Album;
+            if (album != null)
+            {
+                NavigationService?.Navigate(new ViewMediaPage($"search results for \"{PrimaryInputTextBox.Text}\"", album));
+            }
         }
     }
 }

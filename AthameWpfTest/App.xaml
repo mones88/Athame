@@ -65,13 +65,31 @@
             </Style>
 
             <ui:StringCaseConverter x:Key="UpperCaseConverter" Case="Upper" />
-            <Style x:Key="FlatButton" TargetType="{x:Type Button}">
+
+            <Style x:Key="BlankButton" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
                 <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="Foreground" Value="{StaticResource MainNavBackgroundBrush}"/>
+                
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <Style x:Key="FlatButton" BasedOn="{StaticResource BlankButton}" TargetType="{x:Type Button}">
                 <Setter Property="Padding" Value="20,10"/>
+                <Setter Property="Foreground" Value="{StaticResource MainNavBackgroundBrush}"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -164,7 +182,7 @@
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
                             <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" Text="{Binding Path=Artist.Name}" FontSize="14" FontWeight="Light" />
@@ -177,7 +195,7 @@
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
                             <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" FontSize="14" FontWeight="Light"><Run Text="{Binding Path=AlbumArtistOrArtist.Name}" /> — <Run Text="{Binding Path=Album.Title}" /></TextBlock>
@@ -190,7 +208,7 @@
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" />
                         </StackPanel>
@@ -202,7 +220,7 @@
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Name}" FontSize="16" />
                         </StackPanel>
@@ -235,10 +253,19 @@
             <Style x:Key="TrackIcon" TargetType="{x:Type Path}">
                 <Setter Property="Data" Value="M12,3V12.26C11.5,12.09 11,12 10.5,12C8,12 6,14 6,16.5C6,19 8,21 10.5,21C13,21 15,19 15,16.5V6H19V3H12Z" />
             </Style>
+            <Style x:Key="BackIcon" TargetType="{x:Type Path}">
+                <Setter Property="Data" Value="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+            </Style>
 
 
 
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+
+
+
+
+
+
 

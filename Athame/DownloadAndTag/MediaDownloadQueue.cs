@@ -155,17 +155,17 @@ namespace Athame.DownloadAndTag
                     {
                         // Download album artwork if it's not cached
                         if (currentItem.Album != null &&
-                            !AlbumArtCache.Instance.HasItem(currentItem.Album.CoverUri.ToString()))
+                            !ImageCache.Instance.HasItem(currentItem.Album.CoverUri.ToString()))
                         {
                             eventArgs.State = DownloadState.DownloadingAlbumArtwork;
                             OnTrackDownloadProgress(eventArgs);
                             try
                             {
-                                await AlbumArtCache.Instance.AddByDownload(currentItem.Album.CoverUri.ToString());
+                                await ImageCache.Instance.AddByDownload(currentItem.Album.CoverUri.ToString());
                             }
                             catch (Exception ex)
                             {
-                                AlbumArtCache.Instance.AddNull(currentItem.Album.CoverUri.ToString());
+                                ImageCache.Instance.AddNull(currentItem.Album.CoverUri.ToString());
                                 Log.WriteException(Level.Warning, Tag, ex, "Exception occurred when download album artwork:");
                             }
                         }

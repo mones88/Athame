@@ -39,9 +39,15 @@ namespace Athame.PluginAPI.Service
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// The album's cover artwork URL. May be null.
+        /// This property is obsolete. Use <see cref="CoverPicture"/>.
         /// </summary>
+        [Obsolete]
         public Uri CoverUri { get; set; }
+
+        /// <summary>
+        /// The album's cover artwork. May be null.
+        /// </summary>
+        public Picture CoverPicture { get; set; }
 
         /// <summary>
         /// The album's tracks. May be null.

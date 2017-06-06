@@ -15,11 +15,11 @@ namespace Athame.DownloadAndTag
 
         public static void Write(FileType fileType, string path, Track track)
         {
-            AlbumArtFile artworkFile = null;
+            ImageFile artworkFile = null;
             var url = track.Album.CoverUri.ToString();
-            if (AlbumArtCache.Instance.HasItem(url) && AlbumArtCache.Instance.Get(url) != null)
+            if (ImageCache.Instance.HasItem(url) && ImageCache.Instance.Get(url) != null)
             {
-                artworkFile = AlbumArtCache.Instance.Get(track.Album.CoverUri.ToString());
+                artworkFile = ImageCache.Instance.Get(track.Album.CoverUri.ToString());
             }
 
             using (var file = File.Create(new File.LocalFileAbstraction(path), fileType.MimeType, ReadStyle.Average))

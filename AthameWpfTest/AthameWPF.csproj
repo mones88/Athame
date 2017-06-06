@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -58,14 +59,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Caching\PictureCache.cs" />
+    <Compile Include="Caching\PictureCacheEntry.cs" />
     <Compile Include="UI\Controls\AlbumView.xaml.cs">
       <DependentUpon>AlbumView.xaml</DependentUpon>
     </Compile>
     <Compile Include="EnqueuedTrack.cs" />
     <Compile Include="MockDataGen.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="UI\Controls\CachedImage.xaml.cs">
+      <DependentUpon>CachedImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\WaitSpinner.xaml.cs">
+      <DependentUpon>WaitSpinner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\ViewMediaPage.xaml.cs">
+      <DependentUpon>ViewMediaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\QueuePage.xaml.cs">
       <DependentUpon>QueuePage.xaml</DependentUpon>
@@ -82,11 +94,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Controls\CachedImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Controls\PlaylistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Controls\WaitSpinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\LightTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\ViewMediaPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -149,10 +173,15 @@
       <Project>{e10cc6e7-7100-4616-84bc-413a91e668b8}</Project>
       <Name>Athame.PluginAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Athame\Athame.csproj">
+      <Project>{1668fa2b-e96a-4d25-afb6-ac8521239d41}</Project>
+      <Name>Athame</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\DefaultArtwork.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

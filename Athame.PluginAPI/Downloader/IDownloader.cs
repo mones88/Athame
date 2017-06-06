@@ -6,6 +6,7 @@ namespace Athame.PluginAPI.Downloader
 {
     public enum DownloadState
     {
+        Ready,
         PreProcess,
         DownloadingAlbumArtwork,
         Downloading,

@@ -81,12 +81,14 @@
     <Compile Include="Service\IUsernamePasswordAuthenticationAsync.cs" />
     <Compile Include="Service\MediaType.cs" />
     <Compile Include="Service\Metadata.cs" />
-    <Compile Include="Service\PageRequest.cs" />
-    <Compile Include="Service\PaginatedRecordSet.cs" />
+    <Compile Include="Service\PagedMethod.cs" />
+    <Compile Include="Service\Picture.cs" />
     <Compile Include="Service\Playlist.cs" />
+    <Compile Include="Service\PlaylistInfo.cs" />
     <Compile Include="Service\ResourceNotFoundException.cs" />
     <Compile Include="Service\SearchResult.cs" />
     <Compile Include="Service\MusicService.cs" />
+    <Compile Include="Service\ServiceMediaId.cs" />
     <Compile Include="Service\SignInLink.cs" />
     <Compile Include="Service\SingleTrackCollection.cs" />
     <Compile Include="Service\Track.cs" />
