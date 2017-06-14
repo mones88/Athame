@@ -9,5 +9,6 @@
     <Grid>
         <Image x:Name="MainImage" />
         <Path x:Name="ResourceIndicatorPath" />
+        <Path Data="M130.49579,152.10477 L210.75772,67.913938" Margin="78.298,90.926,141.44,124.883" Stretch="Fill"/>
     </Grid>
 </UserControl>

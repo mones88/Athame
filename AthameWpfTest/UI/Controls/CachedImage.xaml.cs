@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Athame.DownloadAndTag;
 using AthameWPF.Caching;
 
 namespace AthameWPF.UI.Controls
@@ -34,7 +33,8 @@ namespace AthameWPF.UI.Controls
 
         private static async void MediaIdPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var _this = (CachedImage) dependencyObject;
+            var _this = (CachedImage)dependencyObject;
+            var imageControl = _this.MainImage;
             var _value = (string) dependencyPropertyChangedEventArgs.NewValue;
             if (PictureCache.HasPicture(_value))
             {
@@ -42,12 +42,12 @@ namespace AthameWPF.UI.Controls
                 if (_this.RenderSize.Width > ThumbnailSize || _this.RenderSize.Height > ThumbnailSize)
                 {
                     await entry.GetFullSizeAsync();
-                    _this.Source = entry.XamlFullSizeBitmap;
+                    imageControl.Source = entry.XamlFullSizeBitmap;
                 }
                 else
                 {
                     await entry.GetThumbnailAsync();
-                    _this.Source = entry.XamlThumbnailBitmap;
+                    imageControl.Source = entry.XamlThumbnailBitmap;
                 }
             }
             else
