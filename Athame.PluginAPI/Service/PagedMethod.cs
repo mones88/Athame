@@ -24,17 +24,17 @@ namespace Athame.PluginAPI.Service
         /// <summary>
         /// A list of every item that has been retrieved so far.
         /// </summary>
-        public IList<T> AllItems { get; set; }
+        public virtual IList<T> AllItems { get; set; }
 
         /// <summary>
         /// The amount of items that are retrieved per page.
         /// </summary>
-        public int ItemsPerPage { get; set; }
+        public int ItemsPerPage { get; }
 
         /// <summary>
         /// The total amount of items that can be retrieved.
         /// </summary>
-        public int TotalNumberOfItems { get; set; }
+        public virtual int TotalNumberOfItems { get; set; }
 
         /// <summary>
         /// Whether the current method instance has more items that can be loaded.

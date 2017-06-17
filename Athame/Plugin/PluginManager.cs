@@ -24,6 +24,7 @@ namespace Athame.Plugin
         public const string PluginDllPrefix = "AthamePlugin.";
         public const string SettingsDir = "Plugin Data";
         public const string SettingsFileFormat = "{0} Settings.json";
+        public const int ApiVersion = 2;
 
         public string PluginDirectory { get; }
 
@@ -99,6 +100,10 @@ namespace Athame.Plugin
             }
             // Activate base plugin
             var plugin = (IPlugin)Activator.CreateInstance(implementingType);
+            if (plugin.ApiVersion != ApiVersion)
+            {
+                throw new PluginLoadException($"Plugin declares incompatible API version: expected {ApiVersion}, found {plugin.ApiVersion}.", assembly.Location);
+            }
             var servicePlugin = plugin as MusicService;
             var context = new PluginContext
             {
