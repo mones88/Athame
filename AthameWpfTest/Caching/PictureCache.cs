@@ -11,7 +11,7 @@ namespace AthameWPF.Caching
 
         public static void AddPicture(string mediaId, Picture picture)
         {
-            backingCache.Add(mediaId, new PictureCacheEntry {OriginalPicture = picture}, DateTimeOffset.MaxValue);
+            backingCache.Add(mediaId, new PictureCacheEntry(picture), ObjectCache.InfiniteAbsoluteExpiration);
         }
 
         public static bool HasPicture(string mediaId)

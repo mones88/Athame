@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Athame.DownloadAndTag;
 using AthameWPF.Caching;
+using AthameWPF.Logging;
+using AthameWPF.Utils;
 
 namespace AthameWPF.UI.Controls
 {
@@ -42,17 +43,26 @@ namespace AthameWPF.UI.Controls
                 if (_this.RenderSize.Width > ThumbnailSize || _this.RenderSize.Height > ThumbnailSize)
                 {
                     await entry.GetFullSizeAsync();
-                    _this.Source = entry.XamlFullSizeBitmap;
+                    _this.MainImage.Source = entry.XamlFullSizeBitmap;
                 }
                 else
                 {
-                    await entry.GetThumbnailAsync();
-                    _this.Source = entry.XamlThumbnailBitmap;
+                    if (entry.OriginalPicture.IsThumbnailAvailable)
+                    {
+                        await entry.GetThumbnailAsync();
+                        _this.MainImage.Source = entry.XamlThumbnailBitmap;
+                    }
+                    else
+                    {
+                        await entry.GetFullSizeAsync();
+                        _this.MainImage.Source = entry.XamlFullSizeBitmap;
+                    }
                 }
             }
             else
             {
-                // TODO: write to log when I figure this shit out
+                _this.MainImage.Source = new BitmapImage(ResourceUriHelper.BuildUri("DefaultArtwork.png"));
+                Log.Warning(nameof(CachedImage), $"No picture cache entry for {_value}");
             }
         }
 

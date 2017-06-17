@@ -12,6 +12,7 @@ namespace Athame.PluginAPI.Service
     /// </summary>
     public abstract class Picture
     {
+
         /// <summary>
         /// The file type of the picture.
         /// </summary>

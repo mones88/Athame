@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -12,6 +8,14 @@ namespace AthameWPF.Caching
 {
     public class PictureCacheEntry
     {
+        public PictureCacheEntry(Picture originalPicture)
+        {
+            OriginalPicture = originalPicture;
+        }
+
+        private readonly SemaphoreSlim fullSizeSemaphore = new SemaphoreSlim(1, 1);
+
+        private readonly SemaphoreSlim thumbnailSemaphore = new SemaphoreSlim(1, 1);
         public Picture OriginalPicture { get; set; }
 
         public byte[] FullSize { get; private set; }
@@ -22,11 +26,9 @@ namespace AthameWPF.Caching
 
         public BitmapImage XamlThumbnailBitmap { get; private set; }
 
-        private readonly SemaphoreSlim fullSizeSemaphore = new SemaphoreSlim(1, 1);
-
         private BitmapImage LoadBitmapImageFromBytes(byte[] imageData)
         {
-            if (imageData == null || imageData.Length == 0) return null;
+            if ((imageData == null) || (imageData.Length == 0)) return null;
             var image = new BitmapImage();
             using (var mem = new MemoryStream(imageData))
             {
@@ -60,8 +62,6 @@ namespace AthameWPF.Caching
                 fullSizeSemaphore.Release();
             }
         }
-
-        private readonly SemaphoreSlim thumbnailSemaphore = new SemaphoreSlim(1, 1);
 
         public async Task GetThumbnailAsync()
         {

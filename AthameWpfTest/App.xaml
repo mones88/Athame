@@ -7,7 +7,8 @@
              xmlns:ui="clr-namespace:AthameWPF.UI"
              xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
              xmlns:model="clr-namespace:Athame.PluginAPI.Service;assembly=Athame.PluginAPI"
-             x:Class="AthameWPF.App"
+             xmlns:models="clr-namespace:AthameWPF.UI.Models"
+             x:Class="AthameWPF.App" Startup="App_OnStartup" Exit="App_OnExit"
              StartupUri="UI/Windows/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -176,16 +177,16 @@
             </ResourceDictionary>
 
             <ResourceDictionary x:Key="BasicMediaCollectionTemplates">
-                <DataTemplate DataType="{x:Type model:Album}">
+                <DataTemplate DataType="{x:Type models:IndependentAlbum}">
                     <Grid Margin="3,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
+                        <controls:CachedImage Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" MediaId="{Binding Path=Smid}"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
-                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" Text="{Binding Path=Artist.Name}" FontSize="14" FontWeight="Light" />
+                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Album.Title}" FontSize="16" Margin="0,0,0,3" />
+                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" Text="{Binding Path=Album.Artist.Name}" FontSize="14" FontWeight="Light" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

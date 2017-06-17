@@ -41,7 +41,7 @@ namespace Athame.DownloadAndTag
                 file.Tag.Comment = CopyrightText;
                 if (artworkFile != null)
                 {
-                    file.Tag.Pictures = new IPicture[] {new Picture(new ByteVector(artworkFile.Data))};
+                    file.Tag.Pictures = new IPicture[] {new TagLib.Picture(new ByteVector(artworkFile.Data))};
                 }
 
                 file.Save();
