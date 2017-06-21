@@ -106,6 +106,7 @@
     <Compile Include="DownloadAndTag\EnqueuedCollection.cs" />
     <Compile Include="DownloadAndTag\ServiceMediaIdExtensions.cs" />
     <Compile Include="DownloadAndTag\TrackDownloadEventArgs.cs" />
+    <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log.cs" />

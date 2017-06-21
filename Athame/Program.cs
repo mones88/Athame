@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Athame.Logging;
 using Athame.Plugin;
@@ -26,7 +27,7 @@ namespace Athame
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
             // Create app instance config
             DefaultApp = new AthameApplication
@@ -47,10 +48,12 @@ namespace Athame
             Log.AddLogger("file", new FileLogger(LogDir));
 #if !DEBUG
             Log.Filter = Level.Warning;
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
             {
-                Log.WriteException(Level.Fatal, "AppDomain", args.ExceptionObject as Exception);
+                Log.WriteException(Level.Fatal, "AppDomain", eventArgs.ExceptionObject as Exception);
             };
+#else
+            Log.AddLogger("debug", new DebugLogger());
 #endif
             Log.Debug(Tag, "Logging installed on AppDomain");
 
@@ -64,6 +67,13 @@ namespace Athame
 
             // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
+            if (args.Length >= 2)
+            {
+                if (args[0] == "/loadSinglePlugin")
+                {
+                    DefaultPluginManager.SetSinglePlugin(args[1]);
+                }
+            }
             
             Log.Debug(Tag, "Ready to begin main form loop");
             // Begin main form
