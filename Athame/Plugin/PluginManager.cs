@@ -64,6 +64,7 @@ namespace Athame.Plugin
 
         private Assembly[] loadedAssemblies;
         private bool isLoading;
+        private string singlePluginFilename;
 
         private bool IsAlreadyLoaded(string assemblyFullName)
         {
@@ -132,7 +133,7 @@ namespace Athame.Plugin
 
         }
 
-        public void LoadAll()
+        private void BeforeLoad()
         {
             if (Plugins != null)
             {
@@ -141,17 +142,35 @@ namespace Athame.Plugin
             Plugins = new List<PluginInstance>();
             // Cache current AppDomain loaded assemblies
             loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+        }
 
-            // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
-            var subDirs = Directory.GetDirectories(PluginDirectory);
-            var pluginDlls = new List<string>();
-            foreach (var subDir in subDirs)
+        public void SetSinglePlugin(string filePath)
+        {
+            singlePluginFilename = filePath;
+        }
+
+        public void LoadAll()
+        {
+            BeforeLoad();
+            IEnumerable<Assembly> assemblies;
+            if (singlePluginFilename == null)
             {
-                pluginDlls.AddRange(Directory.GetFiles(subDir, $"{PluginDllPrefix}*.dll"));
+                // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
+                var subDirs = Directory.GetDirectories(PluginDirectory);
+                var pluginDlls = new List<string>();
+                foreach (var subDir in subDirs)
+                {
+                    pluginDlls.AddRange(Directory.GetFiles(subDir, $"{PluginDllPrefix}*.dll"));
+                }
+                isLoading = true;
+                // Load and activate all plugins
+                assemblies = from dllPath in pluginDlls select Assembly.LoadFile(dllPath);
             }
-            isLoading = true;
-            // Load and activate all plugins
-            var assemblies = from dllPath in pluginDlls select Assembly.LoadFile(dllPath);
+            else
+            {
+                isLoading = true;
+                assemblies = new[] {Assembly.LoadFile(singlePluginFilename) };
+            }
             foreach (var assembly in assemblies)
             {
                 try
