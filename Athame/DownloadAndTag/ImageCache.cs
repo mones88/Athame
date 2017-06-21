@@ -6,46 +6,39 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Athame.PluginAPI.Downloader;
+using Athame.PluginAPI.Service;
 
 namespace Athame.DownloadAndTag
 {
-    public class ImageCache : IDisposable
+    public class ImageCache
     {
         public static readonly ImageCache Instance = new ImageCache();
 
-        private readonly Dictionary<string, ImageFile> items = new Dictionary<string, ImageFile>();
-        private readonly WebClient mClient = new WebClient();
+        private readonly Dictionary<string, ImageCacheEntry> items = new Dictionary<string, ImageCacheEntry>();
 
-        public async Task AddByDownload(string url)
+        public async Task AddByDownload(string smid, Picture picture)
         {
-            var data = await mClient.DownloadDataTaskAsync(url);
-            var contentMimeType = mClient.ResponseHeaders[HttpResponseHeader.ContentType];
+            var data = await picture.GetLargestVersionAsync();
 
-            items.Add(url, new ImageFile
+            items.Add(smid, new ImageCacheEntry
             {
                 Data = data,
-                DownloadUri = new Uri(url),
-                FileType = MediaFileTypes.ByMimeType(contentMimeType)
+                Picture = picture
             });
         }
 
-        public void Add(ImageFile file)
+        public void AddNull(string smid)
         {
-            items[file.DownloadUri.ToString()] = file;
-        }
-
-        public void AddNull(string url)
-        {
-            items[url] = null;
+            items[smid] = null;
         }
 
         private const string DefaultKey = "_default";
-        public ImageFile GetDefault()
+        public ImageCacheEntry GetDefault()
         {
             return items.ContainsKey(DefaultKey) ? items[DefaultKey] : null;
         }
 
-        public void SetDefault(ImageFile file)
+        public void SetDefault(ImageCacheEntry file)
         {
             items[DefaultKey] = file;
         }
@@ -55,20 +48,15 @@ namespace Athame.DownloadAndTag
             return items.ContainsKey(url);
         }
 
-        public ImageFile Get(string url)
+        public ImageCacheEntry Get(string url)
         {
             return items[url];
         }
 
-        public void WriteToFile(string url, string filePath)
+        public void WriteToFile(string smid, string filePath)
         {
-            var item = items[url];
-            File.WriteAllBytes(item.FileType.Append(filePath), item.Data);
-        }
-
-        public void Dispose()
-        {
-            mClient?.Dispose();
+            var item = items[smid];
+            File.WriteAllBytes(item.Picture.FileType.Append(filePath), item.Data);
         }
     }
 }

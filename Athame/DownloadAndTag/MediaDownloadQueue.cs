@@ -151,21 +151,21 @@ namespace Athame.DownloadAndTag
                         continue;
                     }
                     OnTrackDownloadProgress(eventArgs);
-                    if (currentItem.Album.CoverUri != null)
+                    if (currentItem.Album?.CoverPicture != null)
                     {
                         // Download album artwork if it's not cached
-                        if (currentItem.Album != null &&
-                            !ImageCache.Instance.HasItem(currentItem.Album.CoverUri.ToString()))
+                        var albumSmid = currentItem.Album.GetSmid(collection.Service.Info.Name).ToString();
+                        if (!ImageCache.Instance.HasItem(albumSmid))
                         {
                             eventArgs.State = DownloadState.DownloadingAlbumArtwork;
                             OnTrackDownloadProgress(eventArgs);
                             try
                             {
-                                await ImageCache.Instance.AddByDownload(currentItem.Album.CoverUri.ToString());
+                                await ImageCache.Instance.AddByDownload(albumSmid, currentItem.Album.CoverPicture);
                             }
                             catch (Exception ex)
                             {
-                                ImageCache.Instance.AddNull(currentItem.Album.CoverUri.ToString());
+                                ImageCache.Instance.AddNull(albumSmid);
                                 Log.WriteException(Level.Warning, Tag, ex, "Exception occurred when download album artwork:");
                             }
                         }

@@ -98,12 +98,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownloadAndTag\ImageCache.cs" />
-    <Compile Include="DownloadAndTag\ImageFile.cs" />
+    <Compile Include="DownloadAndTag\ImageCacheEntry.cs" />
     <Compile Include="DownloadAndTag\CollectionDownloadEventArgs.cs" />
     <Compile Include="DownloadAndTag\ExceptionEventArgs.cs" />
     <Compile Include="DownloadAndTag\ExceptionSkip.cs" />
     <Compile Include="DownloadAndTag\MediaDownloadQueue.cs" />
     <Compile Include="DownloadAndTag\EnqueuedCollection.cs" />
+    <Compile Include="DownloadAndTag\ServiceMediaIdExtensions.cs" />
     <Compile Include="DownloadAndTag\TrackDownloadEventArgs.cs" />
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />

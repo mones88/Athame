@@ -15,7 +15,7 @@ namespace Athame.DownloadAndTag
 
         public static void Write(FileType fileType, string path, Track track)
         {
-            ImageFile artworkFile = null;
+            ImageCacheEntry artworkFile = null;
             var url = track.Album.CoverUri.ToString();
             if (ImageCache.Instance.HasItem(url) && ImageCache.Instance.Get(url) != null)
             {
