@@ -10,10 +10,10 @@ namespace Athame.UI
 
         private readonly SplitStringParser sspSignInStatus, sspSignInButton;
         private readonly MusicService service;
-        private readonly ServicePluginInstance servicePlugin;
+        private readonly PluginInstance servicePlugin;
         private readonly IAuthenticatable authenticatable;
 
-        public ServiceSettingsView(ServicePluginInstance servicePlugin)
+        public ServiceSettingsView(PluginInstance servicePlugin)
         {
             this.servicePlugin = servicePlugin;
             service = servicePlugin.Service;

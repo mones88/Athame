@@ -37,21 +37,21 @@ namespace Athame.Plugin
             // the plugin load process.
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
-                // If we are currently loading plugin assemblies
-                if (!isLoading) return null;
+                var name = new AssemblyName(args.Name);
 
-                // If for some reason an assembly to resolve doesn't have a file path
-                if (args.RequestingAssembly.Location == null)
-                {
-                    Log.Warning(Tag, $"Race condition! Attempted to resolve assembly {args.Name} with no location while in plugin assembly resolve state!");
-                    return null;
-                }
+                // I am so sorry
+                var pluginDirectory = (from plugin in Plugins
+                                       where plugin.Assembly == args.RequestingAssembly || 
+                                       (from referencedAssembly in plugin.Assembly.GetReferencedAssemblies()
+                                        where referencedAssembly.FullName == args.RequestingAssembly.GetName().ToString()
+                                        select true).Any()
+                                       select plugin.AssemblyDirectory).FirstOrDefault();
+
+                if (pluginDirectory == null) return null;
 
                 // Parse name, get parent directory from requesting assembly's location, then
                 // build a path.
-                var name = new AssemblyName(args.Name);
-                var parentDir = Directory.GetParent(args.RequestingAssembly.Location).FullName;
-                var referencedDllPath = Path.Combine(parentDir, name.Name + ".dll");
+                var referencedDllPath = Path.Combine(pluginDirectory, name.Name + ".dll");
 
                 // Load the assembly no matter what.
                 return Assembly.LoadFile(referencedDllPath);
@@ -66,28 +66,22 @@ namespace Athame.Plugin
         private bool isLoading;
         private string singlePluginFilename;
 
-        private bool IsAlreadyLoaded(string assemblyFullName)
+        private bool IsAlreadyLoaded(AssemblyName assemblyName)
         {
-            var result = loadedAssemblies.Any(assembly => assembly.FullName == assemblyFullName);
+            var result = loadedAssemblies.Any(assembly => assembly.GetName() == assemblyName);
             if (result)
             {
-                Log.Warning(Tag, $"Attempted to load {assemblyFullName} again!");
+                Log.Warning(Tag, $"Attempted to load {assemblyName} again!");
             }
             return result;
         }
 
-        private void Load(Assembly assembly)
+        private void Activate(PluginInstance instance)
         {
+            Log.Debug(Tag, $"Attempting to load {instance.Name}");
+            if (IsAlreadyLoaded(instance.Assembly.GetName())) return;
 
-            if (assembly == null)
-            {
-                Log.Warning(Tag, "Load(Assembly) passed null param");
-                return;
-            }
-            Log.Debug(Tag, $"Attempting to load {assembly.FullName}");
-            if (IsAlreadyLoaded(assembly.FullName)) return;
-
-            var types = assembly.GetExportedTypes();
+            var types = instance.Assembly.GetExportedTypes();
             // Only filter for types which can be instantiated and implement IPlugin somehow.
             var implementingType = types.FirstOrDefault(
                 type =>
@@ -97,37 +91,35 @@ namespace Athame.Plugin
             if (implementingType == null)
             {
                 throw new PluginLoadException("No exported types found implementing IPlugin.",
-                    assembly.Location);
+                    instance.AssemblyDirectory);
             }
             // Activate base plugin
             var plugin = (IPlugin)Activator.CreateInstance(implementingType);
             if (plugin.ApiVersion != ApiVersion)
             {
-                throw new PluginLoadException($"Plugin declares incompatible API version: expected {ApiVersion}, found {plugin.ApiVersion}.", assembly.Location);
+                throw new PluginLoadException($"Plugin declares incompatible API version: expected {ApiVersion}, found {plugin.ApiVersion}.",
+                    instance.AssemblyDirectory);
             }
+            instance.Info = plugin.Info;
+            instance.Plugin = plugin;
+
             var servicePlugin = plugin as MusicService;
             var context = new PluginContext
             {
-                PluginDirectory = Directory.GetParent(assembly.Location).FullName
+                PluginDirectory = instance.AssemblyDirectory
             };
+            instance.Context = context;
+
             if (servicePlugin != null)
             {
                 var settingsPath = Program.DefaultApp.UserDataPathOf(Path.Combine(SettingsDir, String.Format(SettingsFileFormat, plugin.Info.Name)));
                 var settingsFile = new SettingsFile(settingsPath, servicePlugin.Settings.GetType(),
                     servicePlugin.Settings);
-                var instance = new ServicePluginInstance
-                {
-                    Info = plugin.Info,
-                    Plugin = plugin,
-                    Context = context,
-                    Service = servicePlugin,
-                    SettingsFile = settingsFile
-                };
-                Plugins.Add(instance);
+                instance.SettingsFile = settingsFile;
             }
             else
             {
-                throw new PluginLoadException("IPlugin type does not implement MusicService.", assembly.Location);
+                throw new PluginLoadException("IPlugin type does not implement MusicService.", instance.AssemblyDirectory);
             }
 
 
@@ -152,41 +144,43 @@ namespace Athame.Plugin
         public void LoadAll()
         {
             BeforeLoad();
-            IEnumerable<Assembly> assemblies;
-            if (singlePluginFilename == null)
+
+            // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
+            var subDirs = Directory.GetDirectories(PluginDirectory);
+            isLoading = true;
+            foreach (var dir in subDirs)
             {
-                // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
-                var subDirs = Directory.GetDirectories(PluginDirectory);
-                var pluginDlls = new List<string>();
-                foreach (var subDir in subDirs)
-                {
-                    pluginDlls.AddRange(Directory.GetFiles(subDir, $"{PluginDllPrefix}*.dll"));
-                }
-                isLoading = true;
-                // Load and activate all plugins
-                assemblies = from dllPath in pluginDlls select Assembly.LoadFile(dllPath);
-            }
-            else
-            {
-                isLoading = true;
-                assemblies = new[] {Assembly.LoadFile(singlePluginFilename) };
-            }
-            foreach (var assembly in assemblies)
-            {
+                var name = Path.GetFileName(dir);
                 try
                 {
-                    Load(assembly);
+                    // Attempt to load a .pdb if one exists
+                    var basePath = Path.Combine(dir, PluginDllPrefix + name);
+                    var dllFilename = basePath + ".dll";
+                    var pdbFilename = basePath + ".pdb";
+
+                    var theAssembly = File.Exists(pdbFilename)
+                        ? Assembly.Load(File.ReadAllBytes(dllFilename), File.ReadAllBytes(pdbFilename))
+                        : Assembly.Load(File.ReadAllBytes(dllFilename));
+
+                    // Set basic information about the assembly
+                    var plugin = new PluginInstance
+                    {
+                        Assembly = theAssembly,
+                        AssemblyDirectory = dir,
+                        Name = name
+                    };
+                    Plugins.Add(plugin);
+
+                    Activate(plugin);
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteException(Level.Error, Tag, ex, $"While loading assembly {assembly}");
-#if DEBUG
-                    Debugger.Break();
-#endif
-                    var eventArgs = new PluginLoadExceptionEventArgs { Exception = ex, Continue = true };
+                    Log.WriteException(Level.Error, Tag, ex, $"While loading plugin {name}");
+                    var eventArgs = new PluginLoadExceptionEventArgs { PluginName = name, Exception = ex, Continue = true };
                     LoadException?.Invoke(this, eventArgs);
                     if (!eventArgs.Continue) return;
                 }
+
             }
             isLoading = false;
         }
@@ -201,17 +195,17 @@ namespace Athame.Plugin
             foreach (var plugin in Plugins)
             {
                 // If it's a service plugin, add it to main service collection
-                var service = plugin as ServicePluginInstance;
+                var service = plugin.Service;
                 if (service == null) continue;
 
                 // Restore the config
-                service.SettingsFile.Load();
-                service.Service.Settings = service.SettingsFile.Settings;
+                plugin.SettingsFile.Load();
+                plugin.Service.Settings = plugin.SettingsFile.Settings;
 
                 // Call Init
                 plugin.Plugin.Init(Program.DefaultApp, plugin.Context);
 
-                AddService(service.Service);
+                AddService(plugin.Service);
             }
         }
 

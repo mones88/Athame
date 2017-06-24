@@ -116,7 +116,6 @@
     <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Plugin\PluginLoadException.cs" />
     <Compile Include="Plugin\ServiceCastExtensions.cs" />
-    <Compile Include="Plugin\ServicePluginInstance.cs" />
     <Compile Include="Settings\SettingsFile.cs" />
     <Compile Include="Settings\AthameSettings.cs" />
     <Compile Include="UI\LocalisableAccountNameFormat.cs" />

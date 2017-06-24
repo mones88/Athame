@@ -63,6 +63,7 @@ namespace Athame.UI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.queueImageAnimationTimer = new System.Windows.Forms.Timer(this.components);
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2.SuspendLayout();
             this.queueMenu.SuspendLayout();
             this.mMenu.SuspendLayout();
@@ -110,6 +111,7 @@ namespace Athame.UI
             this.titleCol,
             this.artistCol,
             this.albumCol,
+            this.columnHeader1,
             this.locCol});
             this.queueListView.FullRowSelect = true;
             this.queueListView.Location = new System.Drawing.Point(14, 309);
@@ -138,7 +140,7 @@ namespace Athame.UI
             // titleCol
             // 
             this.titleCol.Text = "Title";
-            this.titleCol.Width = 240;
+            this.titleCol.Width = 176;
             // 
             // artistCol
             // 
@@ -361,6 +363,10 @@ namespace Athame.UI
             // 
             this.queueImageAnimationTimer.Tick += new System.EventHandler(this.queueImageAnimationTimer_Tick);
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Flags";
+            // 
             // MainForm
             // 
             this.AcceptButton = this.dlButton;
@@ -430,6 +436,7 @@ namespace Athame.UI
         private System.Windows.Forms.Timer queueImageAnimationTimer;
         private System.Windows.Forms.ColumnHeader locCol;
         private System.Windows.Forms.ProgressBar collectionProgressBar;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }
 

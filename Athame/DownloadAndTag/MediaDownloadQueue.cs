@@ -197,11 +197,19 @@ namespace Athame.DownloadAndTag
                     // Write the tag
                     eventArgs.State = DownloadState.WritingTags;
                     OnTrackDownloadProgress(eventArgs);
-                    TrackTagger.Write(eventArgs.TrackFile.FileType, tempPath, currentItem);
+                    TrackTagger.Write(collection.Service.Info.Name, currentItem, eventArgs.TrackFile, 
+                        Program.DefaultSettings.Settings.AlbumArtworkSaveFormat, tempPath);
 
                     // Rename to proper path
-                    if (useTempFile) File.Move(tempPath, path);
-                    
+                    if (useTempFile)
+                    {
+                        if (File.Exists(path))
+                        {
+                            File.Delete(path);
+                        }
+                        File.Move(tempPath, path);
+                    }
+
 
                 }
                 catch (Exception ex)

@@ -14,7 +14,7 @@ namespace Athame.UI
     public partial class SettingsForm : Form
     {
         private readonly AthameSettings defaults = Program.DefaultSettings.Settings;
-        private readonly List<ServicePluginInstance> services;
+        private readonly List<PluginInstance> services;
 
         public SettingsForm()
         {
@@ -51,7 +51,7 @@ namespace Athame.UI
             }
 
             // Populate services
-            services = Program.DefaultPluginManager.Plugins.Cast<ServicePluginInstance>().ToList();
+            services = Program.DefaultPluginManager.Plugins;
             foreach (var service in services)
             {
                 servicesListBox.Items.Add(service.Info.Name);
@@ -124,7 +124,7 @@ namespace Athame.UI
             DialogResult = DialogResult.OK;
         }
 
-        private ServicePluginInstance selectedInstance;
+        private PluginInstance selectedInstance;
         private MusicService selectedService;
 
         private void servicesListBox_SelectedIndexChanged(object sender, EventArgs e)

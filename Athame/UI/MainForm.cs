@@ -74,15 +74,13 @@ namespace Athame.UI
 
             // Error handler for plugin loader
             Program.DefaultPluginManager.LoadException += DefaultPluginManagerOnLoadException;
-
-            // Begin
-            Program.DefaultPluginManager.LoadAll();
-            Program.DefaultSettings.Load();
-            Program.DefaultPluginManager.InitAll();
         }
+
+        private List<Exception> pluginLoadExceptions = new List<Exception>();
 
         private void DefaultPluginManagerOnLoadException(object sender, PluginLoadExceptionEventArgs pluginLoadExceptionEventArgs)
         {
+            pluginLoadExceptions.Add(pluginLoadExceptionEventArgs.Exception);
             pluginLoadExceptionEventArgs.Continue = true;
         }
 
@@ -167,6 +165,29 @@ namespace Athame.UI
             
         }
 
+        private string BuildFlags(IEnumerable<Metadata> metadata)
+        {
+            if (metadata == null) return "";
+            var ret = new List<string>();
+            foreach (var data in metadata)
+            {
+                if (!data.CanDisplay) continue;
+                if (data.IsFlag)
+                {
+                    // If it's a flag, only display it if the value is "True" (i.e. Boolean.ToString())
+                    if (data.Value == Boolean.TrueString)
+                    {
+                        ret.Add(data.Name);
+                    }
+                }
+                else
+                {
+                    ret.Add($"{data.Name}={data.Value}");
+                }
+            }
+            return String.Join(", ", ret);
+        }
+
         #region Download queue manipulation
         private void AddToQueue(MusicService service, IMediaCollection item, string pathFormat)
         {
@@ -206,6 +227,7 @@ namespace Athame.UI
                 lvItem.SubItems.Add(t.Title);
                 lvItem.SubItems.Add(t.Artist.Name);
                 lvItem.SubItems.Add(t.Album.Title);
+                lvItem.SubItems.Add(BuildFlags(t.CustomMetadata));
                 lvItem.SubItems.Add(t.GetBasicPath(enqueuedItem.PathFormat));
                 group.Items.Add(lvItem);
                 queueListView.Items.Add(lvItem);
@@ -315,6 +337,7 @@ namespace Athame.UI
 
         private void PresentException(Exception ex)
         {
+
             Log.WriteException(Level.Error, Tag, ex, "PresentException");
             SetGlobalProgressState(ProgressBarState.Error);
             var th = "An unknown error occurred";
@@ -367,7 +390,7 @@ namespace Athame.UI
                         {
                             Log.Error(Tag, $"Failed to sign into {service.Info.Name}");
                             CommonTaskDialogs.Message(owner: this, caption: $"Failed to sign in to {service.Info.Name}",
-                                message: null, icon:TaskDialogStandardIcon.Error);
+                                message: null, icon: TaskDialogStandardIcon.Error).Show();
                         }
                     }
                     td.Close();
@@ -470,8 +493,10 @@ namespace Athame.UI
                 queueListView.Items.Clear();
                 isListViewDirty = false;
             }
+#if !DEBUG
             try
             {
+#endif
                 // Don't add if the item is already enqueued.
                 var isAlreadyInQueue = mediaDownloadQueue.ItemById(mResult.Id) != null;
                 if (isAlreadyInQueue)
@@ -532,24 +557,38 @@ namespace Athame.UI
                 {
                     LockUi();
                     var pathFormat = Path.Combine(saveDir, prefType.GetPlatformSaveFormat());
-                    switch (mResult.Type)
+                    try
                     {
-                        case MediaType.Album:
-                            // Get album and display it in listview
-                            var album = await mService.GetAlbumAsync(mResult.Id, true);
-                            AddToQueue(mService, album, pathFormat);
-                            break;
+                        switch (mResult.Type)
+                        {
+                            case MediaType.Album:
+                                // Get album and display it in listview
+                                var album = await mService.GetAlbumAsync(mResult.Id, true);
+                                AddToQueue(mService, album, pathFormat);
+                                break;
 
-                        case MediaType.Playlist:
-                            // Get playlist and display it in listview
-                            var playlist = await mService.GetPlaylistAsync(mResult.Id);
-                            AddToQueue(mService, playlist, pathFormat);
-                            break;
+                            case MediaType.Playlist:
+                                // Get playlist and display it in listview
+                                var playlist = await mService.GetPlaylistAsync(mResult.Id);
+                                AddToQueue(mService, playlist, pathFormat);
+                                break;
 
-                        case MediaType.Track:
-                            var track = await mService.GetTrackAsync(mResult.Id);
-                            AddToQueue(mService, track.AsCollection(), pathFormat);
-                            break;
+                            case MediaType.Track:
+                                var track = await mService.GetTrackAsync(mResult.Id);
+                                AddToQueue(mService, track.AsCollection(), pathFormat);
+                                break;
+                        }
+                    }
+                    catch (ResourceNotFoundException)
+                    {
+                        CommonTaskDialogs.Message(caption: "This media does not exist.",
+    message: "Ensure the provided URL is valid, and try again", owner: this).Show();
+                    }
+                    catch (Exception ex)
+                    {
+                        CommonTaskDialogs.Exception(ex,
+                            "An error occurred while trying to retrieve information for this media.",
+                            "The provided URL may be invalid or unsupported.", this).Show();
                     }
                     idTextBox.Clear();
                     UnlockUi();
@@ -557,11 +596,13 @@ namespace Athame.UI
                 };
                 // Show dialog
                 retrievalWaitTaskDialog.Show();
-            }
+#if !DEBUG
+        }
             catch (Exception ex)
             {
                 PresentException(ex);
             }
+#endif
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -721,6 +762,16 @@ namespace Athame.UI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+            Program.DefaultPluginManager.LoadAll();
+            Program.DefaultSettings.Load();
+            Program.DefaultPluginManager.InitAll();
+            if (pluginLoadExceptions.Count > 0)
+            {
+                CommonTaskDialogs.Message("Plugin load error",
+                    "One or more errors occurred while loading plugins. Some plugins may be unavailable. Check the log for more details.",
+                    TaskDialogStandardButtons.Ok, TaskDialogStandardIcon.Warning, this).Show();
+                pluginLoadExceptions.Clear();
+            }
             if (Program.DefaultPluginManager.Plugins.Count == 0)
             {
                 CommonTaskDialogs.Message("No plugins installed",
