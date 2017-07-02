@@ -106,14 +106,14 @@ namespace Athame.UI
             {
                 case DownloadState.PreProcess:
                     StartAnimation(currentlyDownloadingItem);
-                    currentlyDownloadingItem.Text = "Downloading...";
+                    currentlyDownloadingItem.Text = "Downloading collection...";
                     collectionStatusLabel.Text = "Pre-processing...";
                     break;
                 case DownloadState.DownloadingAlbumArtwork:
                     collectionStatusLabel.Text = "Downloading album artwork...";
                     break;
                 case DownloadState.Downloading:
-                    collectionStatusLabel.Text = "Downloading track...";
+                    collectionStatusLabel.Text = $"[{totalProgressBar.Value}%] Downloading track...";
                     break;
                 case DownloadState.PostProcess:
                     collectionStatusLabel.Text = "Post-processing...";
@@ -489,6 +489,12 @@ namespace Athame.UI
         {
             if (isListViewDirty)
             {
+                collectionStatusLabel.Text = "Ready to begin.";
+                collectionProgressBar.Value = 0;
+                SetGlobalProgress(0);
+                SetGlobalProgressState(ProgressBarState.Normal);
+                totalProgressBar.Value = 0;
+                totalStatusLabel.Text = "Ready";
                 queueListView.Groups.Clear();
                 queueListView.Items.Clear();
                 isListViewDirty = false;
