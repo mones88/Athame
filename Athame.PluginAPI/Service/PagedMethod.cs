@@ -10,7 +10,7 @@ namespace Athame.PluginAPI.Service
     /// Represents a collection of items that are retrieved as pages from a service.
     /// </summary>
     /// <typeparam name="T">The type of each item.</typeparam>
-    public abstract class PagedMethod<T>
+    public abstract class PagedMethod<T> : PagedList<T>
     {
         /// <summary>
         /// Default constructor.
@@ -20,26 +20,6 @@ namespace Athame.PluginAPI.Service
         {
             ItemsPerPage = itemsPerPage;
         }
-
-        /// <summary>
-        /// A list of every item that has been retrieved so far.
-        /// </summary>
-        public virtual IList<T> AllItems { get; set; }
-
-        /// <summary>
-        /// The amount of items that are retrieved per page.
-        /// </summary>
-        public int ItemsPerPage { get; }
-
-        /// <summary>
-        /// The total amount of items that can be retrieved.
-        /// </summary>
-        public virtual int TotalNumberOfItems { get; set; }
-
-        /// <summary>
-        /// Whether the current method instance has more items that can be loaded.
-        /// </summary>
-        public abstract bool HasMoreItems { get; }
 
         /// <summary>
         /// Retrieves the next page asynchronously and appends the result to <see cref="AllItems"/>.

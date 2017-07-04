@@ -81,6 +81,7 @@
     <Compile Include="Service\IUsernamePasswordAuthenticationAsync.cs" />
     <Compile Include="Service\MediaType.cs" />
     <Compile Include="Service\Metadata.cs" />
+    <Compile Include="Service\PagedList.cs" />
     <Compile Include="Service\PagedMethod.cs" />
     <Compile Include="Service\Picture.cs" />
     <Compile Include="Service\Playlist.cs" />

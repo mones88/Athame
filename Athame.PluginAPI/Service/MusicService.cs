@@ -24,6 +24,14 @@ namespace Athame.PluginAPI.Service
         public abstract Task<Playlist> GetPlaylistAsync(string playlistId);
 
         /// <summary>
+        /// Retrieves the items in a playlist
+        /// </summary>
+        /// <param name="playlistId">The playlist's ID to retrieve.</param>
+        /// <param name="itemsPerPage">The number of items to retrieve per page.</param>
+        /// <returns>A paged list of tracks.</returns>
+        public abstract PagedMethod<Track> GetPlaylistItems(string playlistId, int itemsPerPage);
+
+        /// <summary>
         /// Parses a public-facing URL of a service, and returns the media type referenced and the identifier.
         /// </summary>
         /// <param name="url">A URL to parse.</param>
@@ -35,8 +43,32 @@ namespace Athame.PluginAPI.Service
         /// </summary>
         /// <param name="searchText">The text to search</param>
         /// <param name="typesToRetrieve">Which media to search for. This can be ignored for services which return all types regardless.</param>
+        /// <param name="itemsPerPage">The number of items to retrieve per page.</param>
         /// <returns>A <see cref="SearchResult"/> containing top tracks, albums, or playlists.</returns>
-        public abstract Task<SearchResult> SearchAsync(string searchText, MediaType typesToRetrieve);
+        public abstract SearchResult Search(string searchText, MediaType typesToRetrieve, int itemsPerPage);
+
+        /// <summary>
+        /// Retrieves information for a specified artist.
+        /// </summary>
+        /// <param name="artistId">The artist's ID.</param>
+        /// <returns>An artist.</returns>
+        public abstract Task<Artist> GetArtistInfoAsync(string artistId);
+
+        /// <summary>
+        /// Retrieves the top tracks for an artist.
+        /// </summary>
+        /// <param name="artistId">The artist's ID.</param>
+        /// <param name="itemsPerPage">How many items per page to retrieve.</param>
+        /// <returns>A paged list of tracks.</returns>
+        public abstract PagedMethod<Track> GetArtistTopTracks(string artistId, int itemsPerPage);
+
+        /// <summary>
+        /// Retrieves the albums released by an artist.
+        /// </summary>
+        /// <param name="artistId">The artist's ID</param>
+        /// <param name="itemsPerPage">How many items per page to retrieve.</param>
+        /// <returns>A paged list of albums.</returns>
+        public abstract PagedMethod<Album> GetArtistAlbums(string artistId, int itemsPerPage);
 
         /// <summary>
         /// Retrieves an album.
@@ -83,8 +115,21 @@ namespace Athame.PluginAPI.Service
             return new HttpDownloader();
         }
 
+        /// <summary>
+        /// Provides information about a plugin.
+        /// </summary>
         public abstract PluginInfo Info { get; }
+
+        /// <summary>
+        /// The API version the plugin implements.
+        /// </summary>
         public abstract int ApiVersion { get; }
+
+        /// <summary>
+        /// Called when the plugin is loaded.
+        /// </summary>
+        /// <param name="application">The current host application instance.</param>
+        /// <param name="pluginContext">Information about the plugin's location.</param>
         public abstract void Init(AthameApplication application, PluginContext pluginContext);
     }
 }
