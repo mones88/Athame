@@ -54,7 +54,10 @@ namespace Athame.UI
             services = Program.DefaultPluginManager.Plugins;
             foreach (var service in services)
             {
-                servicesListBox.Items.Add(service.Info.Name);
+                if (service.Info != null)
+                {
+                    servicesListBox.Items.Add(service.Info.Name);
+                }
             }
             if (servicesListBox.Items.Count > 0) servicesListBox.SelectedIndex = 0;
         }

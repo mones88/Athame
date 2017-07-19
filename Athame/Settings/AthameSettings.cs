@@ -72,9 +72,9 @@ namespace Athame.Settings
             };
             PlaylistSavePreference = new MediaTypeSavePreference
             {
-                AskForLocation = true,
+                AskForLocation = false,
                 SaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                SaveFormat = "{AlbumArtistOrArtist} - {Title}"
+                SaveFormat = "{PlaylistName}"
             };
             PlaylistSavePreferenceUsesGeneral = false;
             MainWindowPreference = new WindowPreference();

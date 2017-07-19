@@ -10,16 +10,6 @@ namespace Athame.Utils
 {
     public static class TrackFileExtensions
     {
-        /// <summary>
-        /// Gets the path for the track file, which includes the extension.
-        /// </summary>
-        /// <param name="trackFile">The track file.</param>
-        /// <param name="pathFormat">The path format.</param>
-        /// <returns>A formatted path.</returns>
-        public static string GetPath(this TrackFile trackFile, string pathFormat)
-        {
-            return GetPath(trackFile, pathFormat, new StringObjectFormatter());
-        }
 
         /// <summary>
         /// Gets the path for a track, without the extension.

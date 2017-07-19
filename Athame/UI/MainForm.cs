@@ -80,7 +80,16 @@ namespace Athame.UI
 
         private void DefaultPluginManagerOnLoadException(object sender, PluginLoadExceptionEventArgs pluginLoadExceptionEventArgs)
         {
-            pluginLoadExceptions.Add(pluginLoadExceptionEventArgs.Exception);
+            if (pluginLoadExceptionEventArgs.Exception.GetType() == typeof(PluginIncompatibleException))
+            {
+                CommonTaskDialogs.Message("Incompatible plugin",
+                    $"The plugin \"{pluginLoadExceptionEventArgs.PluginName}\" is incompatible with this version of Athame.",
+                    icon: TaskDialogStandardIcon.Error, owner: this).Show();
+            }
+            else
+            {
+                pluginLoadExceptions.Add(pluginLoadExceptionEventArgs.Exception);
+            }
             pluginLoadExceptionEventArgs.Continue = true;
         }
 
@@ -300,7 +309,7 @@ namespace Athame.UI
         private void UnlockUi()
         {
             idTextBox.Enabled = true;
-            dlButton.Enabled = true;
+            dlButton.Enabled = !String.IsNullOrWhiteSpace(idTextBox.Text);
             settingsButton.Enabled = true;
             pasteButton.Enabled = true;
             clearButton.Enabled = true;
@@ -368,7 +377,7 @@ namespace Athame.UI
                     select screen).Any();
         }
 
-        private void ShowStartupTaskDialog()
+        private void RestoreServices()
         {
             var td = CommonTaskDialogs.Wait(owner: this);
             var openCt = new CancellationTokenSource();
@@ -483,21 +492,26 @@ namespace Athame.UI
 
 #endregion
 
+        private void CleanQueueListView()
+        {
+            collectionStatusLabel.Text = "Ready to begin.";
+            collectionProgressBar.Value = 0;
+            SetGlobalProgress(0);
+            SetGlobalProgressState(ProgressBarState.Normal);
+            totalProgressBar.Value = 0;
+            totalStatusLabel.Text = "Ready";
+            queueListView.Groups.Clear();
+            queueListView.Items.Clear();
+            isListViewDirty = false;
+        }
+
 #region MainForm event handlers and control event handlers
         
         private void button1_Click(object sender, EventArgs e)
         {
             if (isListViewDirty)
             {
-                collectionStatusLabel.Text = "Ready to begin.";
-                collectionProgressBar.Value = 0;
-                SetGlobalProgress(0);
-                SetGlobalProgressState(ProgressBarState.Normal);
-                totalProgressBar.Value = 0;
-                totalStatusLabel.Text = "Ready";
-                queueListView.Groups.Clear();
-                queueListView.Items.Clear();
-                isListViewDirty = false;
+                CleanQueueListView();
             }
 #if !DEBUG
             try
@@ -611,7 +625,7 @@ namespace Athame.UI
 #endif
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void RestoreFormPositionAndSize()
         {
             if (!IsWithinVisibleBounds(Program.DefaultSettings.Settings.MainWindowPreference.Location) ||
                 Program.DefaultSettings.Settings.MainWindowPreference.Location == new Point(0, 0))
@@ -629,6 +643,11 @@ namespace Athame.UI
                 Program.DefaultSettings.Settings.MainWindowPreference.Size = savedSize = MinimumSize;
             }
             Size = savedSize;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            RestoreFormPositionAndSize();
         }
 
         private void settingsButton_Click(object sender, EventArgs e)
@@ -670,7 +689,7 @@ namespace Athame.UI
 
         }
 
-        private async void startDownloadButton_Click(object sender, EventArgs e)
+        private async void StartDownload()
         {
             isListViewDirty = true;
             if (mediaDownloadQueue.Count == 0)
@@ -707,7 +726,11 @@ namespace Athame.UI
             {
                 UnlockUi();
             }
+        }
 
+        private async void startDownloadButton_Click(object sender, EventArgs e)
+        {
+            StartDownload();
         }
 
         private void queueListView_MouseClick(object sender, MouseEventArgs e)
@@ -766,10 +789,9 @@ namespace Athame.UI
             Program.DefaultSettings.Settings.MainWindowPreference.Size = Size;
         }
 
-        private void MainForm_Shown(object sender, EventArgs e)
+        private void LoadAndInitPlugins()
         {
             Program.DefaultPluginManager.LoadAll();
-            Program.DefaultSettings.Load();
             Program.DefaultPluginManager.InitAll();
             if (pluginLoadExceptions.Count > 0)
             {
@@ -778,16 +800,29 @@ namespace Athame.UI
                     TaskDialogStandardButtons.Ok, TaskDialogStandardIcon.Warning, this).Show();
                 pluginLoadExceptions.Clear();
             }
-            if (Program.DefaultPluginManager.Plugins.Count == 0)
+            if (!Program.DefaultPluginManager.AreAnyLoaded)
             {
-                CommonTaskDialogs.Message("No plugins installed",
+#if DEBUG
+                // https://youtu.be/Ki5cvEPu_e0?t=161
+                var buttons = TaskDialogStandardButtons.Ok | TaskDialogStandardButtons.No;
+#else
+                var buttons = TaskDialogStandardButtons.Ok;
+#endif
+                if (CommonTaskDialogs.Message("No plugins installed",
                     "No plugins could be found. If you have attempted to install a plugin, it may not be installed properly.",
-                    TaskDialogStandardButtons.Ok, TaskDialogStandardIcon.Error, this).Show();
-                Application.Exit();
+                    buttons, TaskDialogStandardIcon.Error, this).Show() != TaskDialogResult.No)
+                {
+                    Application.Exit();
+                }
+                
             }
+        }
 
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
             LockUi();
-            ShowStartupTaskDialog();
+            LoadAndInitPlugins();
+            RestoreServices();
             UnlockUi();
         }
 

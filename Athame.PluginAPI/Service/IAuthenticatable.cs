@@ -30,5 +30,33 @@ namespace Athame.PluginAPI.Service
         /// Clears any stored session details.
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Gets the currently signed in user's saved tracks
+        /// </summary>
+        /// <param name="itemsPerPage">The number of items per page to retrieve at a time.</param>
+        /// <returns></returns>
+        PagedMethod<Track> GetUserSavedTracks(int itemsPerPage);
+
+        /// <summary>
+        /// Gets the currently signed in user's saved artists
+        /// </summary>
+        /// <param name="itemsPerPage">The number of items per page to retrieve at a time.</param>
+        /// <returns></returns>
+        PagedMethod<Artist> GetUserSavedArtists(int itemsPerPage);
+
+        /// <summary>
+        /// Gets the currently signed in user's saved albums
+        /// </summary>
+        /// <param name="itemsPerPage">The number of items per page to retrieve at a time.</param>
+        /// <returns></returns>
+        PagedMethod<Album> GetUserSavedAlbums(int itemsPerPage);
+
+        /// <summary>
+        /// Gets the currently signed in user's saved playlists
+        /// </summary>
+        /// <param name="itemsPerPage">The number of items per page to retrieve at a time.</param>
+        /// <returns></returns>
+        PagedMethod<Playlist> GetUserSavedPlaylists(int itemsPerPage);
     }
 }

@@ -41,6 +41,7 @@ namespace Athame.UI
             this.titleCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.artistCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.albumCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.locCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.queueImageList = new System.Windows.Forms.ImageList(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -63,7 +64,6 @@ namespace Athame.UI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.queueImageAnimationTimer = new System.Windows.Forms.Timer(this.components);
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2.SuspendLayout();
             this.queueMenu.SuspendLayout();
             this.mMenu.SuspendLayout();
@@ -151,6 +151,10 @@ namespace Athame.UI
             // 
             this.albumCol.Text = "Album";
             this.albumCol.Width = 152;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Flags";
             // 
             // locCol
             // 
@@ -323,6 +327,7 @@ namespace Athame.UI
             // startDownloadButton
             // 
             this.startDownloadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.startDownloadButton.Enabled = false;
             this.startDownloadButton.Location = new System.Drawing.Point(720, 280);
             this.startDownloadButton.Name = "startDownloadButton";
             this.startDownloadButton.Size = new System.Drawing.Size(75, 23);
@@ -362,10 +367,6 @@ namespace Athame.UI
             // queueImageAnimationTimer
             // 
             this.queueImageAnimationTimer.Tick += new System.EventHandler(this.queueImageAnimationTimer_Tick);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Flags";
             // 
             // MainForm
             // 

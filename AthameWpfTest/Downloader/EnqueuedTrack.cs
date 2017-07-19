@@ -1,6 +1,7 @@
-﻿using Athame.PluginAPI.Downloader;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Athame.PluginAPI.Downloader;
 using Athame.PluginAPI.Service;
-using AthameWPF.UI.Models;
 
 namespace AthameWPF.Downloader
 {
@@ -18,6 +19,11 @@ namespace AthameWPF.Downloader
         public TrackFile TrackFile { get; set; }
         public decimal PercentComplete { get; set; }
         public DownloadState State { get; set; }
+
+        public static IEnumerable<EnqueuedTrack> FromCollection(MusicService service, IEnumerable<Track> tracks)
+        {
+            return tracks.Select(track => new EnqueuedTrack(service, track));
+        }
 
     }
 }
