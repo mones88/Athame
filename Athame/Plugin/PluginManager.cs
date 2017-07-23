@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Athame.PluginAPI;
 using Athame.PluginAPI.Service;
-using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Athame.Logging;
 using Athame.Settings;

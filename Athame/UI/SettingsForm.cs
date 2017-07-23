@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using Athame.Plugin;
 using Athame.PluginAPI.Service;
-using Athame.Properties;
 using Athame.Settings;
 
 namespace Athame.UI

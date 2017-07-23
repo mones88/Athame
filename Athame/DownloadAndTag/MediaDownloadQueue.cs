@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Athame.Logging;
@@ -182,16 +179,10 @@ namespace Athame.DownloadAndTag
                         eventArgs.State = DownloadState.PostProcess;
                         OnTrackDownloadProgress(eventArgs);
                     };
-                    var formatter = new StringObjectFormatter
-                    {
-                        Globals = {{"ServiceName", collection.Service.Info.Name}}
-                    };
-                    var playlistCollection = collection.MediaCollection as Playlist;
-                    if (playlistCollection != null)
-                    {
-                        formatter.Globals.Add("PlaylistName", playlistCollection.Title);
-                    }
-                    var path = eventArgs.TrackFile.GetPath(collection.PathFormat, formatter);
+                    
+                    var objDict = Dictify.ObjectToDictionary(currentItem);
+                    objDict["Collection"] = collection;
+                    var path = eventArgs.TrackFile.GetPath(collection.PathFormat, objDict);
                     var tempPath = path;
                     if (useTempFile) tempPath += "-temp";
                     EnsureParentDirectories(tempPath);

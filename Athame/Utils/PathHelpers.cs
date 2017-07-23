@@ -29,13 +29,13 @@ namespace Athame.Utils
         }
 
         /// <summary>
-        /// Splits a path by <see cref="Path.DirectorySeparatorChar"/> and cleans each component.
+        /// Splits a path by the null character and cleans each component.
         /// </summary>
         /// <param name="path">The path to clean.</param>
         /// <returns>A valid path.</returns>
         public static string CleanPath(string path)
         {
-            var components = path.Split(Path.DirectorySeparatorChar);
+            var components = path.Split('\0');
             var cleanComponents = new string[components.Length];
 
             for (var i = 0; i < components.Length; i++)

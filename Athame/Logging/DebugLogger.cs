@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Athame.Utils;
+﻿using System.Diagnostics;
 
 namespace Athame.Logging
 {

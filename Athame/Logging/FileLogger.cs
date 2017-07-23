@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Athame.Utils;
+using CenterCLR;
 
 namespace Athame.Logging
 {
@@ -28,31 +25,31 @@ namespace Athame.Logging
 
         private void EnsureLog()
         {
-            var temp = new { FileDate = DateTime.Now.ToString("yyyyMMdd") };
-            var formattedName = StringObjectFormatter.Format(FilenameFormat, temp);
+            var temp = new Dictionary<string, object> { { "FileDate", DateTime.Now.ToString("yyyyMMdd") } };
+            var formattedName = Named.Format(FilenameFormat, temp);
             if (logFileName != formattedName)
             {
                 logFile?.Dispose();
                 writer?.Dispose();
                 logFile = File.Open(Path.Combine(logDirectory, formattedName), FileMode.Append, FileAccess.Write, FileShare.Read);
                 logFileName = formattedName;
-                writer = new StreamWriter(logFile) {AutoFlush = true};
+                writer = new StreamWriter(logFile) { AutoFlush = true };
             }
         }
 
         public void Write(Level level, string moduleTag, string message)
         {
             EnsureLog();
-            var vars = new
+            var vars = new Dictionary<string, object>
             {
-                Date = DateTime.Now.ToString("O"),
-                Level = level,
-                Tag = moduleTag ?? "Global",
-                Message = message
+                { "Date", DateTime.Now.ToString("O")},
+                { "Level", level},
+                { "Tag", moduleTag ?? "Global"},
+                { "Message", message }
             };
-            var formattedMessage = StringObjectFormatter.Format(LineFormat, vars);
+            var formattedMessage = Named.Format(LineFormat, vars);
             writer.WriteLine(formattedMessage);
-            
+
 
         }
 
