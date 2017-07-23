@@ -590,6 +590,12 @@ namespace Athame.UI
                             case MediaType.Playlist:
                                 // Get playlist and display it in listview
                                 var playlist = await mService.GetPlaylistAsync(mResult.Id);
+                                if (playlist.Tracks == null)
+                                {
+                                    var items = mService.GetPlaylistItems(mResult.Id, 100);
+                                    await items.LoadAllPagesAsync();
+                                    playlist.Tracks = items.AllItems;
+                                }
                                 AddToQueue(mService, playlist, pathFormat);
                                 break;
 

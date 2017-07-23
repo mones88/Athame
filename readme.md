@@ -8,8 +8,6 @@ music directly from the artist as more money goes to them.
 Since I am also caught up with other things I can't devote all my time to fixing and improving Athame. Right now it is
 just a very buggy, basic tool which I hope will either be improved upon in the future, or be contributed to.
 
-Unfortunately I can't pay for both Tidal and Google Play Music, so I am unable to test Google Play Music functionality.
-
 Download
 --------
 [Click the 'Releases' tab above at the top to download the latest, or just click here.](https://github.com/svbnet/Athame/releases)
@@ -18,6 +16,8 @@ Plugins
 -------
 | [Tidal](https://github.com/svbnet/AthamePlugin.Tidal/releases) | [Google Play Music](https://github.com/svbnet/AthamePlugin.GooglePlayMusic/releases) |
 |-------|-------------------|
+
+**At the moment, I am mostly working on the Athame core application, so I can't spend my time writing plugins for other services. However, services like Deezer and Spotify may become available in the future.**
 
 Plugins are always distributed as Zip files - to install a plugin, simply extract the zip to the "Plugins" folder, which is in the same directory
 as the Athame executable. A guide for creating your own plugins can be found on the wiki.
