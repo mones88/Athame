@@ -80,6 +80,15 @@
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log.cs" />
+    <Compile Include="UI\Controls\CachedImage.xaml.cs">
+      <DependentUpon>CachedImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\PathToggleButton.xaml.cs">
+      <DependentUpon>PathToggleButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\PrimaryTabNavigation.xaml.cs">
+      <DependentUpon>PrimaryTabNavigation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Models\IndependentArtist.cs" />
     <Compile Include="Utils\ResourceUriHelper.cs" />
     <Compile Include="Settings\AthameSettings.cs" />
@@ -92,9 +101,6 @@
     <Compile Include="Downloader\EnqueuedTrack.cs" />
     <Compile Include="MockDataGen.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="UI\Controls\CachedImage.xaml.cs">
-      <DependentUpon>CachedImage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
     </Compile>
@@ -120,10 +126,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Controls\CachedImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Controls\PathToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Controls\PlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Controls\PrimaryTabNavigation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
