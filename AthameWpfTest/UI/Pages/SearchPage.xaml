@@ -22,30 +22,34 @@
             <ColumnDefinition Width="7*" />
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0" Background="{StaticResource SecondaryNavBackgroundBrush}">
-            <RadioButton x:Name="SearchSecMenuOption"
+            <DockPanel.Resources>
+                <Style TargetType="controls:PathToggleButton">
+                    <Setter Property="PathRenderSize" Value="24" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Padding" Value="10" />
+                    <Setter Property="Foreground" Value="{StaticResource SecondaryNavForegroundBrush}" />
+                </Style>
+            </DockPanel.Resources>
+            <controls:PathToggleButton x:Name="SearchSecMenuOption"
                          DockPanel.Dock="Top"
                          IsChecked="True"
-                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource SearchIcon}"
-                         ui:SecSwitcherButtonExtensions.Text="Search/URL"
-                         Style="{DynamicResource SecMenuRadioButtonTemplate}" />
+                         PathData="{StaticResource SearchIcon}"
+                         Text="Search/URL" />
 
-            <RadioButton x:Name="PlaylistsSecMenuOption"
+            <controls:PathToggleButton x:Name="PlaylistsSecMenuOption"
                          DockPanel.Dock="Top"
-                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource PlaylistIcon}"
-                         ui:SecSwitcherButtonExtensions.Text="Playlists"
-                         Style="{DynamicResource SecMenuRadioButtonTemplate}" />
+                         PathData="{StaticResource PlaylistIcon}"
+                         Text="Playlists" />
 
-            <RadioButton x:Name="AlbumsSecMenuOption"
+            <controls:PathToggleButton x:Name="AlbumsSecMenuOption"
                          DockPanel.Dock="Top"
-                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource AlbumIcon}"
-                         ui:SecSwitcherButtonExtensions.Text="Albums"
-                         Style="{DynamicResource SecMenuRadioButtonTemplate}" />
+                         PathData="{StaticResource AlbumIcon}"
+                         Text="Albums" />
 
-            <RadioButton x:Name="TracksSecMenuOption"
+            <controls:PathToggleButton x:Name="TracksSecMenuOption"
                          DockPanel.Dock="Top"
-                         ui:SecSwitcherButtonExtensions.PathStyle="{StaticResource TrackIcon}"
-                         ui:SecSwitcherButtonExtensions.Text="Tracks"
-                         Style="{DynamicResource SecMenuRadioButtonTemplate}" />
+                         PathData="{StaticResource TrackIcon}"
+                         Text="Tracks" />
 
             <!-- Account selector at bottom -->
             <ComboBox x:Name="AccountSelectorComboBox" 
@@ -243,6 +247,11 @@
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
                         </ListView.GroupStyle>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
                     </ListView>
                 </Grid>
             </DockPanel>

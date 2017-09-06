@@ -18,7 +18,7 @@
             <StackPanel Orientation="Horizontal" Margin="5, 10">
                 <Viewbox Width="24" Height="24">
                     <Canvas Width="24" Height="24">
-                        <Path Style="{StaticResource BackIcon}" Fill="#aaa" />
+                        <Path Data="{StaticResource BackIcon}" Fill="#aaa" />
                     </Canvas>
                 </Viewbox>
                 <TextBlock VerticalAlignment="Center" Foreground="#aaa" FontSize="14" x:Name="BackTextBlock" Loaded="BackTextBlock_Loaded" Margin="5,0,0,0">Back to something</TextBlock>

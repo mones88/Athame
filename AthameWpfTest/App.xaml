@@ -70,7 +70,7 @@
             <Style x:Key="BlankButton" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
                 <Setter Property="Background" Value="Transparent"/>
-                
+
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="Template">
@@ -87,7 +87,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <Style x:Key="FlatButton" BasedOn="{StaticResource BlankButton}" TargetType="{x:Type Button}">
                 <Setter Property="Padding" Value="20,10"/>
                 <Setter Property="Foreground" Value="{StaticResource MainNavBackgroundBrush}"/>
@@ -259,40 +259,55 @@
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type model:Track}">
-                    <Grid Margin="3,6">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="64"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition SharedSizeGroup="Suggestion" />
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
-                            <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" FontSize="14" FontWeight="Light"><Run Text="{Binding Path=AlbumArtistOrArtist.Name}" /> — <Run Text="{Binding Path=Album.Title}" /></TextBlock>
-                        </StackPanel>
+                        <Grid Margin="3,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" Margin="0,0,0,3" />
+                                <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" FontSize="14" FontWeight="Light"><Run Text="{Binding Path=AlbumArtistOrArtist.Name}" /> — <Run Text="{Binding Path=Album.Title}" /></TextBlock>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type model:Playlist}">
-                    <Grid Margin="3,6">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="64"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition SharedSizeGroup="Suggestion" />
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" />
-                        </StackPanel>
+                        <Grid Margin="3,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="16" />
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type model:Artist}">
-                    <Grid Margin="3,6">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="64"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition SharedSizeGroup="Suggestion" />
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Name}" FontSize="16" />
-                        </StackPanel>
+                        <Grid Margin="3,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" Source="https://placehold.it/350"/>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Name}" FontSize="16" />
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </DataTemplate>
             </ResourceDictionary>

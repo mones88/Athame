@@ -42,5 +42,14 @@ namespace AthameWPF.UI.Controls
             get { return (Geometry) GetValue(PathDataProperty); }
             set { SetValue(PathDataProperty, value); }
         }
+
+        public static readonly DependencyProperty PathRenderSizeProperty = DependencyProperty.Register(
+            "PathRenderSize", typeof(double), typeof(PathToggleButton), new PropertyMetadata(36.0));
+
+        public double PathRenderSize
+        {
+            get { return (double) GetValue(PathRenderSizeProperty); }
+            set { SetValue(PathRenderSizeProperty, value); }
+        }
     }
 }

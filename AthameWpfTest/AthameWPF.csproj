@@ -86,9 +86,6 @@
     <Compile Include="UI\Controls\PathToggleButton.xaml.cs">
       <DependentUpon>PathToggleButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Controls\PrimaryTabNavigation.xaml.cs">
-      <DependentUpon>PrimaryTabNavigation.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\Models\IndependentArtist.cs" />
     <Compile Include="Utils\ResourceUriHelper.cs" />
     <Compile Include="Settings\AthameSettings.cs" />
@@ -134,10 +131,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Controls\PlaylistView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Controls\PrimaryTabNavigation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

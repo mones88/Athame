@@ -8,6 +8,7 @@
         xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
         mc:Ignorable="d"
         Title="Athame" Height="500" Width="700" WindowStartupLocation="CenterScreen">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="72" />
@@ -21,12 +22,20 @@
                 <RowDefinition Height="4" />
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
+                <DockPanel.Resources>
+                    <Style TargetType="controls:PathToggleButton">
+                        <EventSetter Event="Checked" Handler="SwitcherButtonOnChecked" />
+                        <Setter Property="PathRenderSize" Value="36" />
+                        <Setter Property="FontSize" Value="18" />
+                        <Setter Property="Foreground" Value="{StaticResource MainNavForegroundBrush}" />
+                    </Style>
+                </DockPanel.Resources>
                 <controls:PathToggleButton x:Name="MainSwitcherSearchButton" 
                              IsChecked="True"
                              HorizontalAlignment="Left"
-                                           Checked="MainSwitcherSearchButton_OnChecked"
-                                           Text="Add"
-                                           PathData="{StaticResource AddIcon}"/>
+                             Checked="MainSwitcherSearchButton_OnChecked"
+                             Text="Add"
+                             PathData="{StaticResource AddIcon}" />
 
                 <controls:PathToggleButton x:Name="MainSwitcherQueueButton" 
                              HorizontalAlignment="Left"
@@ -56,4 +65,3 @@
                Loaded="MainContentFrame_OnLoaded" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>
-
