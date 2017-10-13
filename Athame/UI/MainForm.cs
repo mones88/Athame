@@ -114,7 +114,7 @@ namespace Athame.UI
             {
                 case DownloadState.PreProcess:
                     StartAnimation(currentlyDownloadingItem);
-                    currentlyDownloadingItem.Text = "Downloading collection...";
+                    currentlyDownloadingItem.Text = "Downloading...";
                     collectionStatusLabel.Text = "Pre-processing...";
                     break;
                 case DownloadState.DownloadingAlbumArtwork:
@@ -147,7 +147,7 @@ namespace Athame.UI
             numberOfRetries = 0;
             // this'll bite me in the ass someday
             currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[e.CurrentItemIndex * 2];
-            queueListView.EnsureVisible(currentlyDownloadingItem.Index);
+            queueListView.EnsureVisible(((MediaItemTag) currentlyDownloadingItem.Tag).GlobalItemIndex);
         }
 
         private void MediaDownloadQueue_CollectionDequeued(object sender, CollectionDownloadEventArgs e)
@@ -197,9 +197,9 @@ namespace Athame.UI
         }
 
         #region Download queue manipulation
-        private void AddToQueue(MusicService service, IMediaCollection item, string pathFormat)
+        private void AddToQueue(MusicService service, IMediaCollection item, string destination, string pathFormat)
         {
-            var enqueuedItem = mediaDownloadQueue.Enqueue(service, item, pathFormat);
+            var enqueuedItem = mediaDownloadQueue.Enqueue(service, item, destination, pathFormat);
             var mediaType = MediaCollectionAsType(item);
             var header = String.Format(GroupHeaderFormat, mediaType, item.Title, service.Info.Name);
             var group = new ListViewGroup(header);
@@ -236,7 +236,7 @@ namespace Athame.UI
                 lvItem.SubItems.Add(t.Artist.Name);
                 lvItem.SubItems.Add(t.Album.Title);
                 lvItem.SubItems.Add(BuildFlags(t.CustomMetadata));
-                lvItem.SubItems.Add(t.GetBasicPath(enqueuedItem.PathFormat));
+                lvItem.SubItems.Add(Path.Combine(destination, t.GetBasicPath(enqueuedItem.PathFormat)));
                 group.Items.Add(lvItem);
                 queueListView.Items.Add(lvItem);
             }
@@ -534,7 +534,7 @@ namespace Athame.UI
                 var saveDir = prefType.SaveDirectory;
                 if (prefType.AskForLocation)
                 {
-                    using (var folderSelectionDialog = new FolderBrowserDialog { Description = "Select a destionation for this media:" })
+                    using (var folderSelectionDialog = new FolderBrowserDialog { Description = "Select a destination for this media:" })
                     {
                         if (folderSelectionDialog.ShowDialog(this) == DialogResult.OK)
                         {
@@ -575,7 +575,7 @@ namespace Athame.UI
                 retrievalWaitTaskDialog.Opened += async (o, args) =>
                 {
                     LockUi();
-                    var pathFormat = Path.Combine(saveDir, prefType.GetPlatformSaveFormat());
+                    var pathFormat = prefType.GetPlatformSaveFormat();
                     try
                     {
                         switch (mResult.Type)
@@ -583,7 +583,7 @@ namespace Athame.UI
                             case MediaType.Album:
                                 // Get album and display it in listview
                                 var album = await mService.GetAlbumAsync(mResult.Id, true);
-                                AddToQueue(mService, album, pathFormat);
+                                AddToQueue(mService, album, saveDir, pathFormat);
                                 break;
 
                             case MediaType.Playlist:
@@ -595,12 +595,12 @@ namespace Athame.UI
                                     await items.LoadAllPagesAsync();
                                     playlist.Tracks = items.AllItems;
                                 }
-                                AddToQueue(mService, playlist, pathFormat);
+                                AddToQueue(mService, playlist, saveDir, pathFormat);
                                 break;
 
                             case MediaType.Track:
                                 var track = await mService.GetTrackAsync(mResult.Id);
-                                AddToQueue(mService, track.AsCollection(), pathFormat);
+                                AddToQueue(mService, track.AsCollection(), saveDir, pathFormat);
                                 break;
                         }
                     }
@@ -875,7 +875,7 @@ namespace Athame.UI
         {
             if (mCurrentlySelectedQueueItem == null) return null;
             var tag = (MediaItemTag)mCurrentlySelectedQueueItem.Tag;
-            var parentDir = Path.GetDirectoryName(tag.Track.GetBasicPath(tag.Collection.PathFormat));
+            var parentDir = Path.GetDirectoryName(Path.Combine(tag.Collection.Destination, tag.Track.GetBasicPath(tag.Collection.PathFormat)));
             return Directory.Exists(parentDir) ? parentDir : null;
         }
 
@@ -901,11 +901,6 @@ namespace Athame.UI
         private void queueListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ShowDetails();
-        }
-
-        private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

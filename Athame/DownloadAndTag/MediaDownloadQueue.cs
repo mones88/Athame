@@ -24,10 +24,11 @@ namespace Athame.DownloadAndTag
             this.useTempFile = useTempFile;
         }
 
-        public EnqueuedCollection Enqueue(MusicService service, IMediaCollection collection, string pathFormat)
+        public EnqueuedCollection Enqueue(MusicService service, IMediaCollection collection, string destination, string pathFormat)
         {
             var item = new EnqueuedCollection
             {
+                Destination = destination,
                 Service = service,
                 PathFormat = pathFormat,
                 MediaCollection = collection
@@ -182,7 +183,7 @@ namespace Athame.DownloadAndTag
                     
                     var objDict = Dictify.ObjectToDictionary(currentItem);
                     objDict["Collection"] = collection;
-                    var path = eventArgs.TrackFile.GetPath(collection.PathFormat, objDict);
+                    var path = Path.Combine(collection.Destination, eventArgs.TrackFile.GetPath(collection.PathFormat, objDict));
                     var tempPath = path;
                     if (useTempFile) tempPath += "-temp";
                     EnsureParentDirectories(tempPath);

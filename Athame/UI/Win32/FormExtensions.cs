@@ -53,10 +53,7 @@ namespace Athame.UI.Win32
                 dwTimeout = (uint)rate
             };
             fInfo.cbSize = (uint)Marshal.SizeOf(fInfo);
-            if (!FlashWindowEx(ref fInfo))
-            {
-                throw new Win32Exception();
-            }
+            FlashWindowEx(ref fInfo);
         }
 
 
