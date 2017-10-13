@@ -53,7 +53,7 @@ namespace AthameWPF.UI.Pages
             var album = item as Album;
             if (album != null)
             {
-                NavigationService?.Navigate(new ViewMediaPage($"search results for \"{PrimaryInputTextBox.Text}\"", album));
+                //NavigationService?.Navigate(new ViewMediaPage($"search results for \"{PrimaryInputTextBox.Text}\"", album));
             }
         }
     }

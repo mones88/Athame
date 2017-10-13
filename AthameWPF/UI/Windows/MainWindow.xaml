@@ -5,63 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AthameWPF"
         xmlns:ui="clr-namespace:AthameWPF.UI"
+        xmlns:viewModel="clr-namespace:AthameWPF.UI.ViewModels"
         xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
         mc:Ignorable="d"
-        Title="Athame" Height="500" Width="700" WindowStartupLocation="CenterScreen">
-
+        Title="Athame" Height="500" Width="700" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel />
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="72" />
+            <RowDefinition Height="42" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Main switcher -->
-        <Grid Grid.Row="0" Background="{StaticResource MainNavBackgroundBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="4" />
-            </Grid.RowDefinitions>
-            <DockPanel Grid.Row="0">
-                <DockPanel.Resources>
-                    <Style TargetType="controls:PathToggleButton">
-                        <EventSetter Event="Checked" Handler="SwitcherButtonOnChecked" />
-                        <Setter Property="PathRenderSize" Value="36" />
-                        <Setter Property="FontSize" Value="18" />
-                        <Setter Property="Foreground" Value="{StaticResource MainNavForegroundBrush}" />
-                    </Style>
-                </DockPanel.Resources>
-                <controls:PathToggleButton x:Name="MainSwitcherSearchButton" 
-                             IsChecked="True"
-                             HorizontalAlignment="Left"
-                             Checked="MainSwitcherSearchButton_OnChecked"
-                             Text="Add"
-                             PathData="{StaticResource AddIcon}" />
-
-                <controls:PathToggleButton x:Name="MainSwitcherQueueButton" 
-                             HorizontalAlignment="Left"
-                             Checked="MainSwitcherQueueButton_OnChecked"
-                             Text="Download Queue"
-                             PathData="{StaticResource DownloadIcon}" />
-
-                <controls:PathToggleButton x:Name="MainSwitcherSettingsButton"
-                             HorizontalAlignment="Right"
-                             Checked="MainSwitcherSettingsButton_OnChecked"
-                             Text="Settings"
-                             PathData="{StaticResource SettingsIcon}" />
+        <Grid Grid.Row="0" Background="{StaticResource MainNavBackgroundBrush}" Margin="0,0,0,5">
+            <Grid.Resources>
+                <Style TargetType="controls:PathButton">
+                    <Setter Property="PathRenderSize" Value="24" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Foreground" Value="{StaticResource MainNavForegroundBrush}" />
+                </Style>
+            </Grid.Resources>
+            <Grid.Effect>
+                <DropShadowEffect Opacity="0.25" Direction="270" ShadowDepth="2"/>
+            </Grid.Effect>
+            <DockPanel HorizontalAlignment="Left">
+                <controls:PathButton Text="Add" PathData="{StaticResource AddIcon}" Command="{Binding AddCommand}" />
+                <controls:PathButton Text="Start" IsEnabled="False" PathData="{StaticResource StartIcon}" />
             </DockPanel>
-            <Canvas Grid.Row="1" 
-                    Background="{StaticResource MainNavIndicatorBrush}" 
-                    x:Name="MainSwitcherSelectionIndicator" 
-                    Width="1"
-                    HorizontalAlignment="Left" Loaded="MainSwitcherSelectionIndicator_Loaded"/>
+            <DockPanel HorizontalAlignment="Right">
+                <controls:PathButton
+                                 Text="Settings"
+                                 PathData="{StaticResource SettingsIcon}" />
+            
+                <controls:PathButton
+                                 Text="About"
+                                 PathData="{StaticResource InfoIcon}" />
+            </DockPanel>
         </Grid>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="10">
+            <TextBlock FontSize="{StaticResource PagePrimaryHeaderFontSize}" Text="Download queue" Margin="0,0,0,10" />
+            <ListView>
+                
+            </ListView>
+        </StackPanel>
 
-        <!-- Content frame -->
-        <Frame Grid.Row="1" 
-               x:Name="MainContentFrame" 
-               HorizontalAlignment="Stretch" 
-               VerticalAlignment="Stretch" 
-               
-               Loaded="MainContentFrame_OnLoaded" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>

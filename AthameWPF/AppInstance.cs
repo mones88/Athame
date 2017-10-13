@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Athame.PluginAPI;
 using AthameWPF.Logging;
+using AthameWPF.Plugin;
 using AthameWPF.Settings;
 
 namespace AthameWPF
@@ -17,6 +18,8 @@ namespace AthameWPF
 
         private const string SettingsFilename = "Athame Settings.json";
         public static string LogDir;
+
+        public PluginManager PluginManager { get; }
 
         public AppInstance()
         {
@@ -30,6 +33,7 @@ namespace AthameWPF
 #endif
             var settingsPath = UserDataPathOf(SettingsFilename);
             settingsFile = new SettingsFile<AthameSettings>(settingsPath);
+            PluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
         }
 
         private readonly SettingsFile<AthameSettings> settingsFile;

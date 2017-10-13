@@ -18,15 +18,15 @@ namespace AthameWPF.UI.Controls
     /// <summary>
     /// Interaction logic for PathToggleButton.xaml
     /// </summary>
-    public partial class PathToggleButton
+    public sealed partial class PathButton
     {
-        public PathToggleButton()
+        public PathButton()
         {
             InitializeComponent();
         }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(PathToggleButton), new PropertyMetadata(default(string)));
+            "Text", typeof(string), typeof(PathButton), new PropertyMetadata(default(string)));
 
         public string Text
         {
@@ -35,7 +35,7 @@ namespace AthameWPF.UI.Controls
         }
 
         public static readonly DependencyProperty PathDataProperty = DependencyProperty.Register(
-            "PathData", typeof(Geometry), typeof(PathToggleButton), new PropertyMetadata(default(Geometry)));
+            "PathData", typeof(Geometry), typeof(PathButton), new PropertyMetadata(default(Geometry)));
 
         public Geometry PathData
         {
@@ -44,7 +44,7 @@ namespace AthameWPF.UI.Controls
         }
 
         public static readonly DependencyProperty PathRenderSizeProperty = DependencyProperty.Register(
-            "PathRenderSize", typeof(double), typeof(PathToggleButton), new PropertyMetadata(36.0));
+            "PathRenderSize", typeof(double), typeof(PathButton), new PropertyMetadata(36.0));
 
         public double PathRenderSize
         {
