@@ -19,7 +19,7 @@ namespace AthameWPF
         private const string SettingsFilename = "Athame Settings.json";
         public static string LogDir;
 
-        public PluginManager PluginManager { get; }
+        public PluginManager PluginManager { get; private set; }
 
         public AppInstance()
         {
@@ -31,12 +31,10 @@ namespace AthameWPF
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "Athame");
 #endif
-            var settingsPath = UserDataPathOf(SettingsFilename);
-            settingsFile = new SettingsFile<AthameSettings>(settingsPath);
-            PluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
+            
         }
 
-        private readonly SettingsFile<AthameSettings> settingsFile;
+        private SettingsFile<AthameSettings> settingsFile;
         public AthameSettings Settings => settingsFile.Settings;
 
         private void InitLogging()
@@ -60,6 +58,9 @@ namespace AthameWPF
         {
             Directory.CreateDirectory(UserDataPath);
             InitLogging();
+            var settingsPath = UserDataPathOf(SettingsFilename);
+            settingsFile = new SettingsFile<AthameSettings>(settingsPath);
+            PluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
             settingsFile.Load();
             Log.Debug(Tag, "Necessary setup is done");
         }

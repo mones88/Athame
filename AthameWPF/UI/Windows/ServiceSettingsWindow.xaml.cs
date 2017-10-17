@@ -11,24 +11,28 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using AthameWPF.UI.ViewModels;
+using AthameWPF.Plugin;
 
 namespace AthameWPF.UI.Windows
 {
     /// <summary>
-    /// Interaction logic for SettingsWindow.xaml
+    /// Interaction logic for ServiceSettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class ServiceSettingsWindow : Window
     {
-        public SettingsWindow()
+        private PluginInstance instance;
+
+        public ServiceSettingsWindow()
         {
             InitializeComponent();
-            GetViewModel().OwnerWindow = this;
         }
 
-        private SettingsViewModel GetViewModel()
+        public ServiceSettingsWindow(PluginInstance instance)
         {
-            return (SettingsViewModel) DataContext;
+            InitializeComponent();
+            this.instance = instance;
+            Title = $"{instance.Info.Name} settings";
+            FormsHost.Child = instance.Service.GetSettingsControl();
         }
     }
 }

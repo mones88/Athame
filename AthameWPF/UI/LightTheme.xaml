@@ -1,17 +1,19 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AthameWPF">
-    <Color x:Key="MainNavBackground">#ff64b5f6</Color>
-    <Color x:Key="MainNavForeground">White</Color>
-    <Color x:Key="MainNavIndicator">White</Color>
 
-    <Color x:Key="SecondaryNavBackground">#ff3475aa</Color>
-    <Color x:Key="SecondaryNavForeground">White</Color>
-   
-    <Color x:Key="PageBackground">White</Color>
-    <Color x:Key="PageForeground">#ff333333</Color>
+    <SolidColorBrush x:Key="MainNavBackgroundBrush" Color="#ff64b5f6" />
+    <SolidColorBrush x:Key="MainNavForegroundBrush" Color="White" />
+    <SolidColorBrush x:Key="MainNavIndicatorBrush" Color="White" />
 
-    <Color x:Key="AlternatingRowsBackground">#3f64b5f6</Color>
+    <SolidColorBrush x:Key="SecNavBackgroundBrush" Color="#338AF6" />
+    <SolidColorBrush x:Key="SecNavHoverBrush" Color="#1256A9" />
+    <SolidColorBrush x:Key="SecNavActiveBrush" Color="#4D9DFF" />
+    <SolidColorBrush x:Key="SecNavForegroundBrush" Color="White" />
 
-    
+    <SolidColorBrush x:Key="PageBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="PageForegroundBrush" Color="#ff333333" />
+
+    <SolidColorBrush x:Key="AlternatingRowsBackgroundBrush" Color="#3f64b5f6" />
+
 </ResourceDictionary>

@@ -12,13 +12,13 @@
             <ColumnDefinition Width="3*" MaxWidth="275" />
             <ColumnDefinition Width="7*" />
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Column="0" Background="{StaticResource SecondaryNavBackgroundBrush}">
+        <DockPanel Grid.Column="0" Background="{StaticResource SecNavBackgroundBrush}">
             <DockPanel.Resources>
                 <Style TargetType="controls:PathButton">
                     <Setter Property="PathRenderSize" Value="24" />
                     <Setter Property="FontSize" Value="14" />
                     <Setter Property="Padding" Value="10" />
-                    <Setter Property="Foreground" Value="{StaticResource SecondaryNavForegroundBrush}" />
+                    <Setter Property="Foreground" Value="{StaticResource SecNavForegroundBrush}" />
                 </Style>
             </DockPanel.Resources>
             <controls:PathButton x:Name="SearchSecMenuOption"

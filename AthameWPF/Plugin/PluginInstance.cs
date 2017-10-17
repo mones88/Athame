@@ -17,5 +17,15 @@ namespace AthameWPF.Plugin
         public Version AssemblyFileVersion { get; set; }
         public SettingsFile SettingsFile { get; set; }
         public MusicService Service => Plugin as MusicService;
+        public IAuthenticatable AuthenticatableService => Service.AsAuthenticatable();
+
+        public string AuthenticatableAccountName
+        {
+            get
+            {
+                var info = AuthenticatableService.Account;
+                return info.DisplayName == null ? info.DisplayId : $"{info.DisplayName} ({info.DisplayId})";
+            }
+        }
     }
 }

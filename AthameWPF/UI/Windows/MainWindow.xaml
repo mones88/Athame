@@ -8,7 +8,7 @@
         xmlns:viewModel="clr-namespace:AthameWPF.UI.ViewModels"
         xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
         mc:Ignorable="d"
-        Title="Athame" Height="500" Width="700" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="Athame" Height="500" Width="700" Style="{StaticResource WindowBase}" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Window.DataContext>
         <viewModel:MainWindowViewModel />
     </Window.DataContext>
@@ -37,7 +37,8 @@
             <DockPanel HorizontalAlignment="Right">
                 <controls:PathButton
                                  Text="Settings"
-                                 PathData="{StaticResource SettingsIcon}" />
+                                 PathData="{StaticResource SettingsIcon}"
+                    Command="{Binding SettingsCommand}"/>
             
                 <controls:PathButton
                                  Text="About"
@@ -45,7 +46,7 @@
             </DockPanel>
         </Grid>
         <StackPanel Orientation="Vertical" Grid.Row="1" Margin="10">
-            <TextBlock FontSize="{StaticResource PagePrimaryHeaderFontSize}" Text="Download queue" Margin="0,0,0,10" />
+            <TextBlock Style="{StaticResource HeadingText}" Text="Download queue" />
             <ListView>
                 
             </ListView>

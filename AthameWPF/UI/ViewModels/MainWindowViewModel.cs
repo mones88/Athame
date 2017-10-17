@@ -15,9 +15,16 @@ namespace AthameWPF.UI.ViewModels
         public MainWindowViewModel()
         {
             AddCommand = new ViewModelCommand(AddCommand_Execute);
+            SettingsCommand = new ViewModelCommand(SettingsCommand_Execute);
+        }
+
+        private void SettingsCommand_Execute(object o)
+        {
+            new SettingsWindow().ShowDialog();
         }
 
         public ViewModelCommand AddCommand { get; }
+        public ViewModelCommand SettingsCommand { get; set; }
 
         private void AddCommand_Execute(object o)
         {
