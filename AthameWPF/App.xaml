@@ -251,7 +251,7 @@
                             <ColumnDefinition Width="64"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <controls:CachedImage Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" MediaId="{Binding Path=Smid}"/>
+<!--                        <controls:CachedImage Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" MediaId="{Binding Path=Smid}"/>-->
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock x:Name="TitleTextBlock" TextWrapping="Wrap" Text="{Binding Path=Album.Title}" FontSize="16" Margin="0,0,0,3" />
                             <TextBlock x:Name="SecondaryInfoTextBlock" TextWrapping="Wrap" Text="{Binding Path=Album.Artist.Name}" FontSize="14" FontWeight="Light" />

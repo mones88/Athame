@@ -27,6 +27,7 @@ namespace Athame
         [STAThread]
         public static void Main(string[] args)
         {
+            TaskDialogHelper.MainCaption = "Athame";
             // Create app instance config
             DefaultApp = new AthameApplication
             {

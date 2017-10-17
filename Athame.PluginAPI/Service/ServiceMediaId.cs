@@ -12,7 +12,7 @@ namespace Athame.PluginAPI.Service
         public MediaType MediaType { get; set; }
         public string Id { get; set; }
 
-        private const char Separator = '/';
+        private const char Separator = '-';
 
         public ServiceMediaId(string serviceName, Track track)
         {

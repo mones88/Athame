@@ -7,21 +7,21 @@ namespace AthameWPF.Caching
 {
     public static class PictureCache
     {
-        private static readonly MemoryCache backingCache = MemoryCache.Default;
+        private static readonly MemoryCache BackingCache = MemoryCache.Default;
 
         public static void AddPicture(string mediaId, Picture picture)
         {
-            backingCache.Add(mediaId, new PictureCacheEntry(picture), ObjectCache.InfiniteAbsoluteExpiration);
+            BackingCache.Add(mediaId, new PictureCacheEntry(picture), ObjectCache.InfiniteAbsoluteExpiration);
         }
 
         public static bool HasPicture(string mediaId)
         {
-            return backingCache.Contains(mediaId);
+            return BackingCache.Contains(mediaId);
         }
 
         public static PictureCacheEntry GetPicture(string mediaId)
         {
-            return (PictureCacheEntry)backingCache.Get(mediaId);
+            return (PictureCacheEntry)BackingCache.Get(mediaId);
         }
     }
 }

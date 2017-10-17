@@ -13,6 +13,10 @@ namespace AthameWPF.Downloader
 
         public IMediaCollection OriginalCollection { get; }
 
+        public ServiceMediaId Smid { get; }
+
+        public List<EnqueuedTrack> Tracks { get; set; }
+
         public EnqueuedCollection(MusicService service, IMediaCollection collection)
         {
             Service = service;
@@ -24,14 +28,20 @@ namespace AthameWPF.Downloader
             }
         }
 
-        public ServiceMediaId Smid { get; }
-
-        public List<EnqueuedTrack> Tracks { get; set; }
-
         public static IEnumerable<EnqueuedCollection> FromCollection(MusicService service,
             IEnumerable<IMediaCollection> collection)
         {
             return collection.Select(mediaCollection => new EnqueuedCollection(service, mediaCollection));
+        }
+    }
+
+    public class EnqueuedCollection<T> : EnqueuedCollection where T : IMediaCollection
+    {
+        public T TypedCollection => (T) OriginalCollection;
+
+        public EnqueuedCollection(MusicService service, T collection) : base(service, collection)
+        {
+
         }
     }
 }

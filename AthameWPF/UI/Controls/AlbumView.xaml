@@ -6,17 +6,19 @@
              xmlns:local="clr-namespace:AthameWPF"
              xmlns:controls="clr-namespace:AthameWPF.UI.Controls"
              xmlns:model="clr-namespace:Athame.PluginAPI.Service;assembly=Athame.PluginAPI"
+             xmlns:dl="clr-namespace:AthameWPF.Downloader"
+             xmlns:ui="clr-namespace:AthameWPF.UI"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="589" d:DataContext="{d:DesignInstance model:Album}">
+             d:DesignHeight="300" d:DesignWidth="589" d:DataContext="{d:DesignInstance dl:EnqueuedAlbum}">
     <Grid.Background>White</Grid.Background>
     <StackPanel Orientation="Vertical">
 
         <DockPanel Margin="10">
             <DockPanel DockPanel.Dock="Left">
-                <Image Width="100" Height="100" Source="{Binding Path=CoverUri}" DockPanel.Dock="Left" Margin="0,0,10,0" />
-                <TextBlock DockPanel.Dock="Top" FontSize="{StaticResource ComponentHeaderFontSize}" Margin="0,0,0,3" Text="{Binding Path=Title}" />
+                <Image Width="100" Height="100" DockPanel.Dock="Left" Margin="0,0,10,0" />
+                    <TextBlock DockPanel.Dock="Top" FontSize="{StaticResource ComponentHeaderFontSize}" Margin="0,0,0,3" Text="{Binding Path=OriginalCollection.Title}" />
                 <TextBlock Margin="0,0,0,15" FontSize="14">
-                    <Run Text="{Binding Path=Artist.Name}" /> (<Run Text="{Binding Path=Year}" />)
+                    <Run Text="{Binding Path=TypedCollection.Artist.Name}" /> (<Run Text="{Binding Path=TypedCollection.Year}" />)
                 </TextBlock>
             </DockPanel>
 

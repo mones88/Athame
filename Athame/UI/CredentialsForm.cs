@@ -46,7 +46,7 @@ namespace Athame.UI
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            var waitForm = CommonTaskDialogs.Wait($"Signing into {svc.Info.Name}...", this);
+            var waitForm = TaskDialogHelper.CreateWaitDialog($"Signing into {svc.Info.Name}...", Handle);
             waitForm.Opened += async (o, args) => {
                 var result = await usernamePasswordService.AuthenticateAsync(emailTextBox.Text, passwordTextBox.Text, true);
                 waitForm.Close();

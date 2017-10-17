@@ -171,7 +171,7 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\SplitStringParser.cs" />
-    <Compile Include="UI\CommonTaskDialogs.cs" />
+    <Compile Include="UI\TaskDialogHelper.cs" />
     <Compile Include="Utils\TrackFileExtensions.cs" />
     <EmbeddedResource Include="UI\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
