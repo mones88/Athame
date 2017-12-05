@@ -21,12 +21,11 @@ I am currently working on a newer, WPF-based release of Athame which has all of 
 like artist browsing, text searching, and so on.
 
 ### Can you add plugin x?
-There are hundreds of music streaming services out there, so I'll mainly focus on the two plugins listed below, plus Deezer and Spotify at
-some point.
+There are hundreds of music streaming services out there, so I'll mainly focus on the two plugins listed below.
 
 ### Can you remove the "Respect the artists! Pay for music when you can! Downloaded with Athame" tag?
-No. Remove it yourself if you really want to.
-
+No. The purpose of that tag is to remind people that Athame is a tool for **saving music from streaming services for personal use only**, and not a tool
+for illegal distribution of music.
 
 
 Plugins
@@ -34,9 +33,8 @@ Plugins
 ### [Tidal](https://github.com/svbnet/AthamePlugin.Tidal/releases) and [Google Play Music](https://github.com/svbnet/AthamePlugin.GooglePlayMusic/releases)
 These are included by default
 
-### Deezer
-Another person is working on a Deezer plugin at the moment, but there is an abandoned downloader that exists called Deezloader.
-All links seem to have been pulled so browse at your own risk!
+### [Deezer](https://github.com/TripleFrequency/AthamePlugin.Deezer)
+A plugin written by [TripleFrequency](http://www.triplefrequency.com/), which works great and is available to download [here](https://github.com/TripleFrequency/AthamePlugin.Deezer/releases).
 
 ### Spotify
 Currently, I have no plans to work on a Spotify plugin. A similar thing called [librespot](https://github.com/plietar/librespot) exists, so
