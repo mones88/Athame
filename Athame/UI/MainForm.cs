@@ -53,7 +53,6 @@ namespace Athame.UI
         private ListViewItem currentlyDownloadingItem;
         private CollectionDownloadEventArgs currentCollection;
         private bool isListViewDirty = false;
-        private int numberOfRetries = 0;
 
 
         public MainForm()
@@ -144,7 +143,6 @@ namespace Athame.UI
 
         private void MediaDownloadQueue_TrackDequeued(object sender, TrackDownloadEventArgs e)
         {
-            numberOfRetries = 0;
             // this'll bite me in the ass someday
             currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[e.CurrentItemIndex * 2];
             queueListView.EnsureVisible(((MediaItemTag)currentlyDownloadingItem.Tag).GlobalItemIndex);
@@ -236,7 +234,7 @@ namespace Athame.UI
                 lvItem.SubItems.Add(t.Artist.Name);
                 lvItem.SubItems.Add(t.Album.Title);
                 lvItem.SubItems.Add(BuildFlags(t.CustomMetadata));
-                lvItem.SubItems.Add(Path.Combine(destination, t.GetBasicPath(enqueuedItem.PathFormat)));
+                lvItem.SubItems.Add(Path.Combine(destination, t.GetBasicPath(enqueuedItem.PathFormat, item)));
                 group.Items.Add(lvItem);
                 queueListView.Items.Add(lvItem);
             }
@@ -687,7 +685,7 @@ namespace Athame.UI
 
         }
 
-        private async void StartDownload()
+        private async Task StartDownload()
         {
             isListViewDirty = true;
             if (mediaDownloadQueue.Count == 0)
@@ -726,7 +724,7 @@ namespace Athame.UI
 
         private async void startDownloadButton_Click(object sender, EventArgs e)
         {
-            StartDownload();
+            await StartDownload();
         }
 
         private void queueListView_MouseClick(object sender, MouseEventArgs e)
@@ -866,7 +864,7 @@ namespace Athame.UI
         {
             if (mCurrentlySelectedQueueItem == null) return null;
             var tag = (MediaItemTag)mCurrentlySelectedQueueItem.Tag;
-            var parentDir = Path.GetDirectoryName(Path.Combine(tag.Collection.Destination, tag.Track.GetBasicPath(tag.Collection.PathFormat)));
+            var parentDir = Path.GetDirectoryName(Path.Combine(tag.Collection.Destination, tag.Track.GetBasicPath(tag.Collection.PathFormat, tag.Collection.MediaCollection)));
             return Directory.Exists(parentDir) ? parentDir : null;
         }
 

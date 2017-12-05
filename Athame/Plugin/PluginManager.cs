@@ -72,8 +72,6 @@ namespace Athame.Plugin
         public event EventHandler<PluginLoadExceptionEventArgs> LoadException;
 
         private Assembly[] loadedAssemblies;
-        private bool isLoading;
-        private string singlePluginFilename;
 
         private bool IsAlreadyLoaded(AssemblyName assemblyName)
         {
@@ -160,18 +158,12 @@ namespace Athame.Plugin
             loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         }
 
-        public void SetSinglePlugin(string filePath)
-        {
-            singlePluginFilename = filePath;
-        }
-
         public void LoadAll()
         {
             BeforeLoad();
 
             // Plugins are stored in format {PluginDir}/{PluginName}/AthamePlugin.*.dll
             var subDirs = Directory.GetDirectories(PluginDirectory);
-            isLoading = true;
             foreach (var dir in subDirs)
             {
                 var name = Path.GetFileName(dir);
@@ -207,7 +199,6 @@ namespace Athame.Plugin
                 }
 
             }
-            isLoading = false;
         }
 
         public void InitAll()

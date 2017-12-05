@@ -66,13 +66,6 @@ namespace Athame
 
             // Create plugin manager instance
             DefaultPluginManager = new PluginManager(Path.Combine(Directory.GetCurrentDirectory(), PluginManager.PluginDir));
-            if (args.Length >= 2)
-            {
-                if (args[0] == "/loadSinglePlugin")
-                {
-                    DefaultPluginManager.SetSinglePlugin(args[1]);
-                }
-            }
             
             Log.Debug(Tag, "Ready to begin main form loop");
             // Begin main form

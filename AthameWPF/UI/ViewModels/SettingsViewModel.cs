@@ -24,7 +24,7 @@ namespace AthameWPF.UI.ViewModels
 
         private void ShowSettings_Execute(object o)
         {
-            
+
             var instance = (PluginInstance) o;
             var serviceSettingsWindow = new ServiceSettingsWindow(instance);
             serviceSettingsWindow.ShowDialog();

@@ -14,12 +14,41 @@ Download
 --------
 [Click the 'Releases' tab above at the top to download the latest, or just click here.](https://github.com/svbnet/Athame/releases)
 
+FAQ
+---
+### Can you add feature x?
+I am currently working on a newer, WPF-based release of Athame which has all of the features of the current release plus features
+like artist browsing, text searching, and so on.
+
+### Can you add plugin x?
+There are hundreds of music streaming services out there, so I'll mainly focus on the two plugins listed below, plus Deezer and Spotify at
+some point.
+
+### Can you remove the "Respect the artists! Pay for music when you can! Downloaded with Athame" tag?
+No. Remove it yourself if you really want to.
+
+
+
 Plugins
 -------
-| [Tidal](https://github.com/svbnet/AthamePlugin.Tidal/releases) | [Google Play Music](https://github.com/svbnet/AthamePlugin.GooglePlayMusic/releases) |
-|-------|-------------------|
+### [Tidal](https://github.com/svbnet/AthamePlugin.Tidal/releases) and [Google Play Music](https://github.com/svbnet/AthamePlugin.GooglePlayMusic/releases)
+These are included by default
 
-**At the moment, I am mostly working on the Athame core application, so I can't spend my time writing plugins for other services. However, services like Deezer and Spotify may become available in the future.**
+### Deezer
+Another person is working on a Deezer plugin at the moment, but there is an abandoned downloader that exists called Deezloader.
+All links seem to have been pulled so browse at your own risk!
+
+### Spotify
+Currently, I have no plans to work on a Spotify plugin. A similar thing called [librespot](https://github.com/plietar/librespot) exists, so
+maybe one day this could be ported to C#.
+
+### Apple Music
+As far as I know, nobody has documented the Apple Music API yet, so nope.
+
+### Qobuz
+Qobuz isn't available in my country at the moment, so I have no plans to implement it.
+
+**At the moment, I am mostly working on the Athame core application, so I can't spend my time writing plugins for other services.**
 
 Plugins are always distributed as Zip files - to install a plugin, simply extract the zip to the "Plugins" folder, which is in the same directory
 as the Athame executable. A guide for creating your own plugins can be found on the wiki.

@@ -180,10 +180,8 @@ namespace Athame.DownloadAndTag
                         eventArgs.State = DownloadState.PostProcess;
                         OnTrackDownloadProgress(eventArgs);
                     };
-                    
-                    var objDict = Dictify.ObjectToDictionary(currentItem);
-                    objDict["Collection"] = collection;
-                    var path = Path.Combine(collection.Destination, eventArgs.TrackFile.GetPath(collection.PathFormat, objDict));
+                    // Generate the path
+                    var path = Path.Combine(collection.Destination, eventArgs.TrackFile.GetPath(collection.PathFormat, collection.MediaCollection));
                     var tempPath = path;
                     if (useTempFile) tempPath += "-temp";
                     EnsureParentDirectories(tempPath);

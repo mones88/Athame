@@ -134,7 +134,6 @@
       <DependentUpon>AlbumView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Downloader\EnqueuedTrack.cs" />
-    <Compile Include="MockDataGen.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="UI\Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
