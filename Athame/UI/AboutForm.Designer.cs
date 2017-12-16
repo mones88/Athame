@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.licensesTextBox = new System.Windows.Forms.RichTextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -81,27 +79,20 @@
             // 
             this.licensesTextBox.BackColor = System.Drawing.Color.White;
             this.licensesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.licensesTextBox.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.licensesTextBox.Location = new System.Drawing.Point(12, 180);
+            this.licensesTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.licensesTextBox.Location = new System.Drawing.Point(12, 100);
             this.licensesTextBox.Name = "licensesTextBox";
             this.licensesTextBox.ReadOnly = true;
-            this.licensesTextBox.Size = new System.Drawing.Size(524, 259);
+            this.licensesTextBox.Size = new System.Drawing.Size(524, 425);
             this.licensesTextBox.TabIndex = 0;
-            this.licensesTextBox.Text = resources.GetString("licensesTextBox.Text");
+            this.licensesTextBox.Text = "The licenses section should be rendered here. If not, you can view them by openin" +
+    "g the Licenses.rtf file included in the program folder.";
             this.licensesTextBox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.licensesTextBox_LinkClicked);
-            // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(9, 113);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(527, 47);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Copyright © 2017 svbnet\r\n\r\nThis project wouldn\'t have been possible without:";
             // 
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(461, 445);
+            this.okButton.Location = new System.Drawing.Point(461, 531);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 9;
@@ -114,9 +105,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(548, 476);
+            this.ClientSize = new System.Drawing.Size(548, 566);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.licensesTextBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label2);
@@ -143,7 +133,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox licensesTextBox;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button okButton;
     }
 }

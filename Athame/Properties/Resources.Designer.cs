@@ -121,6 +121,17 @@ namespace Athame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {\rtf1\adeflang1025\ansi\ansicpg1252\uc1\adeff31507\deff0\stshfdbch31505\stshfloch1\stshfhich1\stshfbi31507\deflang5129\deflangfe1041\themelang5129\themelangfe1041\themelangcs0{\fonttbl{\f1\fbidi \fswiss\fcharset0\fprq2{\*\panose 020b0604020202020204}Arial;}
+        ///{\f11\fbidi \fmodern\fcharset128\fprq1{\*\panose 02020609040205080304}MS Mincho{\*\falt \&apos;82\&apos;6c\&apos;82\&apos;72 \&apos;96\&apos;be\&apos;92\&apos;a9};}{\f11\fbidi \fmodern\fcharset128\fprq1{\*\panose 02020609040205080304}MS Mincho{\*\falt \&apos;82\&apos;6c\&apos;82\&apos;72 \&apos;96\&apos;be\&apos;92\&apos;a9};}
+        ///{\ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Licenses {
+            get {
+                return ResourceManager.GetString("Licenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap menu_arrow {
