@@ -18,7 +18,7 @@ namespace Athame.UI
 
         private void licensesTextBox_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            //Process.Start(e.LinkText);
+            Process.Start(e.LinkText);
         }
     }
 }
