@@ -193,38 +193,39 @@ namespace Athame.UI
             // 
             // settingsButton
             // 
-            resources.ApplyResources(this.settingsButton, "settingsButton");
             this.settingsButton.Image = global::Athame.Properties.Resources.menu_arrow;
+            resources.ApplyResources(this.settingsButton, "settingsButton");
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.UseVisualStyleBackColor = true;
             this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
             // 
             // queueMenu
             // 
-            resources.ApplyResources(this.queueMenu, "queueMenu");
             this.queueMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeTrackToolStripMenuItem,
             this.removeGroupToolStripMenuItem,
             this.toolStripSeparator2,
             this.showCollectionInFileBrowserToolStripMenuItem});
             this.queueMenu.Name = "queueMenu";
+            resources.ApplyResources(this.queueMenu, "queueMenu");
+            this.queueMenu.Opening += new System.ComponentModel.CancelEventHandler(this.queueMenu_Opening);
             // 
             // removeTrackToolStripMenuItem
             // 
-            resources.ApplyResources(this.removeTrackToolStripMenuItem, "removeTrackToolStripMenuItem");
             this.removeTrackToolStripMenuItem.Name = "removeTrackToolStripMenuItem";
+            resources.ApplyResources(this.removeTrackToolStripMenuItem, "removeTrackToolStripMenuItem");
             this.removeTrackToolStripMenuItem.Click += new System.EventHandler(this.removeTrackToolStripMenuItem_Click);
             // 
             // removeGroupToolStripMenuItem
             // 
-            resources.ApplyResources(this.removeGroupToolStripMenuItem, "removeGroupToolStripMenuItem");
             this.removeGroupToolStripMenuItem.Name = "removeGroupToolStripMenuItem";
+            resources.ApplyResources(this.removeGroupToolStripMenuItem, "removeGroupToolStripMenuItem");
             this.removeGroupToolStripMenuItem.Click += new System.EventHandler(this.removeGroupToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             // 
             // showCollectionInFileBrowserToolStripMenuItem
             // 
@@ -248,8 +249,8 @@ namespace Athame.UI
             // 
             // urlValidStateLabel
             // 
-            resources.ApplyResources(this.urlValidStateLabel, "urlValidStateLabel");
             this.urlValidStateLabel.Image = global::Athame.Properties.Resources.error;
+            resources.ApplyResources(this.urlValidStateLabel, "urlValidStateLabel");
             this.urlValidStateLabel.Name = "urlValidStateLabel";
             this.urlValidStateLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.urlValidStateLabel_LinkClicked);
             // 
@@ -262,28 +263,28 @@ namespace Athame.UI
             // 
             // mMenu
             // 
-            resources.ApplyResources(this.mMenu, "mMenu");
             this.mMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsToolStripMenuItem,
             this.toolStripSeparator1,
             this.aboutToolStripMenuItem});
             this.mMenu.Name = "mMenu";
+            resources.ApplyResources(this.mMenu, "mMenu");
             // 
             // settingsToolStripMenuItem
             // 
-            resources.ApplyResources(this.settingsToolStripMenuItem, "settingsToolStripMenuItem");
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            resources.ApplyResources(this.settingsToolStripMenuItem, "settingsToolStripMenuItem");
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             // 
             // aboutToolStripMenuItem
             // 
-            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // queueImageAnimationTimer

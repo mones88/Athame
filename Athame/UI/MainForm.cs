@@ -53,7 +53,8 @@ namespace Athame.UI
         private ListViewItem mCurrentlySelectedQueueItem;
         private ListViewItem currentlyDownloadingItem;
         private CollectionDownloadEventArgs currentCollection;
-        private bool isListViewDirty = false;
+        private bool isListViewDirty;
+        private bool isWorking;
 
 
         public MainForm()
@@ -151,7 +152,6 @@ namespace Athame.UI
                 itemIndex = 0;
             }
             currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[itemIndex * 2];
-            queueListView.EnsureVisible(((MediaItemTag)currentlyDownloadingItem.Tag).GlobalItemIndex);
         }
 
         private void MediaDownloadQueue_CollectionDequeued(object sender, CollectionDownloadEventArgs e)
@@ -300,24 +300,24 @@ namespace Athame.UI
 
         private void LockUi()
         {
+            isWorking = true;
             idTextBox.Enabled = false;
             dlButton.Enabled = false;
             settingsButton.Enabled = false;
             pasteButton.Enabled = false;
             clearButton.Enabled = false;
             startDownloadButton.Enabled = false;
-            queueListView.Enabled = false;
         }
 
         private void UnlockUi()
         {
+            isWorking = false;
             idTextBox.Enabled = true;
             dlButton.Enabled = !String.IsNullOrWhiteSpace(idTextBox.Text);
             settingsButton.Enabled = true;
             pasteButton.Enabled = true;
             clearButton.Enabled = true;
             startDownloadButton.Enabled = mediaDownloadQueue.Count > 0;
-            queueListView.Enabled = true;
         }
 
         private void SetGlobalProgress(int value)
@@ -904,6 +904,12 @@ namespace Athame.UI
         private void queueListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ShowDetails();
+        }
+
+        private void queueMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            removeTrackToolStripMenuItem.Enabled = !isWorking;
+            removeGroupToolStripMenuItem.Enabled = !isWorking;
         }
     }
 }
