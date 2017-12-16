@@ -131,6 +131,7 @@
       <DependentUpon>PathFormatHelpForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\Dictify.cs" />
+    <Compile Include="Utils\MediaCollectionExtensions.cs" />
     <Compile Include="Utils\NullableExtensions.cs" />
     <Compile Include="Utils\PlaylistWriter.cs" />
     <Compile Include="Utils\StringObjectFormatter.cs" />

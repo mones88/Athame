@@ -40,7 +40,7 @@ namespace Athame.UI
 
         // Constants
         private new const string Tag = nameof(MainForm);
-        private const string GroupHeaderFormat = "{0}: {1} ({2})";
+        private const string GroupHeaderFormat = "{2} {0}: {1} ({3} total, {4} available)";
         private const int RetryCount = 3;
 
         // Read-only instance vars
@@ -201,12 +201,19 @@ namespace Athame.UI
         }
 
         #region Download queue manipulation
+
+        private string MakeGroupHeader(EnqueuedCollection collection)
+        {
+            return String.Format(GroupHeaderFormat, MediaCollectionAsType(collection.MediaCollection), 
+                collection.MediaCollection.Title, collection.Service.Info.Name, collection.MediaCollection.Tracks.Count, 
+                collection.MediaCollection.GetAvailableTracksCount());
+        }
+
         private void AddToQueue(MusicService service, IMediaCollection item, string destination, string pathFormat)
         {
             var enqueuedItem = mediaDownloadQueue.Enqueue(service, item, destination, pathFormat);
-            var mediaType = MediaCollectionAsType(item);
-            var header = String.Format(GroupHeaderFormat, mediaType, item.Title, service.Info.Name);
-            var group = new ListViewGroup(header);
+            var header = MakeGroupHeader(enqueuedItem);
+            var group = new ListViewGroup(header, HorizontalAlignment.Center);
             var groupIndex = queueListView.Groups.Add(group);
             for (var i = 0; i < item.Tracks.Count; i++)
             {
@@ -259,7 +266,10 @@ namespace Athame.UI
                 {
                     mediaDownloadQueue.Remove(item.Collection);
                 }
+                var group = queueListView.Groups[item.GroupIndex];
+                group.Header = MakeGroupHeader(item.Collection);
             }
+            
             mCurrentlySelectedQueueItem = null;
         }
 

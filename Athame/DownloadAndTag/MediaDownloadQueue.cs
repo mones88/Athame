@@ -89,6 +89,14 @@ namespace Athame.DownloadAndTag
         }
         #endregion
 
+        public int TrackCount
+        {
+            get
+            {
+                return this.Sum(collection => collection.MediaCollection.Tracks.Count);
+            }
+        }
+
         private ExceptionSkip skip;
 
         public async Task StartDownloadAsync(SavePlaylistSetting playlistSetting)
