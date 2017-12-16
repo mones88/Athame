@@ -206,8 +206,12 @@ namespace Athame.DownloadAndTag
                     // Write the tag
                     eventArgs.State = DownloadState.WritingTags;
                     OnTrackDownloadProgress(eventArgs);
-                    TrackTagger.Write(collection.Service.Info.Name, currentItem, eventArgs.TrackFile, 
-                        Program.DefaultSettings.Settings.AlbumArtworkSaveFormat, tempPath);
+                    var setting = Program.DefaultSettings.Settings.AlbumArtworkSaveFormat;
+                    if (Program.DefaultSettings.Settings.IgnoreSaveArtworkWithPlaylist)
+                    {
+                        setting = AlbumArtworkSaveFormat.DontSave;
+                    }
+                    TrackTagger.Write(collection.Service.Info.Name, currentItem, eventArgs.TrackFile, setting, tempPath);
 
                     // Rename to proper path
                     if (useTempFile)

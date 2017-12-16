@@ -23,6 +23,8 @@ namespace Athame.UI
             saveLocLabel.Text = defaults.GeneralSavePreference.SaveDirectory;
             pathFormatTextBox.Text = defaults.GeneralSavePreference.SaveFormat;
             savePlaylistAsComboBox.SelectedIndex = (int)defaults.SavePlaylist;
+            confirmExitCheckBox.Checked = defaults.ConfirmExit;
+            ignoreAlbumArtworkCheckBox.Checked = defaults.IgnoreSaveArtworkWithPlaylist;
 
             // Inherit checkbox
             pldSameAsAlbumTrack.Checked = defaults.PlaylistSavePreferenceUsesGeneral;
@@ -195,6 +197,16 @@ namespace Athame.UI
         private void savePlaylistAsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             defaults.SavePlaylist = (SavePlaylistSetting)savePlaylistAsComboBox.SelectedIndex;
+        }
+
+        private void confirmExitCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            defaults.ConfirmExit = confirmExitCheckBox.Checked;
+        }
+
+        private void ignoreAlbumArtworkCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            defaults.IgnoreSaveArtworkWithPlaylist = confirmExitCheckBox.Checked;
         }
     }
 }

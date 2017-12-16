@@ -66,7 +66,7 @@ namespace Athame.UI
             return CreateMessageDialog(caption, message, buttons, icon, IntPtr.Zero);
         }
 
-        public static TaskDialog CreateMessageDialog(string caption, string message, TaskDialogStandardButtons buttons, 
+        public static TaskDialog CreateMessageDialog(string caption, string message, TaskDialogStandardButtons buttons,
             TaskDialogStandardIcon icon, IntPtr owner)
         {
             var td = new TaskDialog

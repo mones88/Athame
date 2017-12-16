@@ -80,6 +80,8 @@ namespace Athame.Settings
             PlaylistSavePreferenceUsesGeneral = false;
             MainWindowPreference = new WindowPreference();
             SavePlaylist = SavePlaylistSetting.DontSave;
+            ConfirmExit = true;
+            IgnoreSaveArtworkWithPlaylist = true;
         }
 
         public AlbumArtworkSaveFormat AlbumArtworkSaveFormat { get; set; }
@@ -88,5 +90,8 @@ namespace Athame.Settings
         public bool PlaylistSavePreferenceUsesGeneral { get; set; }
         public WindowPreference MainWindowPreference { get; set; }
         public SavePlaylistSetting SavePlaylist { get; set; }
+
+        public bool ConfirmExit { get; set; }
+        public bool IgnoreSaveArtworkWithPlaylist { get; set; }
     }
 }

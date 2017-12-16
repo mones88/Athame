@@ -660,6 +660,17 @@ namespace Athame.UI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (mediaDownloadQueue.Count > 0 && Program.DefaultSettings.Settings.ConfirmExit)
+            {
+                var msgResult = TaskDialogHelper.ShowMessage("Are you sure you want to exit Athame?",
+                    "You have items waiting in the download queue.", TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No, TaskDialogStandardIcon.Warning, Handle);
+
+                if (msgResult != TaskDialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
             Program.DefaultSettings.Save();
         }
 
@@ -885,7 +896,7 @@ namespace Athame.UI
         {
             var tag = (MediaItemTag) mCurrentlySelectedQueueItem?.Tag;
             if (tag?.Exception == null) return;
-            TaskDialogHelper.CreateExceptionDialog(tag.Exception, "An error occurred while downloading this track",
+            TaskDialogHelper.ShowExceptionDialog(tag.Exception, "An error occurred while downloading this track",
                 "Check you can play this track on the web, check that you have a subscription, or try signing in and out.",
                 Handle);
         }
