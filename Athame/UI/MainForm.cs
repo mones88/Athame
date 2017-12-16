@@ -145,7 +145,12 @@ namespace Athame.UI
         private void MediaDownloadQueue_TrackDequeued(object sender, TrackDownloadEventArgs e)
         {
             // this'll bite me in the ass someday
-            currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[e.CurrentItemIndex * 2];
+            var itemIndex = e.CurrentItemIndex;
+            if (itemIndex == -1)
+            {
+                itemIndex = 0;
+            }
+            currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[itemIndex * 2];
             queueListView.EnsureVisible(((MediaItemTag)currentlyDownloadingItem.Tag).GlobalItemIndex);
         }
 
@@ -703,7 +708,7 @@ namespace Athame.UI
 
                 LockUi();
                 totalStatusLabel.Text = "Warming up...";
-                await mediaDownloadQueue.StartDownloadAsync();
+                await mediaDownloadQueue.StartDownloadAsync(Program.DefaultSettings.Settings.SavePlaylist);
                 totalStatusLabel.Text = "All downloads completed";
                 collectionStatusLabel.Text = GetCompletionMessage();
                 currentlyDownloadingItem = null;

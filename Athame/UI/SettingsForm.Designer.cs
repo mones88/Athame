@@ -33,6 +33,8 @@
             this.pldSameAsAlbumTrack = new System.Windows.Forms.CheckBox();
             this.formatHelpButton = new System.Windows.Forms.Button();
             this.pldOptionsGroupBox = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.savePlaylistAsComboBox = new System.Windows.Forms.ComboBox();
             this.pldAskWhereToSaveRadioButton = new System.Windows.Forms.RadioButton();
             this.pldSaveToRadioButton = new System.Windows.Forms.RadioButton();
             this.pldSaveLocLabel = new System.Windows.Forms.Label();
@@ -121,7 +123,7 @@
             // 
             // formatHelpButton
             // 
-            this.formatHelpButton.Location = new System.Drawing.Point(542, 276);
+            this.formatHelpButton.Location = new System.Drawing.Point(542, 309);
             this.formatHelpButton.Name = "formatHelpButton";
             this.formatHelpButton.Size = new System.Drawing.Size(160, 23);
             this.formatHelpButton.TabIndex = 14;
@@ -131,6 +133,8 @@
             // 
             // pldOptionsGroupBox
             // 
+            this.pldOptionsGroupBox.Controls.Add(this.label3);
+            this.pldOptionsGroupBox.Controls.Add(this.savePlaylistAsComboBox);
             this.pldOptionsGroupBox.Controls.Add(this.pldAskWhereToSaveRadioButton);
             this.pldOptionsGroupBox.Controls.Add(this.pldSaveToRadioButton);
             this.pldOptionsGroupBox.Controls.Add(this.pldSaveLocLabel);
@@ -139,10 +143,33 @@
             this.pldOptionsGroupBox.Controls.Add(this.label2);
             this.pldOptionsGroupBox.Location = new System.Drawing.Point(6, 129);
             this.pldOptionsGroupBox.Name = "pldOptionsGroupBox";
-            this.pldOptionsGroupBox.Size = new System.Drawing.Size(696, 128);
+            this.pldOptionsGroupBox.Size = new System.Drawing.Size(696, 155);
             this.pldOptionsGroupBox.TabIndex = 13;
             this.pldOptionsGroupBox.TabStop = false;
             this.pldOptionsGroupBox.Text = "Playlist download options";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 125);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(107, 15);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Save playlist as file:";
+            // 
+            // savePlaylistAsComboBox
+            // 
+            this.savePlaylistAsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.savePlaylistAsComboBox.FormattingEnabled = true;
+            this.savePlaylistAsComboBox.Items.AddRange(new object[] {
+            "Don\'t save as file",
+            "M3U (M3U8)",
+            "PLS"});
+            this.savePlaylistAsComboBox.Location = new System.Drawing.Point(119, 122);
+            this.savePlaylistAsComboBox.Name = "savePlaylistAsComboBox";
+            this.savePlaylistAsComboBox.Size = new System.Drawing.Size(121, 23);
+            this.savePlaylistAsComboBox.TabIndex = 16;
+            this.savePlaylistAsComboBox.SelectedIndexChanged += new System.EventHandler(this.savePlaylistAsComboBox_SelectedIndexChanged);
             // 
             // pldAskWhereToSaveRadioButton
             // 
@@ -177,7 +204,7 @@
             this.pldSaveLocLabel.Name = "pldSaveLocLabel";
             this.pldSaveLocLabel.Size = new System.Drawing.Size(524, 23);
             this.pldSaveLocLabel.TabIndex = 7;
-            this.pldSaveLocLabel.Text = "Placeholder text";
+            this.pldSaveLocLabel.Text = "Placeholder text ***DO NOT TRANSLATE***";
             this.pldSaveLocLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pldPathFormatTextBox
@@ -258,7 +285,7 @@
             this.saveLocLabel.Name = "saveLocLabel";
             this.saveLocLabel.Size = new System.Drawing.Size(524, 23);
             this.saveLocLabel.TabIndex = 7;
-            this.saveLocLabel.Text = "Placeholder text";
+            this.saveLocLabel.Text = "Placeholder text ***DO NOT TRANSLATE**";
             this.saveLocLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pathFormatTextBox
@@ -542,7 +569,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(744, 583);
+            this.ClientSize = new System.Drawing.Size(744, 581);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -615,5 +642,7 @@
         private System.Windows.Forms.Label serviceDescriptionLabel;
         private System.Windows.Forms.Label serviceNameLabel;
         private System.Windows.Forms.LinkLabel serviceWebsiteLabel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox savePlaylistAsComboBox;
     }
 }

@@ -54,7 +54,10 @@ namespace Athame.DownloadAndTag
                 {
                     file.Tag.AlbumArtists = new[] { track.Album.Artist.Name };
                 }
-                file.Tag.Genres = new[] { track.Genre };
+                if (track.Genre != null)
+                {
+                    file.Tag.Genres = new[] {track.Genre};
+                }
                 file.Tag.Album = track.Album.Title;
                 file.Tag.Track = (uint)track.TrackNumber;
                 file.Tag.TrackCount = (uint)(track.Album.GetNumberOfTracksOnDisc(track.DiscNumber) ?? 0);

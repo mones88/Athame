@@ -22,6 +22,7 @@ namespace Athame.UI
             askWhereToSaveRadioButton.Checked = defaults.GeneralSavePreference.AskForLocation;
             saveLocLabel.Text = defaults.GeneralSavePreference.SaveDirectory;
             pathFormatTextBox.Text = defaults.GeneralSavePreference.SaveFormat;
+            savePlaylistAsComboBox.SelectedIndex = (int)defaults.SavePlaylist;
 
             // Inherit checkbox
             pldSameAsAlbumTrack.Checked = defaults.PlaylistSavePreferenceUsesGeneral;
@@ -189,6 +190,11 @@ namespace Athame.UI
         {
             if (selectedService == null) return;
             Process.Start("\"" + selectedService.Info.Website.ToString() + "\"");
+        }
+
+        private void savePlaylistAsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            defaults.SavePlaylist = (SavePlaylistSetting)savePlaylistAsComboBox.SelectedIndex;
         }
     }
 }

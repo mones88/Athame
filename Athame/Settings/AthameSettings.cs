@@ -12,6 +12,13 @@ namespace Athame.Settings
         AsArtistAlbum
     }
 
+    public enum SavePlaylistSetting
+    {
+        DontSave,
+        M3U,
+        PLS
+    }
+
     public class MediaTypeSavePreference
     {
         public string SaveDirectory { get; set; }
@@ -68,10 +75,11 @@ namespace Athame.Settings
             {
                 AskForLocation = false,
                 SaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                SaveFormat = "{PlaylistName}"
+                SaveFormat = "{PlaylistName}/{Title} - {AlbumArtistOrArtist}"
             };
             PlaylistSavePreferenceUsesGeneral = false;
             MainWindowPreference = new WindowPreference();
+            SavePlaylist = SavePlaylistSetting.DontSave;
         }
 
         public AlbumArtworkSaveFormat AlbumArtworkSaveFormat { get; set; }
@@ -79,5 +87,6 @@ namespace Athame.Settings
         public MediaTypeSavePreference PlaylistSavePreference { get; set; }
         public bool PlaylistSavePreferenceUsesGeneral { get; set; }
         public WindowPreference MainWindowPreference { get; set; }
+        public SavePlaylistSetting SavePlaylist { get; set; }
     }
 }

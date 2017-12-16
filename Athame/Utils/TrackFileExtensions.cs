@@ -23,6 +23,7 @@ namespace Athame.Utils
             var vars = Dictify.ObjectToDictionary(track);
             vars["PlaylistName"] = collection.Title;
             vars["CollectionName"] = collection.Title;
+            vars["ServiceName"] = collection.Title;
             var finalPath = PathHelpers.CleanPath(Named.Format(newFormat, vars));
             return finalPath;
         }

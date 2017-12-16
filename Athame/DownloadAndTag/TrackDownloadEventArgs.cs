@@ -14,7 +14,9 @@ namespace Athame.DownloadAndTag
                 {
                     return 0;
                 }
-                return (CurrentItemIndex + PercentCompleted) / TotalItems;
+                var c = CurrentItemIndex < 0 ? 0 : CurrentItemIndex;
+                var percent = (c + PercentCompleted) / TotalItems;
+                return percent;
             }
         }
 

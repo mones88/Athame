@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Athame.Logging;
 using Athame.PluginAPI.Downloader;
 using Athame.PluginAPI.Service;
+using Athame.Settings;
 using Athame.Utils;
 
 namespace Athame.DownloadAndTag
@@ -90,7 +91,7 @@ namespace Athame.DownloadAndTag
 
         private ExceptionSkip skip;
 
-        public async Task StartDownloadAsync()
+        public async Task StartDownloadAsync(SavePlaylistSetting playlistSetting)
         {
             var queueView = new Queue<EnqueuedCollection>(this);
             while (queueView.Count > 0)
@@ -102,7 +103,7 @@ namespace Athame.DownloadAndTag
                     CurrentCollectionIndex = (Count - queueView.Count) - 1,
                     TotalNumberOfCollections = Count
                 });
-                if (await DownloadCollectionAsync(currentItem)) continue;
+                if (await DownloadCollectionAsync(currentItem, playlistSetting)) continue;
                 if (skip == ExceptionSkip.Fail)
                 {
                     return;
@@ -125,21 +126,25 @@ namespace Athame.DownloadAndTag
             Directory.CreateDirectory(parentPath);
         }
 
-        private async Task<bool> DownloadCollectionAsync(EnqueuedCollection collection)
+        private async Task<bool> DownloadCollectionAsync(EnqueuedCollection collection, SavePlaylistSetting savePlaylistSetting)
         {
             var tracksCollectionLength = collection.MediaCollection.Tracks.Count;
             var tracksQueue = new Queue<Track>(collection.MediaCollection.Tracks);
+            var trackFiles = new List<TrackFile>(collection.MediaCollection.Tracks.Count);
+            TrackDownloadEventArgs gEventArgs = null;
             while (tracksQueue.Count > 0)
             {
-                var currentItem = tracksQueue.Dequeue();
-                var eventArgs = new TrackDownloadEventArgs
+                var eventArgs = gEventArgs = new TrackDownloadEventArgs
                 {
                     CurrentItemIndex = (tracksCollectionLength - tracksQueue.Count) - 1,
                     PercentCompleted = 0M,
                     State = DownloadState.PreProcess,
                     TotalItems = tracksCollectionLength,
+                    
                     TrackFile = null
                 };
+                var currentItem = tracksQueue.Dequeue();
+
                 OnTrackDequeued(eventArgs);
 
                 try
@@ -168,6 +173,7 @@ namespace Athame.DownloadAndTag
                             }
                         }
                     }
+                    // Get the TrackFile
                     eventArgs.TrackFile = await collection.Service.GetDownloadableTrackAsync(currentItem);
                     var downloader = collection.Service.GetDownloader(eventArgs.TrackFile);
                     downloader.Progress += (sender, args) =>
@@ -180,13 +186,17 @@ namespace Athame.DownloadAndTag
                         eventArgs.State = DownloadState.PostProcess;
                         OnTrackDownloadProgress(eventArgs);
                     };
+
                     // Generate the path
-                    var path = Path.Combine(collection.Destination, eventArgs.TrackFile.GetPath(collection.PathFormat, collection.MediaCollection));
+                    var path = collection.GetPath(eventArgs.TrackFile);
                     var tempPath = path;
                     if (useTempFile) tempPath += "-temp";
                     EnsureParentDirectories(tempPath);
                     eventArgs.State = DownloadState.Downloading;
+
+                    // Begin download
                     await downloader.DownloadAsyncTask(eventArgs.TrackFile, tempPath);
+                    trackFiles.Add(eventArgs.TrackFile);
 
                     // Attempt to dispose the downloader, since the most probable case will be that it will
                     // implement IDisposable if it uses sockets
@@ -233,6 +243,48 @@ namespace Athame.DownloadAndTag
                 // Raise the completed event even if an error occurred
                 OnTrackDownloadCompleted(eventArgs);
 
+                
+            }
+
+            // Write playlist if possible
+            try
+            {
+                var writer = new PlaylistWriter(collection, trackFiles);
+                switch (savePlaylistSetting)
+                {
+                    case SavePlaylistSetting.DontSave:
+                        break;
+                    case SavePlaylistSetting.M3U:
+                        writer.WriteM3U8();
+                        break;
+                    case SavePlaylistSetting.PLS:
+                        writer.WritePLS();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(savePlaylistSetting), savePlaylistSetting, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                var exEventArgs = new ExceptionEventArgs
+                {
+                    CurrentState = gEventArgs,
+                    Exception = ex
+                };
+                OnException(exEventArgs);
+                switch (exEventArgs.SkipTo)
+                {
+                    case ExceptionSkip.Item:
+                        break;
+
+                    case ExceptionSkip.Collection:
+                    case ExceptionSkip.Fail:
+                        skip = exEventArgs.SkipTo;
+                        return false;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             return true;
         }
