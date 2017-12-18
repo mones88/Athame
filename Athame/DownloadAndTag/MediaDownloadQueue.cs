@@ -32,7 +32,8 @@ namespace Athame.DownloadAndTag
                 Destination = destination,
                 Service = service,
                 PathFormat = pathFormat,
-                MediaCollection = collection
+                MediaCollection = collection,
+                Type = MediaCollectionAsType(collection)
             };
             Add(item);
             return item;
@@ -215,7 +216,7 @@ namespace Athame.DownloadAndTag
                     eventArgs.State = DownloadState.WritingTags;
                     OnTrackDownloadProgress(eventArgs);
                     var setting = Program.DefaultSettings.Settings.AlbumArtworkSaveFormat;
-                    if (Program.DefaultSettings.Settings.IgnoreSaveArtworkWithPlaylist)
+                    if (Program.DefaultSettings.Settings.IgnoreSaveArtworkWithPlaylist && collection.Type == MediaType.Playlist)
                     {
                         setting = AlbumArtworkSaveFormat.DontSave;
                     }
@@ -299,6 +300,23 @@ namespace Athame.DownloadAndTag
                 }
             }
             return true;
+        }
+
+        private static MediaType MediaCollectionAsType(IMediaCollection collection)
+        {
+            if (collection is Album)
+            {
+                return MediaType.Album;
+            }
+            if (collection is Playlist)
+            {
+                return MediaType.Playlist;
+            }
+            if (collection is SingleTrackCollection)
+            {
+                return MediaType.Track;
+            }
+            return MediaType.Unknown;
         }
     }
 }

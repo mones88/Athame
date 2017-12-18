@@ -146,18 +146,14 @@ namespace Athame.UI
         private void MediaDownloadQueue_TrackDequeued(object sender, TrackDownloadEventArgs e)
         {
             // this'll bite me in the ass someday
-            var itemIndex = e.CurrentItemIndex;
-            if (itemIndex == -1)
-            {
-                itemIndex = 0;
-            }
+            var itemIndex = e.CurrentItemIndex + 1;
             currentlyDownloadingItem = queueListView.Groups[currentCollection.CurrentCollectionIndex].Items[itemIndex * 2];
         }
 
         private void MediaDownloadQueue_CollectionDequeued(object sender, CollectionDownloadEventArgs e)
         {
             currentCollection = e;
-            totalStatusLabel.Text = $"{e.CurrentCollectionIndex + 1}/{e.TotalNumberOfCollections}: {MediaCollectionAsType(e.Collection.MediaCollection)} \"{e.Collection.MediaCollection.Title}\"";
+            totalStatusLabel.Text = $"{e.CurrentCollectionIndex + 1}/{e.TotalNumberOfCollections}: {e.Collection.Type} \"{e.Collection.MediaCollection.Title}\"";
         }
 
         private void MediaDownloadQueue_Exception(object sender, ExceptionEventArgs e)
@@ -204,7 +200,7 @@ namespace Athame.UI
 
         private string MakeGroupHeader(EnqueuedCollection collection)
         {
-            return String.Format(GroupHeaderFormat, MediaCollectionAsType(collection.MediaCollection), 
+            return String.Format(GroupHeaderFormat, collection.Type, 
                 collection.MediaCollection.Title, collection.Service.Info.Name, collection.MediaCollection.Tracks.Count, 
                 collection.MediaCollection.GetAvailableTracksCount());
         }
@@ -290,23 +286,6 @@ namespace Athame.UI
             mCurrentlySelectedQueueItem = null;
         }
         #endregion
-
-        private MediaType MediaCollectionAsType(IMediaCollection collection)
-        {
-            if (collection is Album)
-            {
-                return MediaType.Album;
-            }
-            if (collection is Playlist)
-            {
-                return MediaType.Playlist;
-            }
-            if (collection is SingleTrackCollection)
-            {
-                return MediaType.Track;
-            }
-            return MediaType.Unknown;
-        }
 
         private void LockUi()
         {

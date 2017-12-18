@@ -11,7 +11,7 @@ namespace Athame.DownloadAndTag
         public string PathFormat { get; set; }
         public MusicService Service { get; set; }
         public IMediaCollection MediaCollection { get; set; }
-
+        public MediaType Type { get; set; }
         public string GetRelativePath(TrackFile trackFile)
         {
             return trackFile.GetPath(PathFormat, MediaCollection);

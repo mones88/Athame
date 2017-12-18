@@ -26,7 +26,7 @@
 				<li>Athame uses internal APIs, which means they are subject to change at the discretion of the streaming service provider.</li>
 			</ul>
 			<div class="center-container">
-				<a class="big-button" href="https://github.com/svbnet/Athame/releases/download/0.4.5/athame-0.4.5.zip">Accept and download</a>
+				<a class="big-button" href="https://github.com/svbnet/Athame/releases/download/0.4.6/athame-0.4.6-base-plugins.zip">Accept and download</a>
 			</div>
 		</section>
 		<section>
@@ -41,6 +41,46 @@
 			or <code>~/.config/Athame</code> on Linux/OS X.</p>
 			<hr>
 			<ul class="release-list">
+			
+			<li>
+				<header>
+					<h3 class="relTitle"><a href="https://github.com/svbnet/Athame/releases/tag/0.4.6">Athame 0.4.6</a></h3>
+					<small class="version">0.4.6</small>
+				</header>
+				<p class="relNotes"><p>The plugin API has not changed, so plugins that worked in 0.4.5 will work in this version.</p>
+<p>New users are advised to download the zip file ending in <code>-base-plugins.zip</code>. Otherwise, the zip file ending in the version number can be unzipped directly into your existing program directory.</p>
+<ul>
+<li>
+#74 et al - Fix messed up default playlist path format. <strong>Existing users need to change the path format to <code>{PlaylistName}/{Title} - {AlbumArtistOrArtist}</code> or a similar format for this to work</strong>.
+</li>
+<li>
+#85 - long file names. See <a href="https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/">this article</a> for enabling long file names on Windows 10 Anniversary Edition or later. Note that the code that tries to truncate long file names on earlier platforms is primitive, and may not work if you have a long download destination.
+</li>
+<li>
+#93 - groups now display the total number of tracks in them, as well as the total number of available tracks.
+</li>
+<li>
+#96 - there is now an option in settings to download a M3U or PLS playlist of each collection queued. Due to the way the path format system works, the playlist file is saved in the destination directory. For instance, if the destination directory is your Music folder and your path format is <code>{Artist}/{Album}</code>, the playlist will be saved in your Music folder, and named the same as the collection.
+</li>
+<li>
+#97 - Athame now alerts you if there are items in the queue that haven't been downloaded yet. There is an option to disable this in settings.
+</li>
+<li>
+#95 - The queue can now be scrolled while downloading.
+</li>
+<li>
+#99 - Fixed the issue where the optional "Genre" track property wasn't checked for null before being set in the tag.
+</li>
+<li>Fixed issue where the album artwork download option <code>{Track} {Album}.ext</code> doesn't validate the album artwork path.</li>
+<li>Fixed issue where exception dialog doesn't appear on double click</li>
+<li>Added an option for album art to not be saved when downloading playlist</li>
+<li>Update licenses in about box</li>
+</ul>
+<p>A sincere thank you to everyone who starred this repo, filed an issue, downloaded a copy, or gave a donation/thank you. Your continued support motivates me to continually improve Athame in my limited spare time, and without it I would've given up months ago.</p></p>
+				<footer>
+					<a href="https://github.com/svbnet/Athame/releases/download/0.4.6/athame-0.4.6-base-plugins.zip" class="smaller-button">Accept &amp; download</a>
+				</footer>
+			</li>
 			
 			<li>
 				<header>
