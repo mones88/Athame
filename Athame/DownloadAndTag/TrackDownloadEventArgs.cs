@@ -1,4 +1,5 @@
-﻿using Athame.PluginAPI.Downloader;
+﻿using System.Diagnostics;
+using Athame.PluginAPI.Downloader;
 
 namespace Athame.DownloadAndTag
 {

@@ -109,7 +109,7 @@ namespace Athame.UI
             collectionProgressBar.Value = PercentToInt(e.TotalProgress);
             totalProgressBar.Value +=
                 PercentToInt(((decimal)(e.TotalProgress + currentCollection.CurrentCollectionIndex) /
-                              currentCollection.TotalNumberOfCollections)) - totalProgressBar.Value;
+                              currentCollection.TotalNumberOfCollections)) - totalProgressBar.Value;           
             SetGlobalProgress(totalProgressBar.Value);
             switch (e.State)
             {
