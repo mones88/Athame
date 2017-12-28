@@ -12,7 +12,7 @@ namespace Athame.DownloadAndTag
 {
     public class TrackTagger
     {
-        private const string CopyrightText = "Respect the artists! Pay for music when you can! Downloaded with Athame";
+        private const string CopyrightText = "Respect the artists! Pay for music when you can!";
 
         private static void WriteArtworkFile(string directory, AlbumArtworkSaveFormat saveFormat, Track track, ImageCacheEntry albumArtwork)
         {
@@ -22,7 +22,7 @@ namespace Athame.DownloadAndTag
                 case AlbumArtworkSaveFormat.DontSave:
                     break;
                 case AlbumArtworkSaveFormat.AsCover:
-                    fileName = albumArtwork?.Picture.FileType.Append("cover");
+                    fileName = albumArtwork?.Picture.FileType.Append("Cover");
                     break;
                 case AlbumArtworkSaveFormat.AsArtistAlbum:
                     fileName = albumArtwork?.Picture.FileType.Append($"{track.Artist} - {track.Album.Title}");
