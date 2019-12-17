@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Athame", "Athame\Athame.csproj", "{1668FA2B-E96A-4D25-AFB6-AC8521239D41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Athame.PluginAPI", "Athame.PluginAPI\Athame.PluginAPI.csproj", "{E10CC6E7-7100-4616-84BC-413A91E668B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AthameWPF", "AthameWPF\AthameWPF.csproj", "{E0940989-104F-4F14-8267-778D7C110FBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AthamePlugin.Tidal", "AthamePlugin.Tidal\AthamePlugin.Tidal\AthamePlugin.Tidal.csproj", "{359BA17F-09CF-410F-90CF-8E7766BBC816}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1668FA2B-E96A-4D25-AFB6-AC8521239D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1668FA2B-E96A-4D25-AFB6-AC8521239D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1668FA2B-E96A-4D25-AFB6-AC8521239D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1668FA2B-E96A-4D25-AFB6-AC8521239D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E10CC6E7-7100-4616-84BC-413A91E668B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E10CC6E7-7100-4616-84BC-413A91E668B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E10CC6E7-7100-4616-84BC-413A91E668B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E10CC6E7-7100-4616-84BC-413A91E668B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0940989-104F-4F14-8267-778D7C110FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0940989-104F-4F14-8267-778D7C110FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0940989-104F-4F14-8267-778D7C110FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0940989-104F-4F14-8267-778D7C110FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{359BA17F-09CF-410F-90CF-8E7766BBC816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{359BA17F-09CF-410F-90CF-8E7766BBC816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{359BA17F-09CF-410F-90CF-8E7766BBC816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{359BA17F-09CF-410F-90CF-8E7766BBC816}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2030E6A8-B286-40E9-85B4-3B1C6E287508}
+	EndGlobalSection
+EndGlobal

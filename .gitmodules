@@ -1,0 +1,3 @@
+[submodule "AthamePlugin.Tidal"]
+	path = AthamePlugin.Tidal
+	url = https://github.com/mones88/AthamePlugin.Tidal.git
